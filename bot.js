@@ -1,6 +1,7 @@
 
 require('dotenv').config();
 const { Client, Intents, GatewayIntentBits } = require('discord.js');
+const { joinVoiceChannel } = require('@discordjs/voice'); // Import untuk join voice channel
 const { Configuration, OpenAIApi } = require('openai');
 
 // Konfigurasi API OpenAI
@@ -32,25 +33,30 @@ client.once('ready', async () => {
     console.log(`${client.user.tag} is online and ready!`);
 
     // Bergabung ke Voice Channel
-    const guild = client.guilds.cache.get(GUILD_ID);
+     const guild = client.guilds.cache.get(GUILD_ID);
     if (!guild) {
         console.error('Guild not found!');
         return;
     }
 
     const channel = guild.channels.cache.get(VOICE_CHANNEL_ID);
-    if (!channel || channel.type !== 2) { // 2 = Voice Channel
+    if (!channel || channel.type !== 'GUILD_VOICE') { // Periksa tipe channel
         console.error('Voice channel not found or invalid!');
         return;
     }
 
     try {
-        await channel.join();
+        joinVoiceChannel({
+            channelId: channel.id,
+            guildId: guild.id,
+            adapterCreator: guild.voiceAdapterCreator,
+        });
         console.log('Bot joined the voice channel.');
     } catch (error) {
         console.error('Failed to join voice channel:', error);
     }
 });
+
 
 // Respons Otomatis dan Logging
 client.on('messageCreate', async (message) => {
