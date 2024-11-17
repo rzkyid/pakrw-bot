@@ -58,10 +58,10 @@ async function playAudio(channel) {
         player = createAudioPlayer();
 
         // Membuat resource dengan volume 10% (0.1)
-        const resource = createAudioResource(path.join(__dirname, 'audio', 'relax.mp3'), {
+        const resource = createAudioResource(path.join(__dirname, 'audio', 'desa.mp3'), {
             inlineVolume: true, // Mengaktifkan kontrol volume
         });
-        resource.volume.setVolume(0.1); // Mengatur volume ke 10%
+        resource.volume.setVolume(0.01); // Mengatur volume ke 10%
 
         player.play(resource);
         connection.subscribe(player);
@@ -74,7 +74,7 @@ async function playAudio(channel) {
         player.on(AudioPlayerStatus.Idle, () => {
             console.log('Audio selesai, memulai ulang...');
             const newResource = createAudioResource(resourcePath, { inlineVolume: true });
-            newResource.volume.setVolume(0.1);
+            newResource.volume.setVolume(0.01);
             player.play(newResource); // Memulai ulang audio
         });
 
