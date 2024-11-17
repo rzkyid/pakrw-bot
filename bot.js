@@ -28,6 +28,7 @@ const client = new Client({
 const ALLOWED_CHANNELS = [
     '1052124921817464883', // ID Channel Bot
     '1052123058678276106', // ID Channel Chat Warga
+];
 
 const PREFIX = 'rw';
 const LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID;
@@ -68,7 +69,7 @@ async function playAudio(channel) {
             const resource = createAudioResource(audioPath, {
                 inlineVolume: true,
             });
-            resource.volume.setVolume(0.01); // Atur volume ke 1%
+            resource.volume.setVolume(0.1); // Atur volume ke 10%
             player.play(resource);
         };
                 // Mulai pemutaran audio
