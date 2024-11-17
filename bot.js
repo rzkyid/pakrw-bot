@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Client, Intents, GatewayIntentBits } = require('discord.js');
+const { Client, GatewayIntentBits } = require('discord.js');
 const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus } = require('@discordjs/voice');
 const { Configuration, OpenAIApi } = require('openai');
 const express = require('express');
@@ -36,7 +36,6 @@ app.get('/', (req, res) => {
     res.send('Bot Discord berjalan!');
 });
 
-// Menjalankan server Express
 app.listen(PORT, () => {
     console.log(`Server Express berjalan di port ${PORT}`);
 });
@@ -55,9 +54,14 @@ async function playAudio(channel) {
             adapterCreator: channel.guild.voiceAdapterCreator,
         });
 
-        // Membuat player dan memutar audio
+        // Membuat player
         player = createAudioPlayer();
-        const resource = createAudioResource(path.join(__dirname, 'audio', 'relax.mp3')); // File relax.mp3
+
+        // Membuat resource dengan volume 10% (0.1)
+        const resource = createAudioResource(path.join(__dirname, 'audio', 'relax.mp3'), {
+            inlineVolume: true, // Mengaktifkan kontrol volume
+        });
+        resource.volume.setVolume(0.1); // Mengatur volume ke 10%
 
         player.play(resource);
         connection.subscribe(player);
@@ -91,6 +95,31 @@ client.on('messageCreate', async (message) => {
     const logChannel = client.channels.cache.get(LOG_CHANNEL_ID);
     if (logChannel && message.content.startsWith(PREFIX)) {
         logChannel.send(`[LOG] ${message.author.tag} menggunakan perintah: ${message.content}`);
+    }
+
+    // Perintah untuk bergabung ke voice channel dan memutar audio
+    if (message.content.startsWith(`${PREFIX}join`)) {
+        const voiceChannel = message.member.voice.channel;
+
+        if (!voiceChannel) {
+            message.reply('Anda harus berada di voice channel untuk menggunakan perintah ini.');
+            return;
+        }
+
+        await playAudio(voiceChannel);
+        message.reply('Pak RW telah bergabung ke channel.');
+    }
+
+    // Perintah untuk keluar dari voice channel
+    if (message.content.startsWith(`${PREFIX}leave`)) {
+        if (connection) {
+            connection.destroy();
+            connection = null;
+            player = null;
+            message.reply('Pak RW telah keluar dari voice channel.');
+        } else {
+            message.reply('Pak RW tidak berada di voice channel.');
+        }
     }
 
      // Respons otomatis untuk kata kunci
@@ -152,30 +181,6 @@ client.on('messageCreate', async (message) => {
         }
     }
 
-    // Perintah untuk bergabung ke voice channel dan memutar audio
-    if (message.content.startsWith(`${PREFIX}join`)) {
-        const voiceChannel = message.member.voice.channel;
-
-        if (!voiceChannel) {
-            message.reply('Anda harus berada di voice channel untuk menggunakan perintah ini.');
-            return;
-        }
-
-        await playAudio(voiceChannel);
-        message.reply('Pak RW telah bergabung ke channel.');
-    }
-
-    // Perintah untuk keluar dari voice channel
-    if (message.content.startsWith(`${PREFIX}leave`)) {
-        if (connection) {
-            connection.destroy();
-            connection = null;
-            player = null;
-            message.reply('Pak RW telah keluar dari voice channel.');
-        } else {
-            message.reply('Pak RW tidak berada di voice channel.');
-        }
-    }
 });
 
 // Login ke bot
