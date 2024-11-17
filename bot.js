@@ -24,8 +24,10 @@ const client = new Client({
     ],
 });
 
-// ID Channel yang Diizinkan untuk Autoresponder
-const AUTORESPONDER_CHANNEL_ID = '1052123058678276106'; // Ganti dengan ID channel Anda
+// Channel yang diizinkan untuk autoresponder
+const ALLOWED_CHANNELS = [
+    '1052124921817464883', // ID Channel Bot
+    '1052123058678276106', // ID Channel Chat Warga
 
 const PREFIX = 'rw';
 const LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID;
@@ -142,8 +144,8 @@ client.once('ready', () => {
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
 
-    // Cek apakah pesan berasal dari channel yang diizinkan
-    if (message.channel.id !== AUTORESPONDER_CHANNEL_ID) return;
+     // Cek jika channel termasuk dalam daftar channel yang diizinkan
+    if (!ALLOWED_CHANNELS.includes(message.channel.id)) return;
     
     // Logging penggunaan perintah
     const logChannel = client.channels.cache.get(LOG_CHANNEL_ID);
