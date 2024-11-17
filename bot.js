@@ -24,6 +24,9 @@ const client = new Client({
     ],
 });
 
+// ID Channel yang Diizinkan untuk Autoresponder
+const AUTORESPONDER_CHANNEL_ID = '1052123058678276106'; // Ganti dengan ID channel Anda
+
 const PREFIX = 'rw';
 const LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID;
 
@@ -47,7 +50,7 @@ let connection;
 // Fungsi untuk memutar audio di voice channel
 async function playAudio(channel) {
     try {
-        const audioPath = path.join(__dirname, 'audio', 'relax.mp3');
+        const audioPath = path.join(__dirname, 'audio', 'desa.mp3');
         // Bergabung ke voice channel
         connection = joinVoiceChannel({
             channelId: channel.id,
@@ -139,6 +142,9 @@ client.once('ready', () => {
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
 
+    // Cek apakah pesan berasal dari channel yang diizinkan
+    if (message.channel.id !== AUTORESPONDER_CHANNEL_ID) return;
+    
     // Logging penggunaan perintah
     const logChannel = client.channels.cache.get(LOG_CHANNEL_ID);
     if (logChannel && message.content.startsWith(PREFIX)) {
@@ -171,34 +177,27 @@ client.on('messageCreate', async (message) => {
     }
 
      // Respons otomatis untuk kata kunci
-    if (message.content.toLowerCase().includes('welcome')) {
+ const lowerContent = message.content.toLowerCase();
+
+    if (lowerContent.includes('welcome')) {
         message.reply('Selamat datang warga baru! Semoga betah jadi warga di sini, join voice sini biar makin akrab. <:OkeSip:1291831721313964053>');
-    }
-    if (message.content.toLowerCase().includes('halo')) {
+    } else if (lowerContent.includes('halo')) {
         message.reply('Halo juga kak! Gabung sini ke voice biar makin akrab hehe <:Hehe:1099424821974151310>');
-    }
-    if (message.content.toLowerCase().includes('mabar')) {
+    } else if (lowerContent.includes('mabar')) {
         message.reply('Buat yang mau mabar bisa cari di https://discord.com/channels/1052115524273836176/1052428628819984424 ya jangan lupa tag role game yang mau dimainin <:OkeSip:1291831721313964053>');
-    }
-    if (message.content.toLowerCase().includes('salam kenal')) {
+    } else if (lowerContent.includes('salam kenal')) {
         message.reply('Salam kenal juga kak! Dengan kakak siapa nich? <:Halo:1291831692025397270>');
-    }
-    if (message.content.toLowerCase().includes('donasi')) {
+    } else if (lowerContent.includes('donasi')) {
         message.reply('Kalau mau jadi donatur server bisa cek https://discord.com/channels/1052115524273836176/1221385772351881286 yaaa <:Wink:1099424794350473216>');
-    }
-    if (message.content.toLowerCase().includes('jodoh')) {
+    } else if (lowerContent.includes('jodoh')) {
         message.reply('Buat yang mau cari jodoh bisa langsung aja ke <#1284544825596837971> <:Love:1291831704171970612>');
-    }
-    if (message.content.toLowerCase().includes('pagi')) {
+    } else if (lowerContent.includes('pagi')) {
         message.reply('Selamat pagi juga kak! Kamu tuh kaya alarm, suka bangunin hati aku biar terus inget kamu. <:Kiss:1099424790474915912>');
-    }
-    if (message.content.toLowerCase().includes('siang')) {
+    } else if (lowerContent.includes('siang')) {
         message.reply('Selamat siang juga kak! Siang ini panas, tapi cuma kamu yang bikin hati aku meleleh. Kirim papnya dong di <#1100632084051140669> hehe <:Uwu:1291831737609097338>');
-    }
-    if (message.content.toLowerCase().includes('sore')) {
+    } else if (lowerContent.includes('sore')) {
         message.reply('Selamat sore juga kak! Matahari boleh tenggelam, tapi rasa sayang aku ke kamu nggak pernah hilang <:Uwu:1291831737609097338>');
-    }
-    if (message.content.toLowerCase().includes('malam')) {
+    } else if (lowerContent.includes('malam')) {
         message.reply('Selamat malam juga kak! Aku ada pantun nih buat kamu. Mentari terbenam di tepi pantai, Ombak datang menyapa riang. Malam ini hati terasa damai, Karena kamu selalu di pikiranku sayang. Anjayyy gombal <:Love:1291831704171970612>');
     }
 
