@@ -1,7 +1,8 @@
 require('dotenv').config();
-const { Client, GatewayIntentBits } = require('discord.js');
+const { Client, Intents, GatewayIntentBits } = require('discord.js');
 const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus, VoiceConnectionStatus, AudioPlayer } = require('@discordjs/voice');
 const { Configuration, OpenAIApi } = require('openai');
+const express = require('express');
 const fs = require('fs');
 const path = require('path');
 
@@ -29,11 +30,25 @@ const GUILD_ID = process.env.GUILD_ID;
 const VOICE_CHANNEL_ID = process.env.VOICE_CHANNEL_ID;
 const LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID;
 
+// Konfigurasi Express untuk menangani port
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Routing dasar untuk memastikan aplikasi web berjalan
+app.get('/', (req, res) => {
+    res.send('Bot Discord berjalan!');
+});
+
+// Menjalankan server Express
+app.listen(PORT, () => {
+    console.log(`Server Express berjalan di port ${PORT}`);
+});
+
 // Untuk menyimpan status player
 let player;
 let connection;
 
-// Konfigurasi Bot untuk Play Audio
+// Fungsi untuk memutar audio 24/7
 function playAudio(guild, channelId) {
     const channel = guild.channels.cache.get(channelId);
     if (!channel || channel.type !== 'GUILD_VOICE') {
@@ -69,7 +84,7 @@ function playAudio(guild, channelId) {
         player = createAudioPlayer();
 
         // Menambahkan file audio ke audio resource
-        const resource = createAudioResource(path.join(__dirname, 'audio', 'your-audio-file.mp3'), {
+        const resource = createAudioResource(path.join(__dirname, 'audio', 'relax.mp3'), {
             inputType: AudioPlayerInputType.Arbitrary,
         });
 
@@ -91,6 +106,41 @@ function playAudio(guild, channelId) {
     }
 }
 
+// Bot Siap
+client.once('ready', async () => {
+    console.log(`${client.user.tag} is online and ready!`);
+
+    // Bergabung ke Voice Channel
+    const guild = client.guilds.cache.get(GUILD_ID);
+    if (!guild) {
+        console.error('Guild not found!');
+        return;
+    }
+
+    const channel = guild.channels.cache.get(VOICE_CHANNEL_ID);
+    if (!channel) {
+        console.error('Voice channel not found!');
+        return;
+    }
+
+    if (channel.type !== 'GUILD_VOICE') {
+        console.error('The channel is not a voice channel!');
+        return;
+    }
+
+    try {
+        // Bergabung ke voice channel
+        joinVoiceChannel({
+            channelId: channel.id,
+            guildId: guild.id,
+            adapterCreator: guild.voiceAdapterCreator,
+        });
+        console.log('Bot joined the voice channel.');
+    } catch (error) {
+        console.error('Failed to join voice channel:', error);
+    }
+});
+
 // Respons Otomatis dan Logging
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
@@ -105,7 +155,7 @@ client.on('messageCreate', async (message) => {
     if (message.content.toLowerCase().includes('welcome')) {
         message.reply('Selamat datang warga baru! Semoga betah jadi warga di sini, join voice sini biar makin akrab. <:OkeSip:1291831721313964053>');
     }
-        if (message.content.toLowerCase().includes('halo')) {
+    if (message.content.toLowerCase().includes('halo')) {
         message.reply('Halo juga kak! Gabung sini ke voice biar makin akrab hehe <:Hehe:1099424821974151310>');
     }
     if (message.content.toLowerCase().includes('mabar')) {
@@ -132,7 +182,33 @@ client.on('messageCreate', async (message) => {
     if (message.content.toLowerCase().includes('malam')) {
         message.reply('Selamat malam juga kak! Aku ada pantun nih buat kamu. Mentari terbenam di tepi pantai, Ombak datang menyapa riang. Malam ini hati terasa damai, Karena kamu selalu di pikiranku sayang. Anjayyy gombal <:Love:1291831704171970612>');
     }
-    // (Tambahkan respons otomatis lainnya sesuai kebutuhan)
+
+    // Perintah untuk ngobrol dengan ChatGPT
+    if (message.content.startsWith(`${PREFIX}tanya`)) {
+        const query = message.content.slice(`${PREFIX}tanya`.length).trim();
+        if (!query) {
+            message.reply('Tanyain aja, nanti Pak RW jawab');
+            return;
+        }
+
+        try {
+            const response = await openai.createChatCompletion({
+                model: 'gpt-4', // Menggunakan GPT-4
+                messages: [
+                    {
+                        role: 'user',
+                        content: query, // Pertanyaan dari pengguna
+                    },
+                ],
+            });
+
+            const reply = response.data.choices[0].message.content.trim();
+            message.reply(reply);
+        } catch (error) {
+            console.error('Error with OpenAI API:', error);
+            message.reply('Maaf, Pak RW lagi bingung nih sama pertanyaannya');
+        }
+    }
 
     // Perintah untuk mulai memutar audio
     if (message.content.startsWith(`${PREFIX}play`)) {
@@ -152,29 +228,7 @@ client.on('messageCreate', async (message) => {
         if (player) {
             player.stop();
             connection.destroy();
-            message.reply('Audio berhenti dan bot keluar dari voice channel.');
-        } else {
-            message.reply('Tidak ada audio yang sedang diputar!');
-        }
-    }
-
-    // Perintah untuk deafen bot
-    if (message.content.startsWith(`${PREFIX}deafen`)) {
-        const guild = message.guild;
-        const botMember = guild.members.cache.get(client.user.id);
-        if (botMember) {
-            botMember.voice.setDeaf(true);
-            message.reply('Bot telah di-deafen.');
-        }
-    }
-
-    // Perintah untuk undeafen bot
-    if (message.content.startsWith(`${PREFIX}undeafen`)) {
-        const guild = message.guild;
-        const botMember = guild.members.cache.get(client.user.id);
-        if (botMember) {
-            botMember.voice.setDeaf(false);
-            message.reply('Bot telah di-undeafen.');
+            message.reply('Audio dihentikan dan bot keluar dari voice channel.');
         }
     }
 });
