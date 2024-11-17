@@ -20,7 +20,6 @@
   "dotenv": "^16.0.3",
   "openai": "^3.2.1"
   "@discordjs/voice": "^0.15.0"
-
 },
   "engines": {
     "node": ">=16.9.0"
