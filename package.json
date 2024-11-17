@@ -13,12 +13,13 @@
     "chatgpt",
     "discord.js"
   ],
-  "author": "Nama Anda",
+  "author": "Nev1x",
   "license": "MIT",
-  "dependencies": {
-    "discord.js": "^14.11.0",
-    "openai": "^3.2.1"
-  },
+"dependencies": {
+  "discord.js": "^14.11.0",
+  "dotenv": "^16.0.3",
+  "openai": "^3.2.1"
+},
   "engines": {
     "node": ">=16.9.0"
   }
