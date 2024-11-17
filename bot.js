@@ -106,6 +106,18 @@ client.on('messageCreate', async (message) => {
     if (message.content.toLowerCase().includes('jodoh')) {
         message.reply('Buat yang mau cari jodoh bisa langsung aja ke <#1284544825596837971> <:Love:1291831704171970612>');
     }
+    if (message.content.toLowerCase().includes('pagi')) {
+        message.reply('Selamat pagi juga kak! Kamu tuh kaya alarm, suka bangunin hati aku biar terus inget kamu. <:Kiss:1099424790474915912>');
+    }
+    if (message.content.toLowerCase().includes('siang')) {
+        message.reply('Selamat siang juga kak! Siang ini panas, tapi cuma kamu yang bikin hati aku meleleh. Kirim papnya dong di <#1100632084051140669> hehe <:Uwu:1291831737609097338>');
+    }
+    if (message.content.toLowerCase().includes('sore')) {
+        message.reply('Selamat sore juga kak! Matahari boleh tenggelam, tapi rasa sayang aku ke kamu nggak pernah hilang <:Uwu:1291831737609097338>');
+    }
+    if (message.content.toLowerCase().includes('malam')) {
+        message.reply('Selamat malam juga kak! Aku ada pantun nih buat kamu Mentari terbenam di tepi pantai, Ombak datang menyapa riang. Malam ini hati terasa damai, Karena kamu selalu di pikiranku sayang. Anjayyy gombal <:Love:1291831704171970612>');
+    }
 
     // Perintah untuk ngobrol dengan ChatGPT
     if (message.content.startsWith(`${PREFIX}tanya`)) {
