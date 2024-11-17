@@ -64,19 +64,19 @@ client.on('messageCreate', async (message) => {
 
     // Respons otomatis untuk kata kunci
     if (message.content.toLowerCase().includes('welcome')) {
-        message.channel.send('Selamat datang warga baru! Semoga betah jadi warga di sini, join voice sini biar makin akrab. <:OkeSip:1291831721313964053>');
+        message.message.reply('Selamat datang warga baru! Semoga betah jadi warga di sini, join voice sini biar makin akrab. <:OkeSip:1291831721313964053>');
     }
       if (message.content.toLowerCase().includes('halo')) {
-        message.channel.send('Halo juga kak {user}! Gabung sini ke voice biar makin akrab hehe <:Hehe:1099424821974151310>');
+        message.channel.send('Halo juga kak! Gabung sini ke voice biar makin akrab hehe <:Hehe:1099424821974151310>');
     }
     if (message.content.toLowerCase().includes('mabar')) {
         message.channel.send('Buat yang mau mabar bisa cari di https://discord.com/channels/1052115524273836176/1052428628819984424 ya jangan lupa tag role game yang mau dimainin <:OkeSip:1291831721313964053>');
     }
     if (message.content.toLowerCase().includes('salam kenal')) {
-        message.channel.send('Salam kenal juga kak {user}! Dengan kakak siapa nich? <:Halo:1291831692025397270>');
+        message.channel.send('Salam kenal juga kak! Dengan kakak siapa nich? <:Halo:1291831692025397270>');
     }
      if (message.content.toLowerCase().includes('donasi')) {
-        message.channel.send('Halo kak {user}! Kalau mau jadi donatur server bisa cek https://discord.com/channels/1052115524273836176/1221385772351881286 yaaa <:Wink:1099424794350473216>');
+        message.channel.send('Kalau mau jadi donatur server bisa cek https://discord.com/channels/1052115524273836176/1221385772351881286 yaaa <:Wink:1099424794350473216>');
     }
      if (message.content.toLowerCase().includes('jodoh')) {
         message.channel.send('Buat yang mau cari jodoh bisa langsung aja ke <#1284544825596837971> <:Love:1291831704171970612>');
