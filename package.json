@@ -1,0 +1,25 @@
+
+{
+  "name": "discord-bot",
+  "version": "1.0.0",
+  "description": "Bot Discord dengan fitur 24/7 voice channel, auto-response, dan integrasi ChatGPT.",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "chatgpt",
+    "discord.js"
+  ],
+  "author": "Nama Anda",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.11.0",
+    "openai": "^3.2.1"
+  },
+  "engines": {
+    "node": ">=16.9.0"
+  }
+}
