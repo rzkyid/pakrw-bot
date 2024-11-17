@@ -93,6 +93,38 @@ client.on('messageCreate', async (message) => {
         logChannel.send(`[LOG] ${message.author.tag} menggunakan perintah: ${message.content}`);
     }
 
+     // Respons otomatis untuk kata kunci
+    if (message.content.toLowerCase().includes('welcome')) {
+        message.reply('Selamat datang warga baru! Semoga betah jadi warga di sini, join voice sini biar makin akrab. <:OkeSip:1291831721313964053>');
+    }
+    if (message.content.toLowerCase().includes('halo')) {
+        message.reply('Halo juga kak! Gabung sini ke voice biar makin akrab hehe <:Hehe:1099424821974151310>');
+    }
+    if (message.content.toLowerCase().includes('mabar')) {
+        message.reply('Buat yang mau mabar bisa cari di https://discord.com/channels/1052115524273836176/1052428628819984424 ya jangan lupa tag role game yang mau dimainin <:OkeSip:1291831721313964053>');
+    }
+    if (message.content.toLowerCase().includes('salam kenal')) {
+        message.reply('Salam kenal juga kak! Dengan kakak siapa nich? <:Halo:1291831692025397270>');
+    }
+    if (message.content.toLowerCase().includes('donasi')) {
+        message.reply('Kalau mau jadi donatur server bisa cek https://discord.com/channels/1052115524273836176/1221385772351881286 yaaa <:Wink:1099424794350473216>');
+    }
+    if (message.content.toLowerCase().includes('jodoh')) {
+        message.reply('Buat yang mau cari jodoh bisa langsung aja ke <#1284544825596837971> <:Love:1291831704171970612>');
+    }
+    if (message.content.toLowerCase().includes('pagi')) {
+        message.reply('Selamat pagi juga kak! Kamu tuh kaya alarm, suka bangunin hati aku biar terus inget kamu. <:Kiss:1099424790474915912>');
+    }
+    if (message.content.toLowerCase().includes('siang')) {
+        message.reply('Selamat siang juga kak! Siang ini panas, tapi cuma kamu yang bikin hati aku meleleh. Kirim papnya dong di <#1100632084051140669> hehe <:Uwu:1291831737609097338>');
+    }
+    if (message.content.toLowerCase().includes('sore')) {
+        message.reply('Selamat sore juga kak! Matahari boleh tenggelam, tapi rasa sayang aku ke kamu nggak pernah hilang <:Uwu:1291831737609097338>');
+    }
+    if (message.content.toLowerCase().includes('malam')) {
+        message.reply('Selamat malam juga kak! Aku ada pantun nih buat kamu. Mentari terbenam di tepi pantai, Ombak datang menyapa riang. Malam ini hati terasa damai, Karena kamu selalu di pikiranku sayang. Anjayyy gombal <:Love:1291831704171970612>');
+    }
+
     // Perintah untuk ngobrol dengan ChatGPT
     if (message.content.startsWith(`${PREFIX}tanya`)) {
         const query = message.content.slice(`${PREFIX}tanya`.length).trim();
@@ -130,7 +162,7 @@ client.on('messageCreate', async (message) => {
         }
 
         await playAudio(voiceChannel);
-        message.reply('Bot telah bergabung ke channel dan memutar audio.');
+        message.reply('Pak RW telah bergabung ke channel.');
     }
 
     // Perintah untuk keluar dari voice channel
@@ -139,9 +171,9 @@ client.on('messageCreate', async (message) => {
             connection.destroy();
             connection = null;
             player = null;
-            message.reply('Bot telah keluar dari voice channel.');
+            message.reply('Pak RW telah keluar dari voice channel.');
         } else {
-            message.reply('Bot tidak berada di voice channel.');
+            message.reply('Pak RW tidak berada di voice channel.');
         }
     }
 });
