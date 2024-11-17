@@ -70,8 +70,12 @@ async function playAudio(channel) {
             console.log('Audio sedang diputar.');
         });
 
+        // Replay otomatis saat audio selesai
         player.on(AudioPlayerStatus.Idle, () => {
-            console.log('Audio selesai.');
+            console.log('Audio selesai, memulai ulang...');
+            const newResource = createAudioResource(resourcePath, { inlineVolume: true });
+            newResource.volume.setVolume(0.1);
+            player.play(newResource); // Memulai ulang audio
         });
 
         connection.on('error', (error) => {
