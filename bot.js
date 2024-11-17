@@ -1,7 +1,8 @@
 require('dotenv').config();
-const { Client, GatewayIntentBits } = require('discord.js');
+const { Client, Intents, GatewayIntentBits } = require('discord.js');
 const { joinVoiceChannel } = require('@discordjs/voice');
 const { Configuration, OpenAIApi } = require('openai');
+const express = require('express');
 
 // Konfigurasi API OpenAI
 const openaiConfig = new Configuration({
@@ -26,6 +27,20 @@ const PREFIX = 'rw';
 const GUILD_ID = process.env.GUILD_ID;
 const VOICE_CHANNEL_ID = process.env.VOICE_CHANNEL_ID;
 const LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID;
+
+// Konfigurasi Express untuk menangani port
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Routing dasar untuk memastikan aplikasi web berjalan
+app.get('/', (req, res) => {
+    res.send('Bot Discord berjalan!');
+});
+
+// Menjalankan server Express
+app.listen(PORT, () => {
+    console.log(`Server Express berjalan di port ${PORT}`);
+});
 
 // Bot Siap
 client.once('ready', async () => {
@@ -66,10 +81,6 @@ client.once('ready', async () => {
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
 
-    // Logging untuk Guild dan Channel
-    console.log('Guild ID:', GUILD_ID);
-    console.log('Voice Channel ID:', VOICE_CHANNEL_ID);
-
     // Logging penggunaan perintah
     const logChannel = client.channels.cache.get(LOG_CHANNEL_ID);
     if (logChannel && message.content.startsWith(PREFIX)) {
@@ -105,8 +116,8 @@ client.on('messageCreate', async (message) => {
         }
 
         try {
-            const response = await openai.completions.create({
-                model: 'text-davinci-003', // Pastikan model yang benar digunakan
+            const response = await openai.createCompletion({
+                model: 'text-davinci-003',
                 prompt: query,
                 max_tokens: 200,
             });
