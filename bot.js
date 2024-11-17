@@ -58,7 +58,7 @@ async function playAudio(channel) {
         player = createAudioPlayer();
 
         // Membuat resource dengan volume 10% (0.1)
-        const resource = createAudioResource(path.join(__dirname, 'audio', 'relax.mp3'), {
+        const resource = createAudioResource(path.join(__dirname, 'audio', 'desa.mp3'), {
             inlineVolume: true, // Mengaktifkan kontrol volume
         });
         resource.volume.setVolume(0.01); // Mengatur volume ke 10%
@@ -94,8 +94,8 @@ client.once('ready', async () => {
     client.user.setPresence({
         activities: [
             {
-                name: 'Warga Gang Desa', // Status yang ditampilkan
-                type: ActivityType.Watching, // Jenis aktivitas (Playing, Watching, Listening, dll.)
+                name: 'Gang Desa', // Status yang ditampilkan
+                type: ActivityType.Playing, // Jenis aktivitas (Playing, Watching, Listening, dll.)
             },
         ],
         status: 'online', // Status bot (online, idle, dnd)
