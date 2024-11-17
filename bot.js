@@ -117,7 +117,7 @@ client.on('messageCreate', async (message) => {
 
       try {
     const response = await openai.createChatCompletion({
-        model: 'gpt-3.5-turbo',  // Menggunakan GPT-3.5 Turbo
+        model: 'gpt-4',  // Menggunakan GPT-3.5 Turbo
         messages: [{
             role: 'user',
             content: query,  // Pertanyaan dari pengguna
