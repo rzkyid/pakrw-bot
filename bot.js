@@ -116,7 +116,7 @@ client.on('messageCreate', async (message) => {
         message.reply('Selamat sore juga kak! Matahari boleh tenggelam, tapi rasa sayang aku ke kamu nggak pernah hilang <:Uwu:1291831737609097338>');
     }
     if (message.content.toLowerCase().includes('malam')) {
-        message.reply('Selamat malam juga kak! Aku ada pantun nih buat kamu Mentari terbenam di tepi pantai, Ombak datang menyapa riang. Malam ini hati terasa damai, Karena kamu selalu di pikiranku sayang. Anjayyy gombal <:Love:1291831704171970612>');
+        message.reply('Selamat malam juga kak! Aku ada pantun nih buat kamu. Mentari terbenam di tepi pantai, Ombak datang menyapa riang. Malam ini hati terasa damai, Karena kamu selalu di pikiranku sayang. Anjayyy gombal <:Love:1291831704171970612>');
     }
 
     // Perintah untuk ngobrol dengan ChatGPT
