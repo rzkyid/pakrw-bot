@@ -89,13 +89,13 @@ async function playAudio(channel) {
 // Bot Siap
 client.once('ready', async () => {
     console.log(`${client.user.tag} is online and ready!`);
-
+});
     // Menambahkan custom status
     const statusMessages = ["👀 Sedang Memantau", "👥 Warga Gang Desa"];
     const statusTypes = [ 'dnd', 'idle'];
     let currentStatusIndex = 0;
     let currentTypeIndex = 0;
-});
+
 
 // Respons Otomatis dan Logging
 client.on('messageCreate', async (message) => {
