@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Client, GatewayIntentBits } = require('discord.js');
+const { Client, GatewayIntentBits, ActivityType } = require('discord.js');
 const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus } = require('@discordjs/voice');
 const { Configuration, OpenAIApi } = require('openai');
 const express = require('express');
@@ -94,8 +94,8 @@ client.once('ready', async () => {
     client.user.setPresence({
         activities: [
             {
-                name: 'Gang Desa', // Status yang ditampilkan
-                type: ActivityType.Playing, // Jenis aktivitas (Playing, Watching, Listening, dll.)
+                name: 'Warga Gang Desa', // Status yang ditampilkan
+                type: ActivityType.Watching, // Jenis aktivitas (Playing, Watching, Listening, dll.)
             },
         ],
         status: 'online', // Status bot (online, idle, dnd)
