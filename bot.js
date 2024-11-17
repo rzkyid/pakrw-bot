@@ -33,33 +33,33 @@ client.once('ready', async () => {
 
     // Bergabung ke Voice Channel
     const guild = client.guilds.cache.get(GUILD_ID);
-    if (!guild) {
-        console.error('Guild not found!');
-        return;
-    }
+if (!guild) {
+    console.error('Guild not found!');
+    return;
+}
 
-    const channel = guild.channels.cache.get(VOICE_CHANNEL_ID);
-    if (!channel) {
-        console.error('Voice channel not found!');
-        return;
-    }
+const channel = guild.channels.cache.get(VOICE_CHANNEL_ID);
+if (!channel) {
+    console.error('Voice channel not found!');
+    return;
+}
 
-    if (channel.type !== 'GUILD_VOICE') {
-        console.error('The channel is not a voice channel!');
-        return;
-    }
+if (channel.type !== 'GUILD_VOICE') {
+    console.error('The channel is not a voice channel!');
+    return;
+}
 
-    try {
-        // Bergabung ke voice channel
-        joinVoiceChannel({
-            channelId: channel.id,
-            guildId: guild.id,
-            adapterCreator: guild.voiceAdapterCreator,
-        });
-        console.log('Bot joined the voice channel.');
-    } catch (error) {
-        console.error('Failed to join voice channel:', error);
-    }
+try {
+    // Bergabung ke voice channel
+    joinVoiceChannel({
+        channelId: channel.id,
+        guildId: guild.id,
+        adapterCreator: guild.voiceAdapterCreator,
+    });
+    console.log('Bot joined the voice channel.');
+} catch (error) {
+    console.error('Failed to join voice channel:', error);
+}
 });
 
 // Respons Otomatis dan Logging
@@ -69,6 +69,7 @@ client.on('messageCreate', async (message) => {
     // Logging untuk Guild dan Channel
     console.log('Guild ID:', GUILD_ID);
     console.log('Voice Channel ID:', VOICE_CHANNEL_ID);
+    console.log('Channel Type:', channel.type);
 
     // Logging penggunaan perintah
     const logChannel = client.channels.cache.get(LOG_CHANNEL_ID);
