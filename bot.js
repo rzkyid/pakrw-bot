@@ -64,14 +64,14 @@ client.on('messageCreate', async (message) => {
 
     // Respons otomatis untuk kata kunci "Welcome"
     if (message.content.toLowerCase().includes('welcome')) {
-        message.channel.send('Selamat datang warga baru! Semoga betah jadi warga di sini, join voice sini biar makin akrab.');
+        message.channel.send('Selamat datang warga baru! Semoga betah jadi warga di sini, join voice sini biar makin akrab. <:OkeSip:1291831721313964053>');
     }
 
     // Perintah untuk ngobrol dengan ChatGPT
-    if (message.content.startsWith(`${PREFIX}chat`)) {
-        const query = message.content.slice(`${PREFIX}chat`.length).trim();
+    if (message.content.startsWith(`${PREFIX}tanya`)) {
+        const query = message.content.slice(`${PREFIX}tanya`.length).trim();
         if (!query) {
-            message.reply('Ketikkan sesuatu untuk saya jawab!');
+            message.reply('Tanyain aja, nanti Pak RW jawab');
             return;
         }
 
@@ -86,7 +86,7 @@ client.on('messageCreate', async (message) => {
             message.reply(reply);
         } catch (error) {
             console.error('Error with OpenAI API:', error);
-            message.reply('Maaf, saya mengalami masalah saat mencoba menjawab pertanyaan Anda.');
+            message.reply('Maaf, Pak RW lagi bingung nih sama pertanyaannya');
         }
     }
 });
