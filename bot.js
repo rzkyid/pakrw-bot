@@ -91,17 +91,10 @@ client.once('ready', async () => {
     console.log(`${client.user.tag} is online and ready!`);
 
     // Menambahkan custom status
-    client.user.setPresence({
-        activities: [
-            {
-                name: 'Warga Gang Desa', // Status yang ditampilkan
-                type: ActivityType.Watching, // Jenis aktivitas (Playing, Watching, Listening, dll.)
-            },
-        ],
-        status: 'online', // Status bot (online, idle, dnd)
-    });
-
-    console.log('Custom status telah diatur.');
+    const statusMessages = ["👀 Sedang Memantau", "👥 Warga Gang Desa"];
+    const statusTypes = [ 'dnd', 'idle'];
+    let currentStatusIndex = 0;
+    let currentTypeIndex = 0;
 });
 
 // Respons Otomatis dan Logging
