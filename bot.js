@@ -47,6 +47,7 @@ let connection;
 // Fungsi untuk memutar audio di voice channel
 async function playAudio(channel) {
     try {
+        const audioPath = path.join(__dirname, 'audio', 'relax.mp3');
         // Bergabung ke voice channel
         connection = joinVoiceChannel({
             channelId: channel.id,
@@ -56,31 +57,32 @@ async function playAudio(channel) {
 
         // Membuat player
         player = createAudioPlayer();
-
-        // Membuat resource dengan volume 10% (0.1)
-        const resource = createAudioResource(path.join(__dirname, 'audio', 'desa.mp3'), {
-            inlineVolume: true, // Mengaktifkan kontrol volume
-        });
-        resource.volume.setVolume(0.01); // Mengatur volume ke 10%
-
-        player.play(resource);
         connection.subscribe(player);
 
-        player.on(AudioPlayerStatus.Playing, () => {
-            console.log('Audio sedang diputar.');
-        });
+        const playResource = () => {
+            const resource = createAudioResource(audioPath, {
+                inlineVolume: true,
+            });
+            resource.volume.setVolume(0.01); // Atur volume ke 1%
+            player.play(resource);
+        };
+                // Mulai pemutaran audio
+        playResource();
 
-        // Replay otomatis saat audio selesai
         player.on(AudioPlayerStatus.Idle, () => {
             console.log('Audio selesai, memulai ulang...');
-            const newResource = createAudioResource(resourcePath, { inlineVolume: true });
-            newResource.volume.setVolume(0.01);
-            player.play(newResource); // Memulai ulang audio
+            playResource(); // Ulangi pemutaran audio
+        });
+
+        player.on('error', (error) => {
+            console.error('Kesalahan pada audio player:', error);
         });
 
         connection.on('error', (error) => {
-            console.error('Kesalahan pada koneksi:', error);
+            console.error('Kesalahan pada koneksi voice channel:', error);
         });
+
+        console.log('Audio sedang diputar di voice channel.');
     } catch (error) {
         console.error('Gagal memutar audio:', error);
     }
