@@ -70,7 +70,7 @@ client.on('messageCreate', async (message) => {
 
     // Respons otomatis untuk kata kunci
     if (message.content.toLowerCase().includes('welcome')) {
-        message.channel.send('Selamat datang warga baru! Semoga betah jadi warga di sini, join voice sini biar makin akrab. <:OkeSip:1291831721313964053>');
+        message.reply('Selamat datang warga baru! Semoga betah jadi warga di sini, join voice sini biar makin akrab. <:OkeSip:1291831721313964053>');
     }
       if (message.content.toLowerCase().includes('halo')) {
         message.channel.send('Halo juga kak! Gabung sini ke voice biar makin akrab hehe <:Hehe:1099424821974151310>');
