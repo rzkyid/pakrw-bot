@@ -127,21 +127,23 @@ client.on('messageCreate', async (message) => {
             return;
         }
 
-      try {
-    const response = await openai.createChatCompletion({
-        model: 'gpt-4',  // Menggunakan GPT-3.5 Turbo
-        messages: [{
-            role: 'user',
-            content: query,  // Pertanyaan dari pengguna
-        }],
-    });
+        try {
+            const response = await openai.createChatCompletion({
+                model: 'gpt-4', // Menggunakan GPT-4
+                messages: [
+                    {
+                        role: 'user',
+                        content: query, // Pertanyaan dari pengguna
+                    },
+                ],
+            });
 
-    const reply = response.data.choices[0].message.content.trim();
-    message.reply(reply);
-} catch (error) {
-    console.error('Error with OpenAI API:', error);
-    message.reply('Maaf, Pak RW lagi bingung nih sama pertanyaannya');
-}
+            const reply = response.data.choices[0].message.content.trim();
+            message.reply(reply);
+        } catch (error) {
+            console.error('Error with OpenAI API:', error);
+            message.reply('Maaf, Pak RW lagi bingung nih sama pertanyaannya');
+        }
     }
 });
 
