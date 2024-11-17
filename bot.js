@@ -105,8 +105,8 @@ client.on('messageCreate', async (message) => {
         }
 
         try {
-            const response = await openai.createCompletion({
-                model: 'text-davinci-003',
+            const response = await openai.completions.create({
+                model: 'text-davinci-003', // Pastikan model yang benar digunakan
                 prompt: query,
                 max_tokens: 200,
             });
