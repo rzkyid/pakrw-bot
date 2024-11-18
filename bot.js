@@ -258,8 +258,8 @@ const boysFolder = path.join(__dirname, 'couple_images', 'boys');
             const boyImagePath = path.join(boysFolder, randomBoyFile);
 
             // Kirim kedua gambar ke channel
-            await message.channel.send({
-                content: `💕 **Ini Profile Couple buat kamu!** 💕`,
+            await message.reply({
+                content: `👩‍❤️‍👨 **Ini Photo Profile Couple buat kamu!**`,
                 files: [girlImagePath, boyImagePath],
             });
         } catch (error) {
