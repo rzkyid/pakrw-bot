@@ -249,18 +249,26 @@ client.on('messageCreate', async (message) => {
         }
     }
 
-    // Perintah untuk ngobrol dengan ChatGPT
-    if (message.content.startsWith(`${PREFIX}tanya`)) {
-        const query = message.content.slice(`${PREFIX}tanya`.length).trim();
-        if (!query) {
-            message.reply('Tanyain aja, nanti Pak RW jawab');
-            return;
-        }
+  // Perintah untuk ngobrol dengan ChatGPT
+  // Fungsi untuk delay
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
+// Fungsi untuk mencoba kembali dengan retry (Exponential backoff)
+const makeRequestWithRetry = async (query) => {
+    const MAX_RETRIES = 5; // Maksimal percobaan ulang
+    const RETRY_DELAY = 1000; // Delay awal 1 detik
+
+    let attempts = 0;
+    while (attempts < MAX_RETRIES) {
         try {
+            // Melakukan request ke OpenAI API
             const response = await openai.createChatCompletion({
                 model: 'gpt-3.5-turbo', // Menggunakan GPT-3.5
                 messages: [
+                    {
+                        role: 'system',
+                        content: 'Kamu adalah seorang kepala desa, dan akan menjawab semua pertanyaan warga',
+                    },
                     {
                         role: 'user',
                         content: query, // Pertanyaan dari pengguna
@@ -268,13 +276,38 @@ client.on('messageCreate', async (message) => {
                 ],
             });
 
+            // Mengambil respon dari OpenAI
             const reply = response.data.choices[0].message.content.trim();
-            message.reply(reply);
+            return reply; // Mengembalikan hasil dari OpenAI
         } catch (error) {
-            console.error('Error with OpenAI API:', error);
-            message.reply('Maaf, Pak RW lagi bingung nih sama pertanyaannya');
+            if (error.response && error.response.status === 429) {
+                attempts++;
+                console.log(`Terlalu banyak permintaan, mencoba lagi setelah ${RETRY_DELAY * attempts} ms...`);
+                await delay(RETRY_DELAY * attempts); // Exponential backoff
+            } else {
+                throw error; // Jika ada error lain, lemparkan kembali error tersebut
+            }
         }
     }
+    throw new Error('Coba lagi setelah beberapa saat, batas maksimum pencobaan tercapai');
+};
+
+// Perintah untuk bot tanya jawab
+if (message.content.startsWith(`${PREFIX}tanya`)) {
+    const query = message.content.slice(`${PREFIX}tanya`.length).trim();
+    if (!query) {
+        message.reply('Tanyain aja, nanti Pak RW jawab');
+        return;
+    }
+
+    try {
+        const reply = await makeRequestWithRetry(query); // Menggunakan fungsi retry
+        message.reply(reply); // Mengirimkan jawaban ke pengguna
+    } catch (error) {
+        console.error('Error with OpenAI API:', error);
+        message.reply('Maaf, Pak RW lagi bingung nih sama pertanyaannya');
+    }
+}
 });
 
 // Login ke bot
