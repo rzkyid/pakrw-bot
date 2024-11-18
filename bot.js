@@ -38,8 +38,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Routing dasar untuk memastikan aplikasi web berjalan
+// Routing dasar untuk memastikan aplikasi web berjalan
 app.get('/', (req, res) => {
-    res.send('Bot Discord berjalan!');
+    const filePath = path.join(__dirname, 'index.html');
+    res.sendFile(filePath);
 });
 
 app.listen(PORT, () => {
