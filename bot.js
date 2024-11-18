@@ -29,6 +29,7 @@ const client = new Client({
 const ALLOWED_CHANNELS = [
     '1052124921817464883', // ID Channel Bot
     '1052123058678276106', // ID Channel Chat Warga
+    `1307965374511190068`, // ID Channel Tanya Pak RW
     '1307961992346206238', // ID Channel Couple Generator
 ];
 
@@ -206,7 +207,7 @@ client.on('messageCreate', async (message) => {
     } else if (lowerContent.includes('sore')) {
         message.reply('Selamat sore juga kak! Matahari boleh tenggelam, tapi rasa sayang aku ke kamu nggak pernah hilang <:Uwu:1291831737609097338>');
     } else if (lowerContent.includes('malam')) {
-        message.reply('Selamat malam juga kak! Aku ada pantun nih buat kamu. Mentari terbenam di tepi pantai, Ombak datang menyapa riang. Malam ini hati terasa damai, Karena kamu selalu di pikiranku sayang. Anjayyy gombal <:Love:1291831704171970612>');
+        message.reply('Selamat malam juga kak! Aku ada pantun nih buat kamu.\n\nMentari terbenam di tepi pantai,\nOmbak datang menyapa riang.\nMalam ini hati terasa damai,\n Karena kamu selalu di pikiranku sayang.\n\nAnjayyy gombal <:Love:1291831704171970612>');
     }
 
     // Path folder gambar lokal
