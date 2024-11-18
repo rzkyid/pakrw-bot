@@ -29,6 +29,7 @@ const client = new Client({
 const ALLOWED_CHANNELS = [
     '1052124921817464883', // ID Channel Bot
     '1052123058678276106', // ID Channel Chat Warga
+    '1307961992346206238', // ID Channel Couple Generator
 ];
 
 // Prefix
