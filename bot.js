@@ -1,5 +1,5 @@
-require('dotenv').config(); 
-const { Client, GatewayIntentBits, ActivityType, MessageAttachment, MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
+require('dotenv').config();
+const { Client, GatewayIntentBits, ActivityType, MessageAttachment } = require('discord.js');
 const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus } = require('@discordjs/voice');
 const { Configuration, OpenAIApi } = require('openai');
 const express = require('express');
@@ -151,7 +151,7 @@ client.once('ready', () => {
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
 
-    // Cek jika channel termasuk dalam daftar channel yang diizinkan
+     // Cek jika channel termasuk dalam daftar channel yang diizinkan
     if (!ALLOWED_CHANNELS.includes(message.channel.id)) return;
 
     // Logging penggunaan perintah
@@ -210,96 +210,6 @@ client.on('messageCreate', async (message) => {
         message.reply('Selamat malam juga kak! Aku ada pantun nih buat kamu.\n\nMentari terbenam di tepi pantai,\nOmbak datang menyapa riang.\nMalam ini hati terasa damai,\n Karena kamu selalu di pikiranku sayang.\n\nAnjayyy gombal <:Love:1291831704171970612>');
     }
 
-   // Fitur "Cari Jodoh"
-client.on('messageCreate', async (message) => {
-    // Perintah untuk memulai form
-    if (message.content === 'rwjodoh') {
-        // Membuat tombol untuk memulai form
-        const row = new MessageActionRow().addComponents(
-            new MessageButton()
-                .setCustomId('start_form')
-                .setLabel('Isi Form Cari Jodoh')
-                .setStyle('PRIMARY')
-        );
-
-        // Kirim pesan dengan tombol
-        await message.channel.send({
-            content: 'Klik tombol di bawah untuk mengisi form Cari Jodoh!',
-            components: [row]
-        });
-    }
-});
-
-// Menangani tombol yang ditekan
-client.on('interactionCreate', async (interaction) => {
-    if (!interaction.isButton()) return;
-
-    if (interaction.customId === 'start_form') {
-        // Mengirimkan pertanyaan untuk form
-        await interaction.reply('Silakan isi form berikut:');
-
-        // Membuat embed untuk meminta input
-        const embed = new MessageEmbed()
-            .setColor('#ff69b4')
-            .setTitle('Form Cari Jodoh')
-            .setDescription('Mohon isi data diri berikut (Balas dengan jawaban yang sesuai):')
-            .addFields(
-                { name: 'Nama:', value: 'Tulis Nama Kamu' },
-                { name: 'Umur:', value: 'Tulis Umur Kamu' },
-                { name: 'Jenis Kelamin:', value: 'Tulis Jenis Kelamin Kamu' },
-                { name: 'Agama:', value: 'Tulis Agama Kamu' },
-                { name: 'Domisili:', value: 'Tulis Domisili Kamu' },
-                { name: 'Kesibukan:', value: 'Tulis Kesibukan Kamu' },
-                { name: 'Hobi:', value: 'Tulis Hobi Kamu' },
-                { name: 'Tipe Ideal:', value: 'Tulis Tipe Ideal Kamu' }
-            );
-
-        await interaction.followUp({ embeds: [embed] });
-
-        // Menunggu pesan balasan dari user
-        const filter = (response) => response.author.id === interaction.user.id;
-        const collected = await interaction.channel.awaitMessages({
-            filter,
-            max: 1,
-            time: 60000,
-            errors: ['time'],
-        });
-
-        const userResponse = collected.first();
-
-        // Ambil data dari balasan
-        const formData = userResponse.content.split('\n'); // Memisahkan data yang dipisahkan dengan enter
-
-        // Membuat embed hasil form
-        const resultEmbed = new MessageEmbed()
-            .setColor('#ff69b4')
-            .setTitle('Hasil Form Cari Jodoh')
-            .setDescription(`Berikut adalah data yang kamu isi:`)
-            .addFields(
-                { name: 'Nama:', value: formData[0] || 'Tidak Diisi' },
-                { name: 'Umur:', value: formData[1] || 'Tidak Diisi' },
-                { name: 'Jenis Kelamin:', value: formData[2] || 'Tidak Diisi' },
-                { name: 'Agama:', value: formData[3] || 'Tidak Diisi' },
-                { name: 'Domisili:', value: formData[4] || 'Tidak Diisi' },
-                { name: 'Kesibukan:', value: formData[5] || 'Tidak Diisi' },
-                { name: 'Hobi:', value: formData[6] || 'Tidak Diisi' },
-                { name: 'Tipe Ideal:', value: formData[7] || 'Tidak Diisi' }
-            )
-            .setThumbnail(interaction.user.displayAvatarURL()) // Menampilkan foto profil pengguna
-            .setFooter(`Dikirim oleh: ${interaction.user.tag}`);
-
-        // Kirim hasil embed
-        await interaction.followUp({
-            content: `@${interaction.user.tag}, berikut adalah hasil dari form yang kamu isi:`,
-            embeds: [resultEmbed]
-        });
-
-        // Tambahkan reaksi love otomatis
-        const resultMessage = await interaction.channel.messages.fetch({ limit: 1 });
-        resultMessage.first().react('❤️');
-    }
-});
-
     // Path folder gambar lokal
     const girlsFolder = path.join(__dirname, 'couple_images', 'girls');
     const boysFolder = path.join(__dirname, 'couple_images', 'boys');
@@ -307,28 +217,34 @@ client.on('interactionCreate', async (interaction) => {
     // Perintah untuk mengirim gambar pasangan
     if (message.content.startsWith(`${PREFIX}couple`)) {
         try {
+            // Baca file dari folder girls dan boys
             const girlFiles = fs.readdirSync(girlsFolder);
             const boyFiles = fs.readdirSync(boysFolder);
 
-            if (girlFiles.length !== boyFiles.length) {
-                await message.channel.send('Jumlah gambar cewek dan cowok tidak sama! Periksa folder pasangan.');
-                return;
-            }
+            // Pastikan kedua folder memiliki jumlah file yang sama
+        if (girlFiles.length !== boyFiles.length) {
+            await message.channel.send('Jumlah gambar cewek dan cowok tidak sama! Periksa folder pasangan.');
+            return;
+        }
 
-            girlFiles.sort();
-            boyFiles.sort();
+        // Pastikan urutan file di kedua folder sama (urutan yang diinginkan)
+        // Kita akan urutkan nama file agar memastikan pasangan yang sesuai
+        girlFiles.sort();
+        boyFiles.sort();
 
-            const randomIndex = Math.floor(Math.random() * girlFiles.length);
-            const girlImagePath = path.join(girlsFolder, girlFiles[randomIndex]);
-            const boyImagePath = path.join(boysFolder, boyFiles[randomIndex]);
+        // Ambil gambar pertama sesuai urutan
+        const randomIndex = Math.floor(Math.random() * girlFiles.length);
+        const girlImagePath = path.join(girlsFolder, girlFiles[randomIndex]);
+        const boyImagePath = path.join(boysFolder, boyFiles[randomIndex]);
 
-            await message.reply({
-                content: `👩‍❤️‍👨 **Ini Photo Profile Couple buat kamu!**`,
-                files: [girlImagePath, boyImagePath],
-            });
+        // Kirim kedua gambar ke channel
+        await message.reply({
+            content: `👩‍❤️‍👨 **Ini Photo Profile Couple buat kamu!**`,
+            files: [girlImagePath, boyImagePath],
+        });
         } catch (error) {
-            console.error('Terjadi kesalahan saat mengirim gambar:', error);
-            await message.channel.send('Maaf, terjadi kesalahan saat mencoba mengirim gambar.');
+        console.error('Terjadi kesalahan saat mengirim gambar:', error);
+        await message.channel.send('Maaf, terjadi kesalahan saat mencoba mengirim gambar.');
         }
     }
 
@@ -342,11 +258,11 @@ client.on('interactionCreate', async (interaction) => {
 
         try {
             const response = await openai.createChatCompletion({
-                model: 'gpt-3.5-turbo', 
+                model: 'gpt-3.5-turbo', // Menggunakan GPT-3.5
                 messages: [
                     {
                         role: 'user',
-                        content: query,
+                        content: query, // Pertanyaan dari pengguna
                     },
                 ],
             });
