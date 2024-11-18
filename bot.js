@@ -219,27 +219,30 @@ client.on('messageCreate', async (message) => {
             const girlFiles = fs.readdirSync(girlsFolder);
             const boyFiles = fs.readdirSync(boysFolder);
 
-            if (girlFiles.length === 0 || boyFiles.length === 0) {
-                await message.channel.send('Folder pasangan tidak lengkap! Tambahkan gambar ke subfolder.');
-                return;
-            }
+            // Pastikan kedua folder memiliki jumlah file yang sama
+        if (girlFiles.length !== boyFiles.length) {
+            await message.channel.send('Jumlah gambar cewek dan cowok tidak sama! Periksa folder pasangan.');
+            return;
+        }
 
-            // Pilih file acak dari masing-masing folder
-            const randomGirlFile = girlFiles[Math.floor(Math.random() * girlFiles.length)];
-            const randomBoyFile = boyFiles[Math.floor(Math.random() * boyFiles.length)];
+        // Pastikan urutan file di kedua folder sama (urutan yang diinginkan)
+        // Kita akan urutkan nama file agar memastikan pasangan yang sesuai
+        girlFiles.sort();
+        boyFiles.sort();
 
-            // Path lengkap untuk gambar yang akan dikirim
-            const girlImagePath = path.join(girlsFolder, randomGirlFile);
-            const boyImagePath = path.join(boysFolder, randomBoyFile);
+        // Ambil gambar pertama sesuai urutan
+        const randomIndex = Math.floor(Math.random() * girlFiles.length);
+        const girlImagePath = path.join(girlsFolder, girlFiles[randomIndex]);
+        const boyImagePath = path.join(boysFolder, boyFiles[randomIndex]);
 
-            // Kirim kedua gambar ke channel
-            await message.reply({
-                content: `👩‍❤️‍👨 **Ini Photo Profile Couple buat kamu!**`,
-                files: [girlImagePath, boyImagePath],
-            });
+        // Kirim kedua gambar ke channel
+        await message.reply({
+            content: `👩‍❤️‍👨 **Ini Photo Profile Couple buat kamu!**`,
+            files: [girlImagePath, boyImagePath],
+        });
         } catch (error) {
-            console.error('Terjadi kesalahan saat mengirim gambar:', error);
-            await message.channel.send('Maaf, terjadi kesalahan saat mencoba mengirim gambar.');
+        console.error('Terjadi kesalahan saat mengirim gambar:', error);
+        await message.channel.send('Maaf, terjadi kesalahan saat mencoba mengirim gambar.');
         }
     }
 
