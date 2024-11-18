@@ -55,7 +55,7 @@ let connection;
 // Fungsi untuk memutar audio di voice channel
 async function playAudio(channel) {
     try {
-        const audioPath = path.join(__dirname, 'audio', 'desa.mp3');
+        const audioPath = path.join(__dirname, 'audio', 'sabilulungan.mp3');
         // Bergabung ke voice channel
         connection = joinVoiceChannel({
             channelId: channel.id,
