@@ -1,7 +1,7 @@
 {
   "name": "discord-bot",
   "version": "1.0.0",
-  "description": "Bot Discord dengan fitur 24/7 voice channel, auto-response, dan integrasi ChatGPT.",
+  "description": "Bot Discord dengan fitur 24/7 voice channel, dynamic status, auto-response, dan integrasi ChatGPT.",
   "main": "bot.js",
   "scripts": {
     "start": "node bot.js"
