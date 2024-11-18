@@ -75,7 +75,7 @@ async function playAudio(channel) {
             resource.volume.setVolume(0.1); // Atur volume ke 10%
             player.play(resource);
         };
-                // Mulai pemutaran audio
+        // Mulai pemutaran audio
         playResource();
 
         player.on(AudioPlayerStatus.Idle, () => {
@@ -101,11 +101,12 @@ async function playAudio(channel) {
 client.once('ready', async () => {
     console.log(`${client.user.tag} is online and ready!`);
 });
-    // Menambahkan custom status
-    const statusMessages = ["👀 Sedang Memantau", "👥 Warga Gang Desa"];
-    const statusTypes = [ 'dnd', 'idle'];
-    let currentStatusIndex = 0;
-    let currentTypeIndex = 0;
+
+// Menambahkan custom status
+const statusMessages = ["👀 Sedang Memantau", "👥 Warga Gang Desa"];
+const statusTypes = [ 'dnd', 'idle'];
+let currentStatusIndex = 0;
+let currentTypeIndex = 0;
 
 async function login() {
   try {
@@ -150,7 +151,7 @@ client.on('messageCreate', async (message) => {
 
      // Cek jika channel termasuk dalam daftar channel yang diizinkan
     if (!ALLOWED_CHANNELS.includes(message.channel.id)) return;
-    
+
     // Logging penggunaan perintah
     const logChannel = client.channels.cache.get(LOG_CHANNEL_ID);
     if (logChannel && message.content.startsWith(PREFIX)) {
@@ -182,8 +183,8 @@ client.on('messageCreate', async (message) => {
         }
     }
 
-     // Respons otomatis untuk kata kunci
- const lowerContent = message.content.toLowerCase();
+    // Respons otomatis untuk kata kunci
+    const lowerContent = message.content.toLowerCase();
 
     if (lowerContent.includes('welcome')) {
         message.reply('Selamat datang warga baru! Semoga betah jadi warga di sini, join voice sini biar makin akrab. <:OkeSip:1291831721313964053>');
@@ -205,6 +206,41 @@ client.on('messageCreate', async (message) => {
         message.reply('Selamat sore juga kak! Matahari boleh tenggelam, tapi rasa sayang aku ke kamu nggak pernah hilang <:Uwu:1291831737609097338>');
     } else if (lowerContent.includes('malam')) {
         message.reply('Selamat malam juga kak! Aku ada pantun nih buat kamu. Mentari terbenam di tepi pantai, Ombak datang menyapa riang. Malam ini hati terasa damai, Karena kamu selalu di pikiranku sayang. Anjayyy gombal <:Love:1291831704171970612>');
+    }
+
+    // Path folder gambar lokal
+    const girlsFolder = path.join(__dirname, 'couple_images', 'girls');
+    const boysFolder = path.join(__dirname, 'couple_images', 'boys');
+
+    // Perintah untuk mengirim gambar pasangan
+    if (message.content.startsWith(`${PREFIX}couple`)) {
+        try {
+            // Baca file dari folder girls dan boys
+            const girlFiles = fs.readdirSync(girlsFolder);
+            const boyFiles = fs.readdirSync(boysFolder);
+
+            if (girlFiles.length === 0 || boyFiles.length === 0) {
+                await message.channel.send('Folder pasangan tidak lengkap! Tambahkan gambar ke subfolder.');
+                return;
+            }
+
+            // Pilih file acak dari masing-masing folder
+            const randomGirlFile = girlFiles[Math.floor(Math.random() * girlFiles.length)];
+            const randomBoyFile = boyFiles[Math.floor(Math.random() * boyFiles.length)];
+
+            // Path lengkap untuk gambar yang akan dikirim
+            const girlImagePath = path.join(girlsFolder, randomGirlFile);
+            const boyImagePath = path.join(boysFolder, randomBoyFile);
+
+            // Kirim kedua gambar ke channel
+            await message.reply({
+                content: `👩‍❤️‍👨 **Ini Photo Profile Couple buat kamu!**`,
+                files: [girlImagePath, boyImagePath],
+            });
+        } catch (error) {
+            console.error('Terjadi kesalahan saat mengirim gambar:', error);
+            await message.channel.send('Maaf, terjadi kesalahan saat mencoba mengirim gambar.');
+        }
     }
 
     // Perintah untuk ngobrol dengan ChatGPT
@@ -231,40 +267,6 @@ client.on('messageCreate', async (message) => {
         } catch (error) {
             console.error('Error with OpenAI API:', error);
             message.reply('Maaf, Pak RW lagi bingung nih sama pertanyaannya');
-        }
-    }
-    
-// Path folder gambar lokal
-const girlsFolder = path.join(__dirname, 'couple_images', 'girls');
-const boysFolder = path.join(__dirname, 'couple_images', 'boys');
-
-    if (command === 'couple') {
-        try {
-            // Baca file dari folder girls
-            const girlFiles = fs.readdirSync(girlsFolder);
-            const boyFiles = fs.readdirSync(boysFolder);
-
-            if (girlFiles.length === 0 || boyFiles.length === 0) {
-                await message.channel.send('Folder pasangan tidak lengkap! Tambahkan gambar ke subfolder.');
-                return;
-            }
-
-            // Pilih file acak dari masing-masing folder
-            const randomGirlFile = girlFiles[Math.floor(Math.random() * girlFiles.length)];
-            const randomBoyFile = boyFiles[Math.floor(Math.random() * boyFiles.length)];
-
-            // Path lengkap untuk gambar yang akan dikirim
-            const girlImagePath = path.join(girlsFolder, randomGirlFile);
-            const boyImagePath = path.join(boysFolder, randomBoyFile);
-
-            // Kirim kedua gambar ke channel
-            await message.reply({
-                content: `👩‍❤️‍👨 **Ini Photo Profile Couple buat kamu!**`,
-                files: [girlImagePath, boyImagePath],
-            });
-        } catch (error) {
-            console.error('Terjadi kesalahan saat mengirim gambar:', error);
-            await message.channel.send('Maaf, terjadi kesalahan saat mencoba mengirim gambar.');
         }
     }
 });
