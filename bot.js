@@ -1,9 +1,10 @@
 require('dotenv').config();
-const { Client, GatewayIntentBits, ActivityType } = require('discord.js');
+const { Client, GatewayIntentBits, ActivityType, MessageAttachment } = require('discord.js');
 const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus } = require('@discordjs/voice');
 const { Configuration, OpenAIApi } = require('openai');
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 
 // Konfigurasi API OpenAI
 const openaiConfig = new Configuration({
@@ -30,6 +31,7 @@ const ALLOWED_CHANNELS = [
     '1052123058678276106', // ID Channel Chat Warga
 ];
 
+// Prefix
 const PREFIX = 'rw';
 const LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID;
 
@@ -37,7 +39,6 @@ const LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID;
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Routing dasar untuk memastikan aplikasi web berjalan
 // Routing dasar untuk memastikan aplikasi web berjalan
 app.get('/', (req, res) => {
     const filePath = path.join(__dirname, 'index.html');
@@ -232,7 +233,40 @@ client.on('messageCreate', async (message) => {
             message.reply('Maaf, Pak RW lagi bingung nih sama pertanyaannya');
         }
     }
+    
+// Path folder gambar lokal
+const girlsFolder = path.join(__dirname, 'couple_images', 'girls');
+const boysFolder = path.join(__dirname, 'couple_images', 'boys');
 
+    if (command === 'couple') {
+        try {
+            // Baca file dari folder girls
+            const girlFiles = fs.readdirSync(girlsFolder);
+            const boyFiles = fs.readdirSync(boysFolder);
+
+            if (girlFiles.length === 0 || boyFiles.length === 0) {
+                await message.channel.send('Folder pasangan tidak lengkap! Tambahkan gambar ke subfolder.');
+                return;
+            }
+
+            // Pilih file acak dari masing-masing folder
+            const randomGirlFile = girlFiles[Math.floor(Math.random() * girlFiles.length)];
+            const randomBoyFile = boyFiles[Math.floor(Math.random() * boyFiles.length)];
+
+            // Path lengkap untuk gambar yang akan dikirim
+            const girlImagePath = path.join(girlsFolder, randomGirlFile);
+            const boyImagePath = path.join(boysFolder, randomBoyFile);
+
+            // Kirim kedua gambar ke channel
+            await message.channel.send({
+                content: `💕 **Ini Profile Couple buat kamu!** 💕`,
+                files: [girlImagePath, boyImagePath],
+            });
+        } catch (error) {
+            console.error('Terjadi kesalahan saat mengirim gambar:', error);
+            await message.channel.send('Maaf, terjadi kesalahan saat mencoba mengirim gambar.');
+        }
+    }
 });
 
 // Login ke bot
