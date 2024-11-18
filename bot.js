@@ -57,7 +57,7 @@ let connection;
 // Fungsi untuk memutar audio di voice channel
 async function playAudio(channel) {
     try {
-        const audioPath = path.join(__dirname, 'audio', 'sabilulungan.mp3');
+        const audioPath = path.join(__dirname, 'audio', 'desa.mp3');
         // Bergabung ke voice channel
         connection = joinVoiceChannel({
             channelId: channel.id,
@@ -73,7 +73,7 @@ async function playAudio(channel) {
             const resource = createAudioResource(audioPath, {
                 inlineVolume: true,
             });
-            resource.volume.setVolume(0.1); // Atur volume ke 10%
+            resource.volume.setVolume(0.075); // Atur volume ke 7.5%
             player.play(resource);
         };
         // Mulai pemutaran audio
