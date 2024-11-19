@@ -201,9 +201,21 @@ client.on('messageCreate', async (message) => {
         message.reply('Kalau mau jadi donatur server bisa cek https://discord.com/channels/1052115524273836176/1221385772351881286 yaaa <:Wink:1099424794350473216>');
     } else if (lowerContent.includes('jodoh')) {
         message.reply('Buat yang mau cari jodoh bisa langsung aja ke <#1284544825596837971> <:Love:1291831704171970612>');
-    } else if (lowerContent.includes('pagi')) {
-        message.reply('Selamat pagi juga kak! Hari ini pasti indah, soalnya aku mulai dengan mikirin kamu. <:Kiss:1099424790474915912>');
-    } else if (lowerContent.includes('siang')) {
+    } 
+    
+    else if (lowerContent.includes('pagi')) {
+            const morningReplies = [
+                'Selamat pagi! Semoga harimu menyenangkan!',
+                'Pagi! Jangan lupa sarapan ya!',
+                'Good morning! Semoga kamu selalu sehat dan bahagia!',
+                'Selamat pagi, semangat untuk hari ini!',
+                'Halo! Selamat pagi dan tetap semangat!',
+            ];
+            const randomReply = morningReplies[Math.floor(Math.random() * morningReplies.length)];
+            message.reply(randomReply);
+    } 
+    
+    else if (lowerContent.includes('siang')) {
         message.reply('Selamat siang juga kak! Kayanya matahari cemburu sama kamu deh, soalnya cuma kamu yang bikin aku hangat sepanjang waktu. Kirim papnya dong di <#1100632084051140669> hehe <:Uwu:1291831737609097338>');
     } else if (lowerContent.includes('sore')) {
         message.reply('Selamat sore juga kak! Aku barusan buka kamus, tapi nggak nemu arti dari kamu. Ternyata kamu itu nggak bisa didefinisikan, cuma bisa dirasain. <:Uwu:1291831737609097338>');
