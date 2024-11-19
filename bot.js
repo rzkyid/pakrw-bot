@@ -27,10 +27,9 @@ const client = new Client({
 
 // Channel yang diizinkan untuk autoresponder
 const ALLOWED_CHANNELS = [
-    '1052124921817464883', // ID Channel Bot
+    '1052124921817464883', // ID Channel Pengaturan Bot
     '1052123058678276106', // ID Channel Chat Warga
     '1307965374511190068', // ID Channel Tanya Pak RW
-    '1307961992346206238', // ID Channel Couple Generator
     '1307965818654560368', // ID Channel Kantor Pejabat
 ];
 
@@ -190,7 +189,7 @@ client.on('messageCreate', async (message) => {
     const lowerContent = message.content.toLowerCase();
 
     if (lowerContent.includes('welcome')) {
-        message.reply('Selamat datang warga baru! Semoga betah jadi warga di sini, join voice sini biar makin akrab. <:OkeSip:1291831721313964053>');
+        message.channel.send('Selamat datang warga baru! Semoga betah jadi warga di sini, join voice sini biar makin akrab. <:OkeSip:1291831721313964053>');
     } else if (lowerContent.includes('halo')) {
         message.reply('Halo juga kak! Gabung sini ke voice biar makin akrab hehe <:Hehe:1099424821974151310>');
     } else if (lowerContent.includes('mabar')) {
