@@ -107,7 +107,7 @@ client.once('ready', async () => {
 
 // Menambahkan custom status
 const statusMessages = ["👀 Sedang Memantau", "👥 Warga Gang Desa"];
-const statusTypes = [ 'dnd', 'idle'];
+const statusTypes = [ 'online'];
 let currentStatusIndex = 0;
 let currentTypeIndex = 0;
 
@@ -202,13 +202,13 @@ client.on('messageCreate', async (message) => {
     } else if (lowerContent.includes('jodoh')) {
         message.reply('Buat yang mau cari jodoh bisa langsung aja ke <#1284544825596837971> <:Love:1291831704171970612>');
     } else if (lowerContent.includes('pagi')) {
-        message.reply('Selamat pagi juga kak! Kamu tuh kaya alarm, suka bangunin hati aku biar terus inget kamu. <:Kiss:1099424790474915912>');
+        message.reply('Selamat pagi juga kak! Hari ini pasti indah, soalnya aku mulai dengan mikirin kamu. <:Kiss:1099424790474915912>');
     } else if (lowerContent.includes('siang')) {
-        message.reply('Selamat siang juga kak! Siang ini panas, tapi cuma kamu yang bikin hati aku meleleh. Kirim papnya dong di <#1100632084051140669> hehe <:Uwu:1291831737609097338>');
+        message.reply('Selamat siang juga kak! Kayanya matahari cemburu sama kamu deh, soalnya cuma kamu yang bikin aku hangat sepanjang waktu. Kirim papnya dong di <#1100632084051140669> hehe <:Uwu:1291831737609097338>');
     } else if (lowerContent.includes('sore')) {
-        message.reply('Selamat sore juga kak! Matahari boleh tenggelam, tapi rasa sayang aku ke kamu nggak pernah hilang <:Uwu:1291831737609097338>');
+        message.reply('Selamat sore juga kak! Aku barusan buka kamus, tapi nggak nemu arti dari kamu. Ternyata kamu itu nggak bisa didefinisikan, cuma bisa dirasain. <:Uwu:1291831737609097338>');
     } else if (lowerContent.includes('malam')) {
-        message.reply('Selamat malam juga kak! Aku ada pantun nih buat kamu.\n\nMentari terbenam di tepi pantai,\nOmbak datang menyapa riang.\nMalam ini hati terasa damai,\n Karena kamu selalu di pikiranku sayang.\n\nAnjayyy gombal <:Love:1291831704171970612>');
+        message.reply('Selamat malam juga kak! Kalau kamu bintang, aku bakal jadi langit. Soalnya, aku nggak mau jauh-jauh dari kamu hehe. <:Love:1291831704171970612>');
     }
 
     // Path folder gambar lokal
