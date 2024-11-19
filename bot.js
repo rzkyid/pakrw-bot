@@ -202,26 +202,50 @@ client.on('messageCreate', async (message) => {
     } else if (lowerContent.includes('jodoh')) {
         message.reply('Buat yang mau cari jodoh bisa langsung aja ke <#1284544825596837971> <:Love:1291831704171970612>');
     } 
-    
-    else if (lowerContent.includes('pagi')) {
-            const morningReplies = [
-                'Selamat pagi! Semoga harimu menyenangkan!',
-                'Pagi! Jangan lupa sarapan ya!',
-                'Good morning! Semoga kamu selalu sehat dan bahagia!',
-                'Selamat pagi, semangat untuk hari ini!',
-                'Halo! Selamat pagi dan tetap semangat!',
+        else if (lowerContent.includes('pagi')) {
+            const pagiReplies = [
+                'Pagi juga, sayang! Tau nggak, pagi ini beda banget… ada matahari, ada udara segar, tapi tetap kamu yang bikin aku semangat.',
+                'Selamat pagi, cintaku. Hari ini rasanya indah banget, tapi tetep nggak seindah bayangan kamu di kepala aku.',
+                'Pagi, sayang! Udah ngerasa spesial belum? Kalau belum, coba deh lihat cermin, karena pagi ini kamu alasanku tersenyum.',
+                'Pagi, cinta! Kalau aku punya superpower, aku pasti bakal teleport ke kamu sekarang juga, biar pagiku makin lengkap.',
+                'Pagi juga! Kalau kamu nggak sibuk, boleh dong aku jadi alasan kamu semangat hari ini.',
             ];
-            const randomReply = morningReplies[Math.floor(Math.random() * morningReplies.length)];
+            const randomReply = pagiReplies[Math.floor(Math.random() * pagiReplies.length)];
             message.reply(randomReply);
     } 
-    
-    else if (lowerContent.includes('siang')) {
-        message.reply('Selamat siang juga kak! Kayanya matahari cemburu sama kamu deh, soalnya cuma kamu yang bikin aku hangat sepanjang waktu. Kirim papnya dong di <#1100632084051140669> hehe <:Uwu:1291831737609097338>');
-    } else if (lowerContent.includes('sore')) {
-        message.reply('Selamat sore juga kak! Aku barusan buka kamus, tapi nggak nemu arti dari kamu. Ternyata kamu itu nggak bisa didefinisikan, cuma bisa dirasain. <:Uwu:1291831737609097338>');
-    } else if (lowerContent.includes('malam')) {
-        message.reply('Selamat malam juga kak! Kalau kamu bintang, aku bakal jadi langit. Soalnya, aku nggak mau jauh-jauh dari kamu hehe. <:Love:1291831704171970612>');
-    }
+        else if (lowerContent.includes('siang')) {
+            const siangReplies = [
+                'Siang juga! Semoga siang ini lancar, nggak ada yang bikin pusing, selain mikirin kamu.',
+                'Siang ini panas banget, ya? Tapi kalau kamu di samping aku, pasti adem banget, deh.',
+                'Siang, sayang. Semoga siang ini jadi waktu yang menyenangkan buat kamu, dan kalau bisa sih, sempetin mikirin aku.',
+                'Siang ini aku baru sadar, senyum kamu itu seperti AC, selalu bikin hati ini adem, meskipun cuaca di luar panas.',
+                'Siang, cinta! Jangan lupa makan siang ya, biar kamu tetap semangat, kayak aku yang terus mikirin kamu.',
+            ];
+            const randomReply = siangReplies[Math.floor(Math.random() * siangReplies.length)];
+            message.reply(randomReply);
+    } 
+        else if (lowerContent.includes('sore')) {
+            const soreReplies = [
+                'Sore ini, aku baru sadar, senja di luar cuma bisa bersinar sementara, tapi cinta aku ke kamu nggak pernah redup.',
+                'Selamat sore! Semoga sore ini lebih indah, karena kamu selalu ada untuk bikin semuanya terasa sempurna.',
+                'Selamat sore, sayang! Sore ini memang cerah, tapi tetap nggak ada yang lebih cerah dari senyuman kamu.',
+                'Selamat sore, sayang. Sore ini aku merasa seperti senja, tapi tenang aja, kamu selalu jadi matahari yang menyinari hari-hariku.',
+                'Selamat sore, sayang. Walaupun matahari mulai tenggelam, rasa sayang aku ke kamu nggak akan pernah surut.',
+            ];
+            const randomReply = soreReplies[Math.floor(Math.random() * soreReplies.length)];
+            message.reply(randomReply);
+    } 
+        else if (lowerContent.includes('malam')) {
+            const malamReplies = [
+                'Selamat malam, cintaku. Semoga malam ini kamu tidur nyenyak, dan aku bisa jadi mimpi indah yang menyertaimu.',
+                'Selamat malam, sayang. Kalau malam ini kamu merasa sepi, ingatlah aku selalu ada, menunggumu dalam doa.',
+                'Selamat malam, cintaku. Mungkin kita jauh sekarang, tapi di setiap malam, aku merasa dekat denganmu.',
+                'Selamat malam, sayang. Langit malam ini begitu gelap, tapi kamu selalu jadi bintang yang menerangi malamku.',
+                'Selamat malam, sayang. Aku berharap malam ini kamu bisa tidur dengan tenang, dan bangun dengan senyum, seperti yang kamu buat di hari-hari aku.',
+            ];
+            const randomReply = malamReplies[Math.floor(Math.random() * malamReplies.length)];
+            message.reply(randomReply);
+    } 
 
     // Path folder gambar lokal
     const girlsFolder = path.join(__dirname, 'couple_images', 'girls');
