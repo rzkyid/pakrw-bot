@@ -323,7 +323,7 @@ if (message.content.startsWith(`${PREFIX}tanya`)) {
         console.error('Error with Gemini API:', error);
         message.reply('Maaf, Pak RW lagi bingung nih sama pertanyaannya');
     }
-}
+};
 
 // Login ke bot
 client.login(TOKEN);
