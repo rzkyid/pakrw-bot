@@ -265,9 +265,9 @@ client.on('messageCreate', async (message) => {
             message.reply(randomReply);
     } 
 
-  // Perintah untuk ngobrol dengan Gemini Chat
+// Perintah untuk ngobrol dengan Gemini Chat
 // Fungsi untuk delay
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // Fungsi untuk mencoba kembali dengan retry (Exponential backoff)
 const makeRequestWithRetry = async (query) => {
@@ -278,22 +278,31 @@ const makeRequestWithRetry = async (query) => {
     while (attempts < MAX_RETRIES) {
         try {
             // Melakukan request ke Gemini API
-            const response = await gemini.createChat({
-                model: 'gemini-1.5-flash', // Menggunakan Gemini 1.5 Flash
-                messages: [
-                    {
-                        role: 'system',
-                        content: 'Kamu adalah seorang kepala desa yang pintar, dan akan menjawab semua pertanyaan warga',
+            const response = await axios.post(
+                "https://generativelanguage.googleapis.com/v1beta/chat/completions",
+                {
+                    model: 'gemini-1.5-flash', // Model Gemini
+                    messages: [
+                        {
+                            role: 'system',
+                            content: 'Kamu adalah seorang kepala desa yang pintar, dan akan menjawab semua pertanyaan warga.',
+                        },
+                        {
+                            role: 'user',
+                            content: query, // Pertanyaan dari pengguna
+                        },
+                    ],
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${process.env.GEMINI_API_KEY}`, // Pastikan kunci API tersedia di .env
                     },
-                    {
-                        role: 'user',
-                        content: query, // Pertanyaan dari pengguna
-                    },
-                ],
-            });
+                }
+            );
 
-            // Mengambil respon dari Gemini
-            const reply = response.data.choices[0].message.content.trim(); // Sesuaikan struktur respons Gemini
+            // Mengambil respons dari Gemini
+            const reply = response.data.choices[0].message.content.trim();
             return reply; // Mengembalikan hasil dari Gemini
         } catch (error) {
             if (error.response && error.response.status === 429) {
@@ -301,11 +310,12 @@ const makeRequestWithRetry = async (query) => {
                 console.log(`Terlalu banyak permintaan, mencoba lagi setelah ${RETRY_DELAY * attempts} ms...`);
                 await delay(RETRY_DELAY * attempts); // Exponential backoff
             } else {
-                throw error; // Jika ada error lain, lemparkan kembali error tersebut
+                console.error("Error saat mengakses Gemini API:", error.message);
+                throw error; // Lemparkan error jika tidak dapat diperbaiki
             }
         }
     }
-    throw new Error('Coba lagi setelah beberapa saat, batas maksimum pencobaan tercapai');
+    throw new Error('Coba lagi setelah beberapa saat, batas maksimum pencobaan tercapai.');
 };
 
 // Perintah untuk bot tanya jawab
