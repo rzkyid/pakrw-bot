@@ -5,12 +5,11 @@ const { Configuration, OpenAIApi } = require('openai');
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const axios = require('axios');
 
-// Konfigurasi API OpenAI
-const openaiConfig = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(openaiConfig);
+// Konfigurasi API Gemini AI
+const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/chat/completions";
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 // Token Bot Discord
 const TOKEN = process.env.DISCORD_TOKEN;
@@ -284,7 +283,7 @@ const makeRequestWithRetry = async (query) => {
                 messages: [
                     {
                         role: 'system',
-                        content: 'Kamu adalah seorang kepala desa, dan akan menjawab semua pertanyaan warga',
+                        content: 'Kamu adalah seorang kepala desa yang pintar, dan akan menjawab semua pertanyaan warga',
                     },
                     {
                         role: 'user',
