@@ -285,7 +285,7 @@ const makeRequestWithRetry = async (query) => {
                     messages: [
                         {
                             role: 'system',
-                            content: 'Kamu adalah seorang kepala desa yang pintar, dan akan menjawab semua pertanyaan warga.',
+                            content: 'Kamu adalah seorang kepala desa yang pintar, dan akan menjawab semua pertanyaan warga. Jawabanmu harus singkat, langsung ke poin, dan tidak lebih dari 2000 karakter.',
                         },
                         {
                             role: 'user',
