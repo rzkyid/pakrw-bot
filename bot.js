@@ -266,8 +266,8 @@ client.on('messageCreate', async (message) => {
             message.reply(randomReply);
     } 
 
-  // Perintah untuk ngobrol dengan ChatGPT
-  // Fungsi untuk delay
+  // Perintah untuk ngobrol dengan Gemini Chat
+// Fungsi untuk delay
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 // Fungsi untuk mencoba kembali dengan retry (Exponential backoff)
@@ -278,9 +278,9 @@ const makeRequestWithRetry = async (query) => {
     let attempts = 0;
     while (attempts < MAX_RETRIES) {
         try {
-            // Melakukan request ke OpenAI API
-            const response = await openai.createChatCompletion({
-                model: 'gpt-3.5-turbo', // Menggunakan GPT-3.5
+            // Melakukan request ke Gemini API
+            const response = await gemini.createChat({
+                model: 'gemini-1.5-flash', // Menggunakan Gemini 1.5 Flash
                 messages: [
                     {
                         role: 'system',
@@ -293,9 +293,9 @@ const makeRequestWithRetry = async (query) => {
                 ],
             });
 
-            // Mengambil respon dari OpenAI
-            const reply = response.data.choices[0].message.content.trim();
-            return reply; // Mengembalikan hasil dari OpenAI
+            // Mengambil respon dari Gemini
+            const reply = response.data.choices[0].message.content.trim(); // Sesuaikan struktur respons Gemini
+            return reply; // Mengembalikan hasil dari Gemini
         } catch (error) {
             if (error.response && error.response.status === 429) {
                 attempts++;
@@ -321,11 +321,10 @@ if (message.content.startsWith(`${PREFIX}tanya`)) {
         const reply = await makeRequestWithRetry(query); // Menggunakan fungsi retry
         message.reply(reply); // Mengirimkan jawaban ke pengguna
     } catch (error) {
-        console.error('Error with OpenAI API:', error);
+        console.error('Error with Gemini API:', error);
         message.reply('Maaf, Pak RW lagi bingung nih sama pertanyaannya');
     }
 }
-});
 
 // Login ke bot
 client.login(TOKEN);
