@@ -189,13 +189,13 @@ client.on('messageCreate', async (message) => {
     const lowerContent = message.content.toLowerCase();
 
     if (lowerContent.includes('welcome')) {
-        message.channel.send('Selamat datang warga baru! Semoga betah jadi warga di sini, join voice sini biar makin akrab. <:OkeSip:1291831721313964053>');
+        message.channel.send('Selamat datang warga baru! 👋\nSemoga betah jadi warga di sini, join voice sini biar makin akrab. <:OkeSip:1291831721313964053>');
     } else if (lowerContent.includes('halo')) {
-        message.reply('Halo juga kak! Gabung sini ke voice biar makin akrab hehe <:Hehe:1099424821974151310>');
+        message.reply('Halo juga kak! 👋\nGabung sini ke voice biar makin akrab hehe <:Hehe:1099424821974151310>');
     } else if (lowerContent.includes('mabar')) {
-        message.reply('Buat yang mau mabar bisa cari di https://discord.com/channels/1052115524273836176/1052428628819984424 ya jangan lupa tag role game yang mau dimainin <:OkeSip:1291831721313964053>');
+        message.reply('Buat yang mau mabar bisa cari di https://discord.com/channels/1052115524273836176/1052428628819984424 ya! 🎮\nJangan lupa tag role game yang mau dimainin <:OkeSip:1291831721313964053>');
     } else if (lowerContent.includes('salam kenal')) {
-        message.reply('Salam kenal juga kak! Dengan kakak siapa nich? <:Halo:1291831692025397270>');
+        message.reply('Salam kenal juga kak! 👏\nDengan kakak siapa nich? <:Halo:1291831692025397270>');
     } else if (lowerContent.includes('donasi')) {
         message.reply('Kalau mau jadi donatur server bisa cek https://discord.com/channels/1052115524273836176/1221385772351881286 yaaa <:Wink:1099424794350473216>');
     } else if (lowerContent.includes('jodoh')) {
@@ -203,45 +203,65 @@ client.on('messageCreate', async (message) => {
     } 
         else if (lowerContent.includes('pagi')) {
             const pagiReplies = [
-                'Pagi juga, sayang! Tau nggak, pagi ini beda banget… ada matahari, ada udara segar, tapi tetap kamu yang bikin aku semangat.',
-                'Selamat pagi, cintaku. Hari ini rasanya indah banget, tapi tetep nggak seindah bayangan kamu di kepala aku.',
-                'Pagi, sayang! Udah ngerasa spesial belum? Kalau belum, coba deh lihat cermin, karena pagi ini kamu alasanku tersenyum.',
-                'Pagi, cinta! Kalau aku punya superpower, aku pasti bakal teleport ke kamu sekarang juga, biar pagiku makin lengkap.',
-                'Pagi juga! Kalau kamu nggak sibuk, boleh dong aku jadi alasan kamu semangat hari ini.',
+                'Pagi juga, Kak! Tau nggak, pagi ini beda banget 🌞… ada matahari, ada udara segar 🌿, tapi tetap kamu yang bikin aku semangat. ❤️💪',
+                'Selamat pagi juga, Kak 🌞. Hari ini rasanya indah banget, tapi tetep nggak seindah bayangan kamu di kepala aku. ❤️.',
+                'Pagi, Kak! Udah ngerasa spesial belum? Kalau belum, coba deh lihat cermin 🪞, karena pagi ini kamu alasanku tersenyum. 😊',
+                'Selamat pagi juga, Kak! Kalau aku punya superpower ✨, aku pasti bakal teleport ke kamu sekarang juga, biar pagiku makin lengkap. 💕',
+                'Pagi juga! Kalau kamu nggak sibuk, boleh dong aku jadi alasan kamu semangat hari ini. 💪❤️',
+                'Selamat pagi juga, Kak 🌅. Hari ini indah banget, tapi tetep nggak seindah senyuman kamu di pikiranku 😘.',
+                'Pagi juga! Kalau kamu butuh semangat, ingat ya, aku selalu ada jadi cheerleader buat kamu hari ini. 💃❤️',
+                'Pagi, Kak 🌞! Bayangan kamu di kepala aku aja bikin pagi ini terasa sempurna, apalagi kalau kamu ada di sini. ❤️',
+                'Selamat pagi, Kak. Kalau aku jadi kopi pagi ini ☕, kamu pasti gula yang bikin semuanya terasa manis 🍬',
+                'Pagi, Kak. Jangan lupa sarapan 🥪, biar kamu tetap semangat menjalani hari seperti biasanya. ☕',
             ];
             const randomReply = pagiReplies[Math.floor(Math.random() * pagiReplies.length)];
             message.reply(randomReply);
     } 
         else if (lowerContent.includes('siang')) {
             const siangReplies = [
-                'Siang juga! Semoga siang ini lancar, nggak ada yang bikin pusing, selain mikirin kamu.',
-                'Siang ini panas banget, ya? Tapi kalau kamu di samping aku, pasti adem banget, deh.',
-                'Siang, sayang. Semoga siang ini jadi waktu yang menyenangkan buat kamu, dan kalau bisa sih, sempetin mikirin aku.',
-                'Siang ini aku baru sadar, senyum kamu itu seperti AC, selalu bikin hati ini adem, meskipun cuaca di luar panas.',
-                'Siang, cinta! Jangan lupa makan siang ya, biar kamu tetap semangat, kayak aku yang terus mikirin kamu.',
+                'Selamat siang, Kak! Semoga siang ini secerah senyuman kamu yang selalu bikin hariku lengkap. ☀️😊',
+                'Siang, Kak! Jangan lupa makan siang ya 🍴, biar kamu tetap punya energi buat terus bikin aku bahagia. ❤️',
+                'Selamat siang, Kak. Cuaca mungkin panas ☀️, tapi nggak ada yang lebih hangat dari pikiran tentang kamu. 💕',
+                'Siang juga, Kak! Kalau aku boleh jujur, siang ini jadi lebih indah karena kamu ada di hati aku. 🌤️😍',
+                'Selamat siang, Kak. Semoga hari ini kamu selalu ceria 😊, karena senyuman kamu adalah mood booster terbaik buat aku. 💖',
+                'Siang, Kak! Kamu tahu nggak, walau cuaca panas 🌞, hati aku selalu adem karena ingat kamu. ❄️',
+                'Selamat siang, Kak! Kalau siang ini terasa berat 💪, ingat aja aku selalu ada buat nyemangatin kamu. 💕',
+                'Selamat siang, Kak. Kamu itu kayak AC di siang panas ini ❄️, selalu bikin hati aku adem tiap mikirin kamu. 😊',
+                'Siang, Kak! Jangan lupa istirahat sejenak, ya 🍹. Kamu harus tetap jaga energi, karena kamu itu alasan aku terus semangat. 💖',
+                'Siang juga! Semoga siang ini penuh keberuntungan ☀️, kecuali aku, yang udah kalah sama pesona kamu. 😘',
             ];
             const randomReply = siangReplies[Math.floor(Math.random() * siangReplies.length)];
             message.reply(randomReply);
     } 
         else if (lowerContent.includes('sore')) {
             const soreReplies = [
-                'Sore ini, aku baru sadar, senja di luar cuma bisa bersinar sementara, tapi cinta aku ke kamu nggak pernah redup.',
-                'Selamat sore! Semoga sore ini lebih indah, karena kamu selalu ada untuk bikin semuanya terasa sempurna.',
-                'Selamat sore, sayang! Sore ini memang cerah, tapi tetap nggak ada yang lebih cerah dari senyuman kamu.',
-                'Selamat sore, sayang. Sore ini aku merasa seperti senja, tapi tenang aja, kamu selalu jadi matahari yang menyinari hari-hariku.',
-                'Selamat sore, sayang. Walaupun matahari mulai tenggelam, rasa sayang aku ke kamu nggak akan pernah surut.',
+                'Selamat sore, Kak! Langit sore ini mungkin indah 🌅, tapi tetap nggak seindah senyuman kamu. 😊',
+                'Sore, Kak! Udara sore ini sejuk banget 🌬️, kayak hati aku tiap kali inget kamu. ❤️',
+                'Selamat sore! Kalau aku bisa, aku mau jadi matahari sore 🌇, biar selalu bisa menemani kamu di setiap langkah. 💕',
+                'Sore, Kak! Langit mulai berubah warna 🌤️, tapi rasa aku ke kamu nggak pernah berubah. 😍',
+                'Selamat sore, Kak! Jangan lupa istirahat sebentar ya 🌄, biar kamu tetap segar dan semangat buat nanti malam. 💖',
+                'Sore ini tenang banget 🌅, tapi nggak ada yang lebih tenang dari hati aku tiap kali kamu ada di pikiranku. ❄️',
+                'Sore, Kak! Semoga sisa hari ini lancar 🌇, sama lancarnya senyuman kamu yang bikin aku nggak bisa lupa. 😊',
+                'Selamat sore! Matahari mungkin mulai tenggelam 🌄, tapi perhatian aku ke kamu nggak pernah surut. ❤️',
+                'Sore, Kak! Langit sore ini indah banget 🌅, tapi tetap kalah sama indahnya kehadiran kamu di hidupku.💕',
+                '"Selamat sore, Kak! Semoga sore ini kamu bahagia 🌤️, karena kebahagiaan kamu adalah pelengkap hari-hariku. 😊',
             ];
             const randomReply = soreReplies[Math.floor(Math.random() * soreReplies.length)];
             message.reply(randomReply);
     } 
         else if (lowerContent.includes('malam')) {
             const malamReplies = [
-                'Selamat malam, cintaku. Semoga malam ini kamu tidur nyenyak, dan aku bisa jadi mimpi indah yang menyertaimu.',
-                'Selamat malam, sayang. Kalau malam ini kamu merasa sepi, ingatlah aku selalu ada, menunggumu dalam doa.',
-                'Selamat malam, cintaku. Mungkin kita jauh sekarang, tapi di setiap malam, aku merasa dekat denganmu.',
-                'Selamat malam, sayang. Langit malam ini begitu gelap, tapi kamu selalu jadi bintang yang menerangi malamku.',
-                'Selamat malam, sayang. Aku berharap malam ini kamu bisa tidur dengan tenang, dan bangun dengan senyum, seperti yang kamu buat di hari-hari aku.',
-            ];
+                'Selamat malam, Kak! Semoga tidurmu nyenyak dan mimpi indah datang menghampiri 🌙, aku akan selalu ada di hati kamu. ❤️',
+                'Malam, Kak. Kalau malam ini kamu merasa sepi, ingatlah aku selalu ada, menunggumu dalam doa 💭, selalu ada di sini. 💕',
+                'Malam juga, Kak! Semoga mimpi indah menemani tidurmu 🌙, dan besok pagi kita bisa saling mengingat satu sama lain. 😊',
+                'Selamat malam, Kak. Kalau malam ini terasa sepi 🌙, jangan khawatir, aku ada di sini dan selalu siap nemenin kamu dalam mimpi. 😊',
+                'Malam, Kak! Setelah hari yang panjang, semoga kamu bisa beristirahat dengan tenang dan bangun besok pagi dengan senyuman yang cerah 🌟💤',
+                'Selamat malam juga, Kak. Kalau malam ini terasa panjang 🌙, ingat aku selalu ada di sini, di setiap doamu. 💌',
+                'Malam, Kak. Semoga setiap bintang yang bersinar malam ini membawa mimpi manis untuk kamu. ✨💭',
+                'Selamat malam juga, Kak! Bintang-bintang udah mulai muncul 🌟, semoga malam ini membawa ketenangan untuk kamu yang selalu ada di hati aku. ❤️',
+                'Selamat malam, Kak! Kalau malam ini kamu merasa kesepian 🌜, ingat ada aku yang selalu menemani kamu lewat doa-doa. 💕',
+                'Malam juga, Kak! Walau kita berpisah sementara 🌙, aku selalu berharap kita bisa bertemu dalam mimpi. 💭',
+                ];
             const randomReply = malamReplies[Math.floor(Math.random() * malamReplies.length)];
             message.reply(randomReply);
     } 
