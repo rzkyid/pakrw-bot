@@ -147,20 +147,6 @@ client.once('ready', () => {
 });
 
 // Fitur Curhat
-// File untuk menyimpan data curhat
-const DATA_FILE = './curhat_data.json';
-
-// Muat data curhat dari file (jika ada)
-let curhatData = {};
-if (fs.existsSync(DATA_FILE)) {
-    curhatData = JSON.parse(fs.readFileSync(DATA_FILE));
-}
-
-// Simpan data curhat ke file
-function saveCurhatData() {
-    fs.writeFileSync(DATA_FILE, JSON.stringify(curhatData, null, 2));
-}
-
 // Tombol Curhat Awal
 client.on('messageCreate', async (message) => {
     if (message.content === 'rwtombolcurhat') {
@@ -181,7 +167,6 @@ client.on('messageCreate', async (message) => {
 // Ketika Tombol Ditekan
 client.on('interactionCreate', async (interaction) => {
     if (interaction.isButton()) {
-        // Handle Curhat Yuk Button
         if (interaction.customId === 'curhat_yuk') {
             const modal = new ModalBuilder()
                 .setCustomId('curhat_modal')
@@ -205,10 +190,7 @@ client.on('interactionCreate', async (interaction) => {
             );
 
             await interaction.showModal(modal);
-        }
-
-        // Handle Balas Button
-        else if (interaction.customId.startsWith('balas_')) {
+        } else if (interaction.customId.startsWith('balas_')) {
             const curhatId = interaction.customId.split('_')[1];
             const modal = new ModalBuilder()
                 .setCustomId(`balas_modal_${curhatId}`)
@@ -225,9 +207,8 @@ client.on('interactionCreate', async (interaction) => {
         }
     }
 
-    if (interaction.type === InteractionType.ModalSubmit) {
+    if (interaction.type === 'MODAL_SUBMIT') {
         if (interaction.customId === 'curhat_modal') {
-            // Proses Form Curhat
             const pesanCurhat = interaction.fields.getTextInputValue('pesan_curhat');
             const linkGambar = interaction.fields.getTextInputValue('link_gambar');
 
@@ -237,9 +218,7 @@ client.on('interactionCreate', async (interaction) => {
                 .setDescription(pesanCurhat)
                 .setTimestamp();
 
-            if (linkGambar) {
-                embed.setImage(linkGambar);
-            }
+            if (linkGambar) embed.setImage(linkGambar);
 
             const buttons = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
@@ -256,9 +235,13 @@ client.on('interactionCreate', async (interaction) => {
             if (channel) {
                 const message = await channel.send({ embeds: [embed], components: [buttons] });
 
-                // Simpan data curhat
-                curhatData[message.id] = { threadId: null, createdAt: new Date().toISOString() };
-                saveCurhatData();
+                // Simpan ID pesan ke footer embed untuk referensi balasan
+                await message.edit({
+                    embeds: [
+                        new EmbedBuilder(message.embeds[0])
+                            .setFooter({ text: `Curhat ID: ${message.id}` })
+                    ],
+                });
 
                 await interaction.reply({ content: 'Curhat Anda berhasil dikirim!', ephemeral: true });
             } else {
@@ -275,42 +258,25 @@ client.on('interactionCreate', async (interaction) => {
                 .setTimestamp();
 
             const channel = client.channels.cache.get(CURHAT_CHANNEL_ID);
-            if (channel && curhatData[curhatId]) {
+            if (channel) {
                 try {
-                    // Cek apakah thread sudah ada, jika belum buat thread baru
-                    let thread;
-                    if (!curhatData[curhatId].threadId) {
-                        const message = await channel.messages.fetch(curhatId);
-                        thread = await message.startThread({
-                            name: `Balasan - ${message.id}`,
-                            autoArchiveDuration: 1440,
-                        });
+                    const message = await channel.messages.fetch(curhatId);
+                    const thread = message.hasThread
+                        ? message.thread
+                        : await message.startThread({ name: `curhat-${curhatId}`, autoArchiveDuration: 1440 });
 
-                        // Simpan thread ID ke data
-                        curhatData[curhatId].threadId = thread.id;
-                        saveCurhatData();
-                    } else {
-                        thread = await channel.threads.fetch(curhatData[curhatId].threadId);
-                    }
-
-                    // Kirim balasan ke thread
-                    if (thread) {
-                        await thread.send({ embeds: [embed] });
-                        await interaction.reply({ content: 'Balasan Anda berhasil dikirim ke thread!', ephemeral: true });
-                    } else {
-                        throw new Error('Thread tidak ditemukan.');
-                    }
+                    await thread.send({ embeds: [embed] });
+                    await interaction.reply({ content: 'Balasan Anda berhasil dikirim ke thread!', ephemeral: true });
                 } catch (error) {
                     console.error(error);
-                    await interaction.reply({ content: 'Gagal mengirim balasan. Pesan curhat tidak ditemukan atau thread tidak dapat diakses.', ephemeral: true });
+                    await interaction.reply({ content: 'Gagal mengirim balasan. Pesan curhat tidak ditemukan atau telah dihapus.', ephemeral: true });
                 }
             } else {
-                await interaction.reply({ content: 'Pesan curhat tidak ditemukan atau belum dibuat.', ephemeral: true });
+                await interaction.reply({ content: 'Gagal mengirim balasan. Channel tidak ditemukan.', ephemeral: true });
             }
         }
     }
 });
-
 
 // Respons Otomatis dan Logging
 client.on('messageCreate', async (message) => {
