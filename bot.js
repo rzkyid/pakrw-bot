@@ -153,7 +153,7 @@ client.on('messageCreate', async (message) => {
         const buttons = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
                 .setCustomId('curhat_yuk')
-                .setLabel('📝 Curhat Yuk')
+                .setLabel('✨ Curhat Yuk')
                 .setStyle(ButtonStyle.Primary)
         );
 
