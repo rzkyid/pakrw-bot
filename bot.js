@@ -147,6 +147,19 @@ client.once('ready', () => {
 });
 
 // Fitur Curhat
+// File untuk menyimpan data curhat
+const DATA_FILE = './curhat_data.json';
+
+// Muat data curhat dari file (jika ada)
+let curhatData = {};
+if (fs.existsSync(DATA_FILE)) {
+    curhatData = JSON.parse(fs.readFileSync(DATA_FILE));
+}
+
+// Simpan data curhat ke file
+function saveCurhatData() {
+    fs.writeFileSync(DATA_FILE, JSON.stringify(curhatData, null, 2));
+}
 
 // Tombol Curhat Awal
 client.on('messageCreate', async (message) => {
@@ -241,10 +254,12 @@ client.on('interactionCreate', async (interaction) => {
 
             const channel = client.channels.cache.get(CURHAT_CHANNEL_ID);
             if (channel) {
-                // Kirim pesan pertama
                 const message = await channel.send({ embeds: [embed], components: [buttons] });
 
-                // Simpan ID pesan curhat untuk digunakan nanti
+                // Simpan data curhat
+                curhatData[message.id] = { threadId: null, createdAt: new Date().toISOString() };
+                saveCurhatData();
+
                 await interaction.reply({ content: 'Curhat Anda berhasil dikirim!', ephemeral: true });
             } else {
                 await interaction.reply({ content: 'Gagal mengirim curhat. Channel tidak ditemukan.', ephemeral: true });
@@ -259,42 +274,38 @@ client.on('interactionCreate', async (interaction) => {
                 .setDescription(balasan)
                 .setTimestamp();
 
-            const buttons = new ActionRowBuilder().addComponents(
-                new ButtonBuilder()
-                    .setCustomId('curhat_yuk')
-                    .setLabel('📝 Curhat Yuk')
-                    .setStyle(ButtonStyle.Primary)
-            );
-
             const channel = client.channels.cache.get(CURHAT_CHANNEL_ID);
-            if (channel) {
+            if (channel && curhatData[curhatId]) {
                 try {
-                    // Cari pesan curhat yang akan dibalas
-                    const message = await channel.messages.fetch(curhatId);
-                    if (message) {
-                        // Cek apakah thread sudah ada, jika belum buat thread baru
-                        let thread;
-                        if (message.thread) {
-                            thread = message.thread;
-                        } else {
-                            thread = await message.startThread({
-                                name: `Balasan - ${message.id}`,
-                                autoArchiveDuration: 1440,
-                            });
-                        }
+                    // Cek apakah thread sudah ada, jika belum buat thread baru
+                    let thread;
+                    if (!curhatData[curhatId].threadId) {
+                        const message = await channel.messages.fetch(curhatId);
+                        thread = await message.startThread({
+                            name: `Balasan - ${message.id}`,
+                            autoArchiveDuration: 1440,
+                        });
 
-                        // Kirim balasan ke thread yang ada
-                        await thread.send({ embeds: [embed], components: [buttons] });
+                        // Simpan thread ID ke data
+                        curhatData[curhatId].threadId = thread.id;
+                        saveCurhatData();
+                    } else {
+                        thread = await channel.threads.fetch(curhatData[curhatId].threadId);
+                    }
+
+                    // Kirim balasan ke thread
+                    if (thread) {
+                        await thread.send({ embeds: [embed] });
                         await interaction.reply({ content: 'Balasan Anda berhasil dikirim ke thread!', ephemeral: true });
                     } else {
-                        await interaction.reply({ content: 'Pesan curhat tidak ditemukan di channel yang sama.', ephemeral: true });
+                        throw new Error('Thread tidak ditemukan.');
                     }
                 } catch (error) {
                     console.error(error);
-                    await interaction.reply({ content: 'Gagal mengirim balasan. Pesan curhat tidak ditemukan atau telah dihapus.', ephemeral: true });
+                    await interaction.reply({ content: 'Gagal mengirim balasan. Pesan curhat tidak ditemukan atau thread tidak dapat diakses.', ephemeral: true });
                 }
             } else {
-                await interaction.reply({ content: 'Gagal mengirim balasan. Channel tidak ditemukan.', ephemeral: true });
+                await interaction.reply({ content: 'Pesan curhat tidak ditemukan atau belum dibuat.', ephemeral: true });
             }
         }
     }
