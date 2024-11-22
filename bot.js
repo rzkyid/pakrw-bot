@@ -30,7 +30,7 @@ const ALLOWED_CHANNELS = [
     '1307965374511190068', // ID Channel Tanya Pak RW
     '1307965818654560368', // ID Channel Kantor Pejabat
 ];
-const CURHAT_CHANNEL_ID = '1221377162020651008';
+const CURHAT_CHANNEL_ID = '1052124921817464883';
 
 // Prefix
 const PREFIX = 'rw';
@@ -248,7 +248,7 @@ client.on('interactionCreate', async (interaction) => {
                     autoArchiveDuration: 1440,
                 });
 
-                // Simpan thread ID di dalam pesan atau database (misalnya di dalam embed atau di cache)
+                // Simpan thread ID di dalam pesan atau di footer embed
                 await message.edit({
                     embeds: [
                         new EmbedBuilder(message.embeds[0])
