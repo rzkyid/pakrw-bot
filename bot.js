@@ -147,6 +147,23 @@ client.once('ready', () => {
 });
 
 // Fitur Curhat
+
+// Tombol Curhat Awal
+client.on('messageCreate', async (message) => {
+    if (message.content === 'rwtombolcurhat') {
+        const buttons = new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
+                .setCustomId('curhat_yuk')
+                .setLabel('📝 Curhat Yuk')
+                .setStyle(ButtonStyle.Primary)
+        );
+
+        await message.channel.send({
+            content: 'Ingin curhat? Tekan tombol di bawah ini!',
+            components: [buttons],
+        });
+    }
+});
 // Ketika Tombol Ditekan
 client.on('interactionCreate', async (interaction) => {
     if (interaction.isButton()) {
