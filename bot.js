@@ -164,6 +164,7 @@ client.on('messageCreate', async (message) => {
         });
     }
 });
+
 // Ketika Tombol Ditekan
 client.on('interactionCreate', async (interaction) => {
     if (interaction.isButton()) {
@@ -240,22 +241,10 @@ client.on('interactionCreate', async (interaction) => {
 
             const channel = client.channels.cache.get(CURHAT_CHANNEL_ID);
             if (channel) {
+                // Kirim pesan pertama
                 const message = await channel.send({ embeds: [embed], components: [buttons] });
 
-                // Membuat thread dan mendapatkan ID thread
-                const thread = await message.startThread({
-                    name: `curhat-${message.id}`, // Nama thread menggunakan ID pesan
-                    autoArchiveDuration: 1440,
-                });
-
-                // Simpan thread ID di dalam pesan atau database (misalnya di dalam embed atau di cache)
-                await message.edit({
-                    embeds: [
-                        new EmbedBuilder(message.embeds[0])
-                            .setFooter({ text: `Thread ID: ${thread.id}` })
-                    ]
-                });
-
+                // Simpan ID pesan curhat untuk digunakan nanti
                 await interaction.reply({ content: 'Curhat Anda berhasil dikirim!', ephemeral: true });
             } else {
                 await interaction.reply({ content: 'Gagal mengirim curhat. Channel tidak ditemukan.', ephemeral: true });
@@ -280,27 +269,27 @@ client.on('interactionCreate', async (interaction) => {
             const channel = client.channels.cache.get(CURHAT_CHANNEL_ID);
             if (channel) {
                 try {
-                    // Cari pesan curhat yang akan dibalas di channel yang sama
+                    // Cari pesan curhat yang akan dibalas
                     const message = await channel.messages.fetch(curhatId);
                     if (message) {
-                        // Cari thread berdasarkan ID thread yang tersimpan di footer embed
-                        const threadId = message.embeds[0]?.footer?.text.split('Thread ID: ')[1];
-                        if (threadId) {
-                            const thread = await channel.threads.fetch(threadId);
-                            if (thread) {
-                                await thread.send({ embeds: [embed], components: [buttons] });
-                                await interaction.reply({ content: 'Balasan Anda berhasil dikirim ke thread!', ephemeral: true });
-                            } else {
-                                await interaction.reply({ content: 'Thread tidak ditemukan di channel yang sama.', ephemeral: true });
-                            }
+                        // Cek apakah thread sudah ada, jika belum buat thread baru
+                        let thread;
+                        if (message.thread) {
+                            thread = message.thread;
                         } else {
-                            await interaction.reply({ content: 'ID thread tidak ditemukan dalam pesan curhat.', ephemeral: true });
+                            thread = await message.startThread({
+                                name: `Balasan - ${message.id}`,
+                                autoArchiveDuration: 1440,
+                            });
                         }
+
+                        // Kirim balasan ke thread yang ada
+                        await thread.send({ embeds: [embed], components: [buttons] });
+                        await interaction.reply({ content: 'Balasan Anda berhasil dikirim ke thread!', ephemeral: true });
                     } else {
                         await interaction.reply({ content: 'Pesan curhat tidak ditemukan di channel yang sama.', ephemeral: true });
                     }
                 } catch (error) {
-                    // Tangani kesalahan jika pesan tidak ditemukan atau sudah dihapus
                     console.error(error);
                     await interaction.reply({ content: 'Gagal mengirim balasan. Pesan curhat tidak ditemukan atau telah dihapus.', ephemeral: true });
                 }
