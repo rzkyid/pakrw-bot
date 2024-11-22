@@ -101,13 +101,47 @@ client.on('interactionCreate', async (interaction) => {
             return interaction.reply({ content: "Terjadi kesalahan saat memberikan role.", ephemeral: true });
         }
     }
+
+    // Command untuk menghapus role (hapusrole)
+    if (commandName === 'hapusrole') {
+        const member = interaction.options.getMember('member');
+        const role = interaction.options.getRole('role');
+
+        if (!member || !role) {
+            return interaction.reply({ content: "Pastikan Anda memilih member dan role yang valid.", ephemeral: true });
+        }
+
+        // Periksa apakah member sudah memiliki role tersebut
+        if (!member.roles.cache.has(role.id)) {
+            return interaction.reply({
+                content: `✅ ${member.user.tag} tidak memiliki role **${role.name}**!`,
+                ephemeral: false // Pesan ini dapat dilihat oleh semua member
+            });
+        }
+
+        // Periksa apakah role bisa dihapus
+        if (role.position >= interaction.guild.members.me.roles.highest.position) {
+            return interaction.reply({ content: "Saya tidak memiliki izin untuk menghapus role ini.", ephemeral: true });
+        }
+
+        try {
+            await member.roles.remove(role);
+            return interaction.reply({
+                content: `✅ Berhasil menghapus role **${role.name}** dari ${member.user.tag}.`,
+                ephemeral: false // Pesan ini dapat dilihat oleh semua member
+            });
+        } catch (error) {
+            console.error(error);
+            return interaction.reply({ content: "Terjadi kesalahan saat menghapus role.", ephemeral: true });
+        }
+    }
 });
 
-// Register Slash Command
+// Register Slash Commands
 client.on('ready', () => {
     client.application.commands.create(
         new SlashCommandBuilder()
-            .setName('kasihrole')  // Nama command diubah menjadi kasihrole
+            .setName('kasihrole')  // Nama command untuk memberikan role
             .setDescription('Memberikan role kepada member')
             .addUserOption(option => 
                 option.setName('member')
@@ -117,6 +151,22 @@ client.on('ready', () => {
             .addRoleOption(option => 
                 option.setName('role')
                     .setDescription('Pilih role yang akan diberikan')
+                    .setRequired(true)
+            )
+    );
+
+    client.application.commands.create(
+        new SlashCommandBuilder()
+            .setName('hapusrole')  // Nama command untuk menghapus role
+            .setDescription('Menghapus role dari member')
+            .addUserOption(option => 
+                option.setName('member')
+                    .setDescription('Pilih member')
+                    .setRequired(true)
+            )
+            .addRoleOption(option => 
+                option.setName('role')
+                    .setDescription('Pilih role yang akan dihapus')
                     .setRequired(true)
             )
     );
