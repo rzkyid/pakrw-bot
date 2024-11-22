@@ -153,7 +153,7 @@ client.on('messageCreate', async (message) => {
         const buttons = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
                 .setCustomId('curhat_yuk')
-                .setLabel('Curhat Yuk')
+                .setLabel('📝 Curhat Yuk')
                 .setStyle(ButtonStyle.Primary)
         );
 
@@ -218,7 +218,7 @@ client.on('interactionCreate', async (interaction) => {
             const linkGambar = interaction.fields.getTextInputValue('link_gambar');
 
             const embed = new EmbedBuilder()
-                .setColor('#00FF00')
+                .setColor('#4B5320')
                 .setTitle('Pesan Curhat')
                 .setDescription(pesanCurhat)
                 .setTimestamp();
@@ -230,17 +230,22 @@ client.on('interactionCreate', async (interaction) => {
             const buttons = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setCustomId('curhat_yuk')
-                    .setLabel('Curhat Yuk')
+                    .setLabel('✨ Curhat Yuk')
                     .setStyle(ButtonStyle.Primary),
                 new ButtonBuilder()
                     .setCustomId(`balas_${interaction.id}`)
-                    .setLabel('Balas')
+                    .setLabel('💬 Balas')
                     .setStyle(ButtonStyle.Secondary)
             );
 
             const channel = client.channels.cache.get(CURHAT_CHANNEL_ID);
             if (channel) {
-                await channel.send({ embeds: [embed], components: [buttons] });
+                const message = await channel.send({ embeds: [embed], components: [buttons] });
+                const thread = await message.startThread({
+                    name: `Curhat-${message.id}`,
+                    autoArchiveDuration: 1440,
+                });
+
                 await interaction.reply({ content: 'Curhat Anda berhasil dikirim!', ephemeral: true });
             } else {
                 await interaction.reply({ content: 'Gagal mengirim curhat. Channel tidak ditemukan.', ephemeral: true });
@@ -251,7 +256,7 @@ client.on('interactionCreate', async (interaction) => {
             const balasan = interaction.fields.getTextInputValue('balasan');
 
             const embed = new EmbedBuilder()
-                .setColor('#FFFF00')
+                .setColor('#DDF35E')
                 .setTitle('Balasan Curhat')
                 .setDescription(balasan)
                 .setTimestamp();
@@ -259,14 +264,19 @@ client.on('interactionCreate', async (interaction) => {
             const buttons = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setCustomId('curhat_yuk')
-                    .setLabel('Curhat Yuk')
+                    .setLabel('✨ Curhat Yuk')
                     .setStyle(ButtonStyle.Primary)
             );
 
             const channel = client.channels.cache.get(CURHAT_CHANNEL_ID);
             if (channel) {
-                await channel.send({ content: `**Balasan untuk Curhat ID:** ${curhatId}`, embeds: [embed], components: [buttons] });
-                await interaction.reply({ content: 'Balasan Anda berhasil dikirim!', ephemeral: true });
+                const thread = channel.threads.cache.find(thread => thread.name === `Curhat-${curhatId}`);
+                if (thread) {
+                    await thread.send({ embeds: [embed], components: [buttons] });
+                    await interaction.reply({ content: 'Balasan Anda berhasil dikirim ke thread!', ephemeral: true });
+                } else {
+                    await interaction.reply({ content: 'Gagal mengirim balasan. Thread tidak ditemukan.', ephemeral: true });
+                }
             } else {
                 await interaction.reply({ content: 'Gagal mengirim balasan. Channel tidak ditemukan.', ephemeral: true });
             }
