@@ -168,13 +168,6 @@ client.on('messageCreate', async (message) => {
 // Ketika Tombol Ditekan
 client.on('interactionCreate', async (interaction) => {
     if (interaction.isButton()) {
-
-    // Logging penggunaan perintah
-    const logChannel = client.channels.cache.get(LOG_CHANNEL_ID);
-    if (logChannel && message.content.startsWith(PREFIX)) {
-        logChannel.send(`[LOG] ${message.author.tag} menggunakan perintah: ${message.content}`);
-    }
-        
         if (interaction.customId === 'curhat_yuk') {
             // Modal untuk Curhat
             const modal = new ModalBuilder()
