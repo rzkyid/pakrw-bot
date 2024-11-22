@@ -241,8 +241,12 @@ client.on('interactionCreate', async (interaction) => {
             const channel = client.channels.cache.get(CURHAT_CHANNEL_ID);
             if (channel) {
                 const message = await channel.send({ embeds: [embed], components: [buttons] });
+                
+                // Buat ID thread yang lebih singkat
+                const shortThreadId = `curhat-${message.id.substring(0, 6)}`; // ID thread singkat berdasarkan 6 karakter pertama dari ID pesan
+                
                 const thread = await message.startThread({
-                    name: `Curhat-${message.id}`,
+                    name: shortThreadId,
                     autoArchiveDuration: 1440,
                 });
 
@@ -270,8 +274,8 @@ client.on('interactionCreate', async (interaction) => {
 
             const channel = client.channels.cache.get(CURHAT_CHANNEL_ID);
             if (channel) {
-                // Cari thread dengan ID yang sesuai
-                const thread = channel.threads.cache.find(t => t.name === `Curhat-${curhatId}`);
+                // Cari thread dengan ID yang sesuai (ID thread singkat)
+                const thread = channel.threads.cache.find(t => t.name === `curhat-${curhatId}`);
                 if (thread) {
                     await thread.send({ embeds: [embed], components: [buttons] });
                     await interaction.reply({ content: 'Balasan Anda berhasil dikirim ke thread!', ephemeral: true });
@@ -284,7 +288,6 @@ client.on('interactionCreate', async (interaction) => {
         }
     }
 });
-
 
 // Respons Otomatis dan Logging
 client.on('messageCreate', async (message) => {
