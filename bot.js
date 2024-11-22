@@ -77,6 +77,14 @@ client.on('interactionCreate', async (interaction) => {
             return interaction.reply({ content: "Pastikan Anda memilih member dan role yang valid.", ephemeral: true });
         }
 
+        // Periksa apakah member sudah memiliki role tersebut
+        if (member.roles.cache.has(role.id)) {
+            return interaction.reply({
+                content: `${member.user.tag} sudah memiliki role **${role.name}**!`,
+                ephemeral: false // Pesan ini dapat dilihat oleh semua member
+            });
+        }
+
         // Periksa apakah role bisa diberikan
         if (role.position >= interaction.guild.members.me.roles.highest.position) {
             return interaction.reply({ content: "Saya tidak memiliki izin untuk memberikan role ini.", ephemeral: true });
@@ -84,7 +92,10 @@ client.on('interactionCreate', async (interaction) => {
 
         try {
             await member.roles.add(role);
-            return interaction.reply({ content: `Berhasil memberikan role **${role.name}** kepada ${member.user.tag}.`, ephemeral: true });
+            return interaction.reply({
+                content: `Berhasil memberikan role **${role.name}** kepada ${member.user.tag}.`,
+                ephemeral: false // Pesan ini dapat dilihat oleh semua member
+            });
         } catch (error) {
             console.error(error);
             return interaction.reply({ content: "Terjadi kesalahan saat memberikan role.", ephemeral: true });
