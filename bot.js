@@ -147,23 +147,6 @@ client.once('ready', () => {
 });
 
 // Fitur Curhat
-// Tombol Curhat Awal
-client.on('messageCreate', async (message) => {
-    if (message.content === 'rwtombolcurhat') {
-        const buttons = new ActionRowBuilder().addComponents(
-            new ButtonBuilder()
-                .setCustomId('curhat_yuk')
-                .setLabel('📝 Curhat Yuk')
-                .setStyle(ButtonStyle.Primary)
-        );
-
-        await message.channel.send({
-            content: 'Ingin curhat? Tekan tombol di bawah ini!',
-            components: [buttons],
-        });
-    }
-});
-
 // Ketika Tombol Ditekan
 client.on('interactionCreate', async (interaction) => {
     if (interaction.isButton()) {
@@ -280,7 +263,7 @@ client.on('interactionCreate', async (interaction) => {
             const channel = client.channels.cache.get(CURHAT_CHANNEL_ID);
             if (channel) {
                 try {
-                    // Cari pesan curhat yang akan dibalas
+                    // Cari pesan curhat yang akan dibalas di channel yang sama
                     const message = await channel.messages.fetch(curhatId);
                     if (message) {
                         // Cari thread berdasarkan ID thread yang tersimpan di footer embed
@@ -291,15 +274,16 @@ client.on('interactionCreate', async (interaction) => {
                                 await thread.send({ embeds: [embed], components: [buttons] });
                                 await interaction.reply({ content: 'Balasan Anda berhasil dikirim ke thread!', ephemeral: true });
                             } else {
-                                await interaction.reply({ content: 'Thread tidak ditemukan.', ephemeral: true });
+                                await interaction.reply({ content: 'Thread tidak ditemukan di channel yang sama.', ephemeral: true });
                             }
                         } else {
-                            await interaction.reply({ content: 'Tidak ada ID thread yang ditemukan.', ephemeral: true });
+                            await interaction.reply({ content: 'ID thread tidak ditemukan dalam pesan curhat.', ephemeral: true });
                         }
                     } else {
-                        await interaction.reply({ content: 'Pesan curhat tidak ditemukan.', ephemeral: true });
+                        await interaction.reply({ content: 'Pesan curhat tidak ditemukan di channel yang sama.', ephemeral: true });
                     }
                 } catch (error) {
+                    // Tangani kesalahan jika pesan tidak ditemukan atau sudah dihapus
                     console.error(error);
                     await interaction.reply({ content: 'Gagal mengirim balasan. Pesan curhat tidak ditemukan atau telah dihapus.', ephemeral: true });
                 }
