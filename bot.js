@@ -27,7 +27,6 @@ const client = new Client({
 const ALLOWED_CHANNELS = [
     '1052124921817464883', // ID Channel Pengaturan Bot
     '1052123058678276106', // ID Channel Chat Warga
-    '1307965374511190068', // ID Channel Tanya Pak RW
     '1307965818654560368', // ID Channel Kantor Pejabat
 ];
 const CURHAT_CHANNEL_ID = '1221377162020651008';
