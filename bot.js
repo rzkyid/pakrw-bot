@@ -30,7 +30,7 @@ const ALLOWED_CHANNELS = [
     '1307965374511190068', // ID Channel Tanya Pak RW
     '1307965818654560368', // ID Channel Kantor Pejabat
 ];
-const CURHAT_CHANNEL_ID = '1052124921817464883';
+const CURHAT_CHANNEL_ID = '1221377162020651008';
 
 // Prefix
 const PREFIX = 'rw';
@@ -165,6 +165,8 @@ client.on('messageCreate', async (message) => {
 });
 
 // Ketika Tombol Ditekan
+const generateShortId = () => Math.random().toString(36).substring(2, 8).toUpperCase();
+
 client.on('interactionCreate', async (interaction) => {
     if (interaction.isButton()) {
         // Handle Tombol Curhat Yuk
@@ -214,6 +216,7 @@ client.on('interactionCreate', async (interaction) => {
     if (interaction.type === InteractionType.ModalSubmit) {
         if (interaction.customId === 'curhat_modal') {
             // Proses Form Curhat
+            const curhatId = generateShortId();
             const pesanCurhat = interaction.fields.getTextInputValue('pesan_curhat');
             const linkGambar = interaction.fields.getTextInputValue('link_gambar');
 
@@ -221,7 +224,7 @@ client.on('interactionCreate', async (interaction) => {
                 .setColor('#4B5320')
                 .setTitle('Pesan Curhat')
                 .setDescription(pesanCurhat)
-                .setFooter({ text: `Curhat ID: ${interaction.id}` }) // Tambahkan footer ID curhat
+                .setFooter({ text: `Curhat ID: ${curhatId}` }) // Gunakan ID singkat
                 .setTimestamp();
 
             if (linkGambar) {
@@ -231,10 +234,10 @@ client.on('interactionCreate', async (interaction) => {
             const buttons = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setCustomId('curhat_yuk')
-                    .setLabel('📝 Curhat Yuk')
+                    .setLabel('✨ Curhat Yuk')
                     .setStyle(ButtonStyle.Primary),
                 new ButtonBuilder()
-                    .setCustomId(`balas_${interaction.id}`)
+                    .setCustomId(`balas_${curhatId}`)
                     .setLabel('💬 Balas')
                     .setStyle(ButtonStyle.Secondary)
             );
@@ -273,7 +276,7 @@ client.on('interactionCreate', async (interaction) => {
                             thread = message.thread;
                         } else {
                             thread = await message.startThread({
-                                name: `Balasan - ${message.id}`,
+                                name: `Balasan - ${curhatId}`,
                                 autoArchiveDuration: 1440,
                             });
                         }
@@ -283,18 +286,11 @@ client.on('interactionCreate', async (interaction) => {
                             .setColor('#DDF35E')
                             .setTitle('Balasan Curhat')
                             .setDescription(balasan)
-                            .setFooter({ text: `Curhat ID: ${curhatId}` }) // Tambahkan footer ID curhat ke balasan
+                            .setFooter({ text: `Curhat ID: ${curhatId}` }) // Gunakan ID singkat
                             .setTimestamp();
 
-                        const buttons = new ActionRowBuilder().addComponents(
-                            new ButtonBuilder()
-                                .setCustomId('curhat_yuk')
-                                .setLabel('📝 Curhat Yuk')
-                                .setStyle(ButtonStyle.Primary)
-                        );
-
                         // Kirim balasan ke thread yang ada
-                        await thread.send({ embeds: [embed], components: [buttons] });
+                        await thread.send({ embeds: [embed] });
                         await interaction.reply({ content: 'Balasan Anda berhasil dikirim ke thread!', ephemeral: true });
                     } else {
                         await interaction.reply({ content: 'Pesan curhat tidak ditemukan di channel yang sama.', ephemeral: true });
@@ -309,6 +305,7 @@ client.on('interactionCreate', async (interaction) => {
         }
     }
 });
+
 
 // Respons Otomatis dan Logging
 client.on('messageCreate', async (message) => {
