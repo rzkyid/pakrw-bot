@@ -1,7 +1,6 @@
 require('dotenv').config();
-const { Client, GatewayIntentBits, ActivityType, MessageAttachment } = require('discord.js');
+const { Client, GatewayIntentBits, EmbedBuilder, ActivityType, MessageAttachment, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus } = require('@discordjs/voice');
-const { Configuration, OpenAIApi } = require('openai');
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
@@ -31,6 +30,7 @@ const ALLOWED_CHANNELS = [
     '1307965374511190068', // ID Channel Tanya Pak RW
     '1307965818654560368', // ID Channel Kantor Pejabat
 ];
+const CONFESSIONS_CHANNEL_ID = '1221377162020651008';
 
 // Prefix
 const PREFIX = 'rw';
