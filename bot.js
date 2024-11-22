@@ -511,8 +511,9 @@ client.on('messageCreate', async (message) => {
         message.reply('Kalau mau jadi donatur server bisa cek https://discord.com/channels/1052115524273836176/1221385772351881286 yaaa <:Wink:1099424794350473216>');
     } else if (lowerContent.includes('jodoh')) {
         message.reply('Buat yang mau cari jodoh bisa langsung aja ke <#1284544825596837971> <:Love:1291831704171970612>');
-    } 
-        else if (lowerContent.includes('pagi')) {
+    } else if (lowerContent.includes('curhat')) {
+        message.reply('Buat yang mau curhat bisa langsung aja ke <#1221377162020651008> <:Wink:1099424794350473216>');
+    } else if (lowerContent.includes('pagi')) {
             const pagiReplies = [
                 'Pagi juga, Kak! Tau nggak, pagi ini beda banget 🌞… ada matahari, ada udara segar 🌿, tapi tetap kamu yang bikin aku semangat. ❤️💪',
                 'Selamat pagi juga, Kak 🌞. Hari ini rasanya indah banget, tapi tetep nggak seindah bayangan kamu di kepala aku. ❤️.',
