@@ -454,11 +454,14 @@ client.on('messageCreate', async (message) => {
             const randomReply = malamReplies[Math.floor(Math.random() * malamReplies.length)];
             message.reply(randomReply);
     } 
+});
 
 // Perintah untuk ngobrol dengan Gemini Chat
+client.on('messageCreate', async (message) => {
+    if (message.author.bot) return;
+
 // Fungsi untuk delay
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
 // Fungsi untuk mencoba kembali dengan retry (Exponential backoff)
 const makeRequestWithRetry = async (query) => {
     const MAX_RETRIES = 5; // Maksimal percobaan ulang
