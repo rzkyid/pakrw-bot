@@ -37,7 +37,7 @@ const CURHAT_CHANNEL_ID = '1221377162020651008';
 
 // Prefix
 const PREFIX = 'rw';
-const LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID;
+const LOG_CHANNEL_ID = '1099916187044941914';
 
 // Konfigurasi Express untuk menangani port
 const app = express();
