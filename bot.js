@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Client, GatewayIntentBits, EmbedBuilder, ActivityType, MessageAttachment, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { Client, GatewayIntentBits, EmbedBuilder, ActivityType, MessageAttachment, ActionRowBuilder, ButtonBuilder, ButtonStyle,  ModalBuilder, TextInputBuilder, TextInputStyle, InteractionType } = require('discord.js');
 const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus } = require('@discordjs/voice');
 const express = require('express');
 const path = require('path');
@@ -148,104 +148,137 @@ client.once('ready', () => {
 });
 
 // Fitur Curhat
-let confessionCounter = 1;
+// Tombol Curhat Awal
+client.on('messageCreate', async (message) => {
+    if (message.content === 'rwtombolcurhat') {
+        const buttons = new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
+                .setCustomId('curhat_yuk')
+                .setLabel('Curhat Yuk')
+                .setStyle(ButtonStyle.Primary)
+        );
 
-const createCurhatButton = () => {
-    return new ActionRowBuilder().addComponents(
-        new ButtonBuilder()
-            .setCustomId('curhat_yuk')
-            .setLabel('Curhat Yuk')
-            .setStyle(ButtonStyle.Primary)
-    );
-};
-
-client.on('interactionCreate', async (interaction) => {
-    if (interaction.isButton()) {
-        if (interaction.customId === 'curhat_yuk') {
-            await interaction.reply({
-                content: 'Ketik curhatmu secara anonim dengan mengetik `rwcurhat <isi_curhat>`!',
-                ephemeral: true,
-            });
-        } else if (interaction.customId.startsWith('reply_')) {
-            const confessionId = interaction.customId.split('_')[1];
-            await interaction.reply({
-                content: `Ketik balasanmu untuk curhat #${confessionId} dengan mengetik \`rwreply ${confessionId} <isi_balasan>\`!`,
-                ephemeral: true,
-            });
-        }
+        await message.channel.send({
+            content: 'Ingin curhat? Tekan tombol di bawah ini!',
+            components: [buttons],
+        });
     }
 });
 
-client.on('messageCreate', async (message) => {
-    // Perintah rwcurhat
-    if (message.content.startsWith('rwcurhat')) {
-        const confession = message.content.slice(9).trim();
+// Ketika Tombol Ditekan
+client.on('interactionCreate', async (interaction) => {
+    if (interaction.isButton()) {
 
-        if (!confession) {
-            await message.reply('Curhatmu kosong! Ketik `rwcurhat <isi_curhat>` untuk mengirim curhat.');
-            return;
+    // Logging penggunaan perintah
+    const logChannel = client.channels.cache.get(LOG_CHANNEL_ID);
+    if (logChannel && message.content.startsWith(PREFIX)) {
+        logChannel.send(`[LOG] ${message.author.tag} menggunakan perintah: ${message.content}`);
+    }
+        
+        if (interaction.customId === 'curhat_yuk') {
+            // Modal untuk Curhat
+            const modal = new ModalBuilder()
+                .setCustomId('curhat_modal')
+                .setTitle('Form Curhat');
+
+            const pesanInput = new TextInputBuilder()
+                .setCustomId('pesan_curhat')
+                .setLabel('Isi Pesan Curhat Anda')
+                .setStyle(TextInputStyle.Paragraph)
+                .setRequired(true);
+
+            const linkGambarInput = new TextInputBuilder()
+                .setCustomId('link_gambar')
+                .setLabel('Link Gambar (Opsional)')
+                .setStyle(TextInputStyle.Short)
+                .setRequired(false);
+
+            modal.addComponents(
+                new ActionRowBuilder().addComponents(pesanInput),
+                new ActionRowBuilder().addComponents(linkGambarInput)
+            );
+
+            await interaction.showModal(modal);
+        } else if (interaction.customId.startsWith('balas_')) {
+            // Modal untuk Balas Curhat
+            const curhatId = interaction.customId.split('_')[1];
+
+            const modal = new ModalBuilder()
+                .setCustomId(`balas_modal_${curhatId}`)
+                .setTitle('Balasan Curhat');
+
+            const balasanInput = new TextInputBuilder()
+                .setCustomId('balasan')
+                .setLabel('Isi Balasan Anda')
+                .setStyle(TextInputStyle.Paragraph)
+                .setRequired(true);
+
+            modal.addComponents(new ActionRowBuilder().addComponents(balasanInput));
+
+            await interaction.showModal(modal);
         }
-
-        const channel = client.channels.cache.get(CONFESSIONS_CHANNEL_ID);
-
-        if (!channel) {
-            await message.reply('Channel curhat tidak ditemukan! Pastikan bot memiliki akses ke channel tersebut.');
-            return;
-        }
-
-        const embed = new EmbedBuilder()
-            .setColor('#ff69b4')
-            .setTitle(`Anonymous Confession (#${confessionCounter})`)
-            .setDescription(`"${confession}"`)
-            .setFooter({ text: 'Balas dengan mengetik "rwreply <ID_curhat> <isi_balasan>" atau gunakan tombol di bawah.' })
-            .setTimestamp();
-
-        const replyButton = new ActionRowBuilder().addComponents(
-            new ButtonBuilder()
-                .setCustomId(`reply_${confessionCounter}`)
-                .setLabel('Balas')
-                .setStyle(ButtonStyle.Secondary)
-        );
-
-        await channel.send({ embeds: [embed], components: [replyButton] });
-        await message.reply('Curhatmu berhasil dikirim secara anonim!');
-
-        confessionCounter++;
     }
 
-    // Perintah rwreply
-    if (message.content.startsWith('rwreply')) {
-        const args = message.content.slice(8).trim().split(' ');
-        const confessionId = args.shift();
-        const replyText = args.join(' ');
+    if (interaction.type === InteractionType.ModalSubmit) {
+        if (interaction.customId === 'curhat_modal') {
+            // Proses Form Curhat
+            const pesanCurhat = interaction.fields.getTextInputValue('pesan_curhat');
+            const linkGambar = interaction.fields.getTextInputValue('link_gambar');
 
-        if (!confessionId || !replyText) {
-            await message.reply('Format salah! Ketik `rwreply <ID_curhat> <isi_balasan>` untuk membalas curhat.');
-            return;
+            const embed = new EmbedBuilder()
+                .setColor('#00FF00')
+                .setTitle('Pesan Curhat')
+                .setDescription(pesanCurhat)
+                .setTimestamp();
+
+            if (linkGambar) {
+                embed.setImage(linkGambar);
+            }
+
+            const buttons = new ActionRowBuilder().addComponents(
+                new ButtonBuilder()
+                    .setCustomId('curhat_yuk')
+                    .setLabel('Curhat Yuk')
+                    .setStyle(ButtonStyle.Primary),
+                new ButtonBuilder()
+                    .setCustomId(`balas_${interaction.id}`)
+                    .setLabel('Balas')
+                    .setStyle(ButtonStyle.Secondary)
+            );
+
+            const channel = client.channels.cache.get(CURHAT_CHANNEL_ID);
+            if (channel) {
+                await channel.send({ embeds: [embed], components: [buttons] });
+                await interaction.reply({ content: 'Curhat Anda berhasil dikirim!', ephemeral: true });
+            } else {
+                await interaction.reply({ content: 'Gagal mengirim curhat. Channel tidak ditemukan.', ephemeral: true });
+            }
+        } else if (interaction.customId.startsWith('balas_modal_')) {
+            // Proses Form Balasan
+            const curhatId = interaction.customId.split('_')[2];
+            const balasan = interaction.fields.getTextInputValue('balasan');
+
+            const embed = new EmbedBuilder()
+                .setColor('#FFFF00')
+                .setTitle('Balasan Curhat')
+                .setDescription(balasan)
+                .setTimestamp();
+
+            const buttons = new ActionRowBuilder().addComponents(
+                new ButtonBuilder()
+                    .setCustomId('curhat_yuk')
+                    .setLabel('Curhat Yuk')
+                    .setStyle(ButtonStyle.Primary)
+            );
+
+            const channel = client.channels.cache.get(CURHAT_CHANNEL_ID);
+            if (channel) {
+                await channel.send({ content: `**Balasan untuk Curhat ID:** ${curhatId}`, embeds: [embed], components: [buttons] });
+                await interaction.reply({ content: 'Balasan Anda berhasil dikirim!', ephemeral: true });
+            } else {
+                await interaction.reply({ content: 'Gagal mengirim balasan. Channel tidak ditemukan.', ephemeral: true });
+            }
         }
-
-        const channel = client.channels.cache.get(CONFESSIONS_CHANNEL_ID);
-
-        if (!channel) {
-            await message.reply('Channel curhat tidak ditemukan! Pastikan bot memiliki akses ke channel tersebut.');
-            return;
-        }
-
-        const replyEmbed = new EmbedBuilder()
-            .setColor('#00bfff')
-            .setTitle(`Balasan untuk Curhat #${confessionId}`)
-            .setDescription(`"${replyText}"`)
-            .setFooter({ text: 'Dikirim secara anonim' })
-            .setTimestamp();
-
-        await channel.send({ embeds: [replyEmbed] });
-        await message.reply(`Balasan untuk curhat #${confessionId} berhasil dikirim!`);
-    }
-
-    // Perintah untuk memunculkan tombol "Curhat Yuk"
-    if (message.content === 'rwtombolcurhat') {
-        const row = createCurhatButton();
-        await message.channel.send({ content: 'Klik tombol berikut untuk memulai curhat!', components: [row] });
     }
 });
 
