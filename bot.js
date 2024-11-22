@@ -164,117 +164,133 @@ client.on('messageCreate', async (message) => {
     }
 });
 
-// Ketika Tombol Ditekan
-client.on('interactionCreate', async (interaction) => {
-    if (interaction.isButton()) {
-        if (interaction.customId === 'curhat_yuk') {
-            const modal = new ModalBuilder()
-                .setCustomId('curhat_modal')
-                .setTitle('Form Curhat');
+// Fungsi Mengirim Embed Curhat
+async function kirimCurhat(interaction, pesanCurhat, linkGambar) {
+    const embed = new EmbedBuilder()
+        .setColor('#4B5320')
+        .setTitle('Pesan Curhat')
+        .setDescription(pesanCurhat)
+        .setTimestamp();
 
-            const pesanInput = new TextInputBuilder()
-                .setCustomId('pesan_curhat')
-                .setLabel('Isi Pesan Curhat Anda')
-                .setStyle(TextInputStyle.Paragraph)
-                .setRequired(true);
-
-            const linkGambarInput = new TextInputBuilder()
-                .setCustomId('link_gambar')
-                .setLabel('Link Gambar (Opsional)')
-                .setStyle(TextInputStyle.Short)
-                .setRequired(false);
-
-            modal.addComponents(
-                new ActionRowBuilder().addComponents(pesanInput),
-                new ActionRowBuilder().addComponents(linkGambarInput)
-            );
-
-            await interaction.showModal(modal);
-        } else if (interaction.customId.startsWith('balas_')) {
-            const curhatId = interaction.customId.split('_')[1];
-            const modal = new ModalBuilder()
-                .setCustomId(`balas_modal_${curhatId}`)
-                .setTitle('Balasan Curhat');
-
-            const balasanInput = new TextInputBuilder()
-                .setCustomId('balasan')
-                .setLabel('Isi Balasan Anda')
-                .setStyle(TextInputStyle.Paragraph)
-                .setRequired(true);
-
-            modal.addComponents(new ActionRowBuilder().addComponents(balasanInput));
-            await interaction.showModal(modal);
-        }
+    if (linkGambar) {
+        embed.setImage(linkGambar);
     }
 
-    if (interaction.type === 'MODAL_SUBMIT') {
-        if (interaction.customId === 'curhat_modal') {
-            const pesanCurhat = interaction.fields.getTextInputValue('pesan_curhat');
-            const linkGambar = interaction.fields.getTextInputValue('link_gambar');
+    const buttons = new ActionRowBuilder().addComponents(
+        new ButtonBuilder()
+            .setCustomId(`balas_${interaction.id}`)
+            .setLabel('💬 Balas')
+            .setStyle(ButtonStyle.Secondary)
+    );
 
-            const embed = new EmbedBuilder()
-                .setColor('#4B5320')
-                .setTitle('Pesan Curhat')
-                .setDescription(pesanCurhat)
-                .setTimestamp();
+    const channel = client.channels.cache.get(CURHAT_CHANNEL_ID);
+    if (!channel) {
+        throw new Error('Channel curhat tidak ditemukan.');
+    }
 
-            if (linkGambar) embed.setImage(linkGambar);
+    const message = await channel.send({ embeds: [embed], components: [buttons] });
 
-            const buttons = new ActionRowBuilder().addComponents(
-                new ButtonBuilder()
-                    .setCustomId('curhat_yuk')
-                    .setLabel('📝 Curhat Yuk')
-                    .setStyle(ButtonStyle.Primary),
-                new ButtonBuilder()
-                    .setCustomId(`balas_${interaction.id}`)
-                    .setLabel('💬 Balas')
-                    .setStyle(ButtonStyle.Secondary)
-            );
+    // Menambahkan ID pesan ke footer embed
+    const updatedEmbed = EmbedBuilder.from(embed)
+        .setFooter({ text: `Curhat ID: ${message.id}` });
+    await message.edit({ embeds: [updatedEmbed] });
 
-            const channel = client.channels.cache.get(CURHAT_CHANNEL_ID);
-            if (channel) {
-                const message = await channel.send({ embeds: [embed], components: [buttons] });
+    return message;
+}
 
-                // Simpan ID pesan ke footer embed untuk referensi balasan
-                await message.edit({
-                    embeds: [
-                        new EmbedBuilder(message.embeds[0])
-                            .setFooter({ text: `Curhat ID: ${message.id}` })
-                    ],
-                });
+// Fungsi Membalas di Thread
+async function balasCurhat(interaction, curhatId, balasan) {
+    const channel = client.channels.cache.get(CURHAT_CHANNEL_ID);
+    if (!channel) {
+        throw new Error('Channel curhat tidak ditemukan.');
+    }
 
-                await interaction.reply({ content: 'Curhat Anda berhasil dikirim!', ephemeral: true });
-            } else {
-                await interaction.reply({ content: 'Gagal mengirim curhat. Channel tidak ditemukan.', ephemeral: true });
+    const message = await channel.messages.fetch(curhatId);
+    if (!message) {
+        throw new Error('Pesan curhat tidak ditemukan.');
+    }
+
+    let thread;
+    if (message.hasThread) {
+        thread = message.thread;
+    } else {
+        thread = await message.startThread({
+            name: `Balasan - ${curhatId}`,
+            autoArchiveDuration: 1440,
+        });
+    }
+
+    const embed = new EmbedBuilder()
+        .setColor('#DDF35E')
+        .setTitle('Balasan Curhat')
+        .setDescription(balasan)
+        .setTimestamp();
+
+    await thread.send({ embeds: [embed] });
+
+    return thread;
+}
+
+// Ketika Tombol Ditekan
+client.on('interactionCreate', async (interaction) => {
+    try {
+        if (interaction.isButton()) {
+            if (interaction.customId === 'curhat_yuk') {
+                const modal = new ModalBuilder()
+                    .setCustomId('curhat_modal')
+                    .setTitle('Form Curhat');
+
+                const pesanInput = new TextInputBuilder()
+                    .setCustomId('pesan_curhat')
+                    .setLabel('Isi Pesan Curhat Anda')
+                    .setStyle(TextInputStyle.Paragraph)
+                    .setRequired(true);
+
+                const linkGambarInput = new TextInputBuilder()
+                    .setCustomId('link_gambar')
+                    .setLabel('Link Gambar (Opsional)')
+                    .setStyle(TextInputStyle.Short)
+                    .setRequired(false);
+
+                modal.addComponents(
+                    new ActionRowBuilder().addComponents(pesanInput),
+                    new ActionRowBuilder().addComponents(linkGambarInput)
+                );
+
+                await interaction.showModal(modal);
+            } else if (interaction.customId.startsWith('balas_')) {
+                const curhatId = interaction.customId.split('_')[1];
+                const modal = new ModalBuilder()
+                    .setCustomId(`balas_modal_${curhatId}`)
+                    .setTitle('Balasan Curhat');
+
+                const balasanInput = new TextInputBuilder()
+                    .setCustomId('balasan')
+                    .setLabel('Isi Balasan Anda')
+                    .setStyle(TextInputStyle.Paragraph)
+                    .setRequired(true);
+
+                modal.addComponents(new ActionRowBuilder().addComponents(balasanInput));
+                await interaction.showModal(modal);
             }
-        } else if (interaction.customId.startsWith('balas_modal_')) {
-            const curhatId = interaction.customId.split('_')[2];
-            const balasan = interaction.fields.getTextInputValue('balasan');
+        } else if (interaction.type === InteractionType.ModalSubmit) {
+            if (interaction.customId === 'curhat_modal') {
+                const pesanCurhat = interaction.fields.getTextInputValue('pesan_curhat');
+                const linkGambar = interaction.fields.getTextInputValue('link_gambar');
 
-            const embed = new EmbedBuilder()
-                .setColor('#DDF35E')
-                .setTitle('Balasan Curhat')
-                .setDescription(balasan)
-                .setTimestamp();
+                await kirimCurhat(interaction, pesanCurhat, linkGambar);
+                await interaction.reply({ content: 'Curhat Anda berhasil dikirim!', ephemeral: true });
+            } else if (interaction.customId.startsWith('balas_modal_')) {
+                const curhatId = interaction.customId.split('_')[2];
+                const balasan = interaction.fields.getTextInputValue('balasan');
 
-            const channel = client.channels.cache.get(CURHAT_CHANNEL_ID);
-            if (channel) {
-                try {
-                    const message = await channel.messages.fetch(curhatId);
-                    const thread = message.hasThread
-                        ? message.thread
-                        : await message.startThread({ name: `curhat-${curhatId}`, autoArchiveDuration: 1440 });
-
-                    await thread.send({ embeds: [embed] });
-                    await interaction.reply({ content: 'Balasan Anda berhasil dikirim ke thread!', ephemeral: true });
-                } catch (error) {
-                    console.error(error);
-                    await interaction.reply({ content: 'Gagal mengirim balasan. Pesan curhat tidak ditemukan atau telah dihapus.', ephemeral: true });
-                }
-            } else {
-                await interaction.reply({ content: 'Gagal mengirim balasan. Channel tidak ditemukan.', ephemeral: true });
+                await balasCurhat(interaction, curhatId, balasan);
+                await interaction.reply({ content: 'Balasan Anda berhasil dikirim ke thread!', ephemeral: true });
             }
         }
+    } catch (error) {
+        console.error(error);
+        await interaction.reply({ content: `Terjadi kesalahan: ${error.message}`, ephemeral: true });
     }
 });
 
