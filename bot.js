@@ -1,5 +1,8 @@
 require('dotenv').config();
-const { Client, GatewayIntentBits, EmbedBuilder, ActivityType, MessageAttachment, ActionRowBuilder, ButtonBuilder, ButtonStyle,  ModalBuilder, TextInputBuilder, TextInputStyle, InteractionType, Intents, MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
+const { Client, GatewayIntentBits, EmbedBuilder, ActivityType, MessageAttachment, ActionRowBuilder, ButtonBuilder, ButtonStyle, 
+       ModalBuilder, TextInputBuilder, TextInputStyle, InteractionType, Intents, MessageActionRow, MessageButton, MessageEmbed,
+       SlashCommandBuilder, PermissionFlagsBits
+      } = require('discord.js');
 const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus } = require('@discordjs/voice');
 const express = require('express');
 const path = require('path');
@@ -20,6 +23,7 @@ const client = new Client({
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.GuildVoiceStates,
         GatewayIntentBits.MessageContent,
+        GatewayIntentBits.GuildMembers
     ],
 });
 
@@ -47,6 +51,64 @@ app.get('/', (req, res) => {
 
 app.listen(PORT, () => {
     console.log(`Server Express berjalan di port ${PORT}`);
+});
+
+// Fitur kasih role
+client.on('interactionCreate', async (interaction) => {
+    // Pastikan hanya menangani Slash Command
+    if (!interaction.isCommand()) return;
+
+    const { commandName } = interaction;
+
+    // Periksa apakah user memiliki role dengan ID '1077457424736333844' atau admin
+    const hasPermission = interaction.memberPermissions.has(PermissionFlagsBits.Administrator) ||
+        interaction.member.roles.cache.has('1077457424736333844'); // Cek apakah pengguna memiliki role dengan ID ini
+
+    if (!hasPermission) {
+        return interaction.reply({ content: "Anda tidak memiliki izin untuk menggunakan perintah ini.", ephemeral: true });
+    }
+
+    // Command untuk memberikan role (diubah ke kasihrole)
+    if (commandName === 'kasihrole') {
+        const member = interaction.options.getMember('member');
+        const role = interaction.options.getRole('role');
+
+        if (!member || !role) {
+            return interaction.reply({ content: "Pastikan Anda memilih member dan role yang valid.", ephemeral: true });
+        }
+
+        // Periksa apakah role bisa diberikan
+        if (role.position >= interaction.guild.members.me.roles.highest.position) {
+            return interaction.reply({ content: "Saya tidak memiliki izin untuk memberikan role ini.", ephemeral: true });
+        }
+
+        try {
+            await member.roles.add(role);
+            return interaction.reply({ content: `Berhasil memberikan role **${role.name}** kepada ${member.user.tag}.`, ephemeral: true });
+        } catch (error) {
+            console.error(error);
+            return interaction.reply({ content: "Terjadi kesalahan saat memberikan role.", ephemeral: true });
+        }
+    }
+});
+
+// Register Slash Command
+client.on('ready', () => {
+    client.application.commands.create(
+        new SlashCommandBuilder()
+            .setName('kasihrole')  // Nama command diubah menjadi kasihrole
+            .setDescription('Memberikan role kepada member')
+            .addUserOption(option => 
+                option.setName('member')
+                    .setDescription('Pilih member')
+                    .setRequired(true)
+            )
+            .addRoleOption(option => 
+                option.setName('role')
+                    .setDescription('Pilih role yang akan diberikan')
+                    .setRequired(true)
+            )
+    );
 });
 
 // Untuk menyimpan status player
