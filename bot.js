@@ -230,7 +230,7 @@ client.on('interactionCreate', async (interaction) => {
             const buttons = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setCustomId('curhat_yuk')
-                    .setLabel('✨ Curhat Yuk')
+                    .setLabel('📝 Curhat Yuk')
                     .setStyle(ButtonStyle.Primary),
                 new ButtonBuilder()
                     .setCustomId(`balas_${interaction.id}`)
@@ -264,13 +264,14 @@ client.on('interactionCreate', async (interaction) => {
             const buttons = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setCustomId('curhat_yuk')
-                    .setLabel('✨ Curhat Yuk')
+                    .setLabel('📝 Curhat Yuk')
                     .setStyle(ButtonStyle.Primary)
             );
 
             const channel = client.channels.cache.get(CURHAT_CHANNEL_ID);
             if (channel) {
-                const thread = channel.threads.cache.find(thread => thread.name === `Curhat-${curhatId}`);
+                // Cari thread dengan ID yang sesuai
+                const thread = channel.threads.cache.find(t => t.name === `Curhat-${curhatId}`);
                 if (thread) {
                     await thread.send({ embeds: [embed], components: [buttons] });
                     await interaction.reply({ content: 'Balasan Anda berhasil dikirim ke thread!', ephemeral: true });
@@ -283,6 +284,7 @@ client.on('interactionCreate', async (interaction) => {
         }
     }
 });
+
 
 // Respons Otomatis dan Logging
 client.on('messageCreate', async (message) => {
