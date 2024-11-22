@@ -30,8 +30,7 @@ const ALLOWED_CHANNELS = [
     '1307965374511190068', // ID Channel Tanya Pak RW
     '1307965818654560368', // ID Channel Kantor Pejabat
 ];
-const CONFESSIONS_CHANNEL_ID = '1221377162020651008';
-
+const CURHAT_CHANNEL_ID = '1221377162020651008';
 
 // Prefix
 const PREFIX = 'rw';
