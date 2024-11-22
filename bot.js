@@ -167,7 +167,7 @@ client.on('messageCreate', async (message) => {
 // Ketika Tombol Ditekan
 client.on('interactionCreate', async (interaction) => {
     if (interaction.isButton()) {
-        // Handle Curhat Yuk Button
+        // Handle Tombol Curhat Yuk
         if (interaction.customId === 'curhat_yuk') {
             const modal = new ModalBuilder()
                 .setCustomId('curhat_modal')
@@ -193,7 +193,7 @@ client.on('interactionCreate', async (interaction) => {
             await interaction.showModal(modal);
         }
 
-        // Handle Balas Button
+        // Handle Tombol Balas
         else if (interaction.customId.startsWith('balas_')) {
             const curhatId = interaction.customId.split('_')[1];
             const modal = new ModalBuilder()
@@ -221,6 +221,7 @@ client.on('interactionCreate', async (interaction) => {
                 .setColor('#4B5320')
                 .setTitle('Pesan Curhat')
                 .setDescription(pesanCurhat)
+                .setFooter({ text: `Curhat ID: ${interaction.id}` }) // Tambahkan footer ID curhat
                 .setTimestamp();
 
             if (linkGambar) {
@@ -240,10 +241,8 @@ client.on('interactionCreate', async (interaction) => {
 
             const channel = client.channels.cache.get(CURHAT_CHANNEL_ID);
             if (channel) {
-                // Kirim pesan pertama
-                const message = await channel.send({ embeds: [embed], components: [buttons] });
-
-                // Simpan ID pesan curhat untuk digunakan nanti
+                // Kirim pesan curhat
+                await channel.send({ embeds: [embed], components: [buttons] });
                 await interaction.reply({ content: 'Curhat Anda berhasil dikirim!', ephemeral: true });
             } else {
                 await interaction.reply({ content: 'Gagal mengirim curhat. Channel tidak ditemukan.', ephemeral: true });
@@ -255,8 +254,18 @@ client.on('interactionCreate', async (interaction) => {
             const channel = client.channels.cache.get(CURHAT_CHANNEL_ID);
             if (channel) {
                 try {
-                    // Cari pesan curhat yang akan dibalas
-                    const message = await channel.messages.fetch(curhatId);
+                    // Cari pesan curhat berdasarkan curhatId
+                    let message;
+                    try {
+                        message = await channel.messages.fetch(curhatId);
+                    } catch (error) {
+                        // Jika pesan tidak ditemukan, coba cari dari footer embed
+                        const allMessages = await channel.messages.fetch({ limit: 100 });
+                        message = allMessages.find((msg) =>
+                            msg.embeds[0]?.footer?.text === `Curhat ID: ${curhatId}`
+                        );
+                    }
+
                     if (message) {
                         // Cek apakah thread sudah ada, jika belum buat thread baru
                         let thread;
@@ -274,11 +283,18 @@ client.on('interactionCreate', async (interaction) => {
                             .setColor('#DDF35E')
                             .setTitle('Balasan Curhat')
                             .setDescription(balasan)
-                            .setTimestamp()
-                            .setFooter({ text: `Balasan ID: ${interaction.id}` }); // Tambahkan footer ID balasan
+                            .setFooter({ text: `Curhat ID: ${curhatId}` }) // Tambahkan footer ID curhat ke balasan
+                            .setTimestamp();
+
+                        const buttons = new ActionRowBuilder().addComponents(
+                            new ButtonBuilder()
+                                .setCustomId('curhat_yuk')
+                                .setLabel('📝 Curhat Yuk')
+                                .setStyle(ButtonStyle.Primary)
+                        );
 
                         // Kirim balasan ke thread yang ada
-                        await thread.send({ embeds: [embed] });
+                        await thread.send({ embeds: [embed], components: [buttons] });
                         await interaction.reply({ content: 'Balasan Anda berhasil dikirim ke thread!', ephemeral: true });
                     } else {
                         await interaction.reply({ content: 'Pesan curhat tidak ditemukan di channel yang sama.', ephemeral: true });
