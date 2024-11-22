@@ -248,7 +248,7 @@ client.on('interactionCreate', async (interaction) => {
                     autoArchiveDuration: 1440,
                 });
 
-                // Simpan thread ID di dalam pesan atau di footer embed
+                // Simpan thread ID di dalam pesan atau database (misalnya di dalam embed atau di cache)
                 await message.edit({
                     embeds: [
                         new EmbedBuilder(message.embeds[0])
@@ -279,20 +279,29 @@ client.on('interactionCreate', async (interaction) => {
 
             const channel = client.channels.cache.get(CURHAT_CHANNEL_ID);
             if (channel) {
-                // Cari thread berdasarkan ID thread yang tersimpan di footer embed
-                const message = await channel.messages.fetch({ message: curhatId });
-                if (message && message.embeds[0]?.footer?.text) {
-                    const threadId = message.embeds[0].footer.text.split('Thread ID: ')[1];
-                    const thread = await channel.threads.fetch(threadId);
-
-                    if (thread) {
-                        await thread.send({ embeds: [embed], components: [buttons] });
-                        await interaction.reply({ content: 'Balasan Anda berhasil dikirim ke thread!', ephemeral: true });
+                try {
+                    // Cari pesan curhat yang akan dibalas
+                    const message = await channel.messages.fetch(curhatId);
+                    if (message) {
+                        // Cari thread berdasarkan ID thread yang tersimpan di footer embed
+                        const threadId = message.embeds[0]?.footer?.text.split('Thread ID: ')[1];
+                        if (threadId) {
+                            const thread = await channel.threads.fetch(threadId);
+                            if (thread) {
+                                await thread.send({ embeds: [embed], components: [buttons] });
+                                await interaction.reply({ content: 'Balasan Anda berhasil dikirim ke thread!', ephemeral: true });
+                            } else {
+                                await interaction.reply({ content: 'Thread tidak ditemukan.', ephemeral: true });
+                            }
+                        } else {
+                            await interaction.reply({ content: 'Tidak ada ID thread yang ditemukan.', ephemeral: true });
+                        }
                     } else {
-                        await interaction.reply({ content: 'Thread tidak ditemukan.', ephemeral: true });
+                        await interaction.reply({ content: 'Pesan curhat tidak ditemukan.', ephemeral: true });
                     }
-                } else {
-                    await interaction.reply({ content: 'Pesan curhat tidak ditemukan.', ephemeral: true });
+                } catch (error) {
+                    console.error(error);
+                    await interaction.reply({ content: 'Gagal mengirim balasan. Pesan curhat tidak ditemukan atau telah dihapus.', ephemeral: true });
                 }
             } else {
                 await interaction.reply({ content: 'Gagal mengirim balasan. Channel tidak ditemukan.', ephemeral: true });
