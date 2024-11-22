@@ -208,7 +208,17 @@ client.on('interactionCreate', async (interaction) => {
                 .setStyle(TextInputStyle.Paragraph)
                 .setRequired(true);
 
-            modal.addComponents(new ActionRowBuilder().addComponents(balasanInput));
+            const linkGambarInput = new TextInputBuilder()
+                .setCustomId('link_gambar_balasan')
+                .setLabel('Link Gambar Balasan (Opsional)')
+                .setStyle(TextInputStyle.Short)
+                .setRequired(false);
+
+            modal.addComponents(
+                new ActionRowBuilder().addComponents(balasanInput),
+                new ActionRowBuilder().addComponents(linkGambarInput)
+            );
+
             await interaction.showModal(modal);
         }
     }
@@ -260,6 +270,7 @@ client.on('interactionCreate', async (interaction) => {
         } else if (interaction.customId.startsWith('balas_modal_')) {
             const curhatId = interaction.customId.split('_')[2];
             const balasan = interaction.fields.getTextInputValue('balasan');
+            const linkGambarBalasan = interaction.fields.getTextInputValue('link_gambar_balasan');
 
             const channel = client.channels.cache.get(CURHAT_CHANNEL_ID);
             if (channel) {
@@ -296,6 +307,10 @@ client.on('interactionCreate', async (interaction) => {
                             .setFooter({ text: `Curhat ID: ${curhatId}` }) // Gunakan ID singkat
                             .setTimestamp();
 
+                        if (linkGambarBalasan) {
+                            embed.setImage(linkGambarBalasan);
+                        }
+
                         // Kirim balasan ke thread yang ada
                         await thread.send({ embeds: [embed] });
 
@@ -304,7 +319,7 @@ client.on('interactionCreate', async (interaction) => {
                         if (logChannel) {
                             logChannel.send(`[LOG] **${interaction.user.username}** mengirim balasan ke curhat ID: ${curhatId} - "${balasan}"`);
                         }
-                        
+
                         await interaction.reply({ content: 'Balasan Anda berhasil dikirim ke thread!', ephemeral: true });
                     } else {
                         await interaction.reply({ content: 'Pesan curhat tidak ditemukan di channel yang sama.', ephemeral: true });
@@ -319,6 +334,7 @@ client.on('interactionCreate', async (interaction) => {
         }
     }
 });
+
 
 // Respons Otomatis dan Logging
 client.on('messageCreate', async (message) => {
