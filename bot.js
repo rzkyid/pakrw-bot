@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Client, GatewayIntentBits, EmbedBuilder, ActivityType, MessageAttachment, ActionRowBuilder, ButtonBuilder, ButtonStyle,  ModalBuilder, TextInputBuilder, TextInputStyle, InteractionType } = require('discord.js');
+const { Client, GatewayIntentBits, EmbedBuilder, ActivityType, MessageAttachment, ActionRowBuilder, ButtonBuilder, ButtonStyle,  ModalBuilder, TextInputBuilder, TextInputStyle, InteractionType, Intents, MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus } = require('@discordjs/voice');
 const express = require('express');
 const path = require('path');
@@ -20,6 +20,8 @@ const client = new Client({
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.GuildVoiceStates,
         GatewayIntentBits.MessageContent,
+        Intents.FLAGS.GUILDS,
+        Intents.FLAGS.GUILD_MESSAGES,
     ],
 });
 
@@ -167,8 +169,8 @@ client.on('messageCreate', async (message) => {
 // Ketika Tombol Ditekan
 client.on('interactionCreate', async (interaction) => {
     if (interaction.isButton()) {
+        // Handle Curhat Yuk Button
         if (interaction.customId === 'curhat_yuk') {
-            // Modal untuk Curhat
             const modal = new ModalBuilder()
                 .setCustomId('curhat_modal')
                 .setTitle('Form Curhat');
@@ -191,10 +193,11 @@ client.on('interactionCreate', async (interaction) => {
             );
 
             await interaction.showModal(modal);
-        } else if (interaction.customId.startsWith('balas_')) {
-            // Modal untuk Balas Curhat
-            const curhatId = interaction.customId.split('_')[1];
+        }
 
+        // Handle Balas Button
+        else if (interaction.customId.startsWith('balas_')) {
+            const curhatId = interaction.customId.split('_')[1];
             const modal = new ModalBuilder()
                 .setCustomId(`balas_modal_${curhatId}`)
                 .setTitle('Balasan Curhat');
@@ -206,7 +209,6 @@ client.on('interactionCreate', async (interaction) => {
                 .setRequired(true);
 
             modal.addComponents(new ActionRowBuilder().addComponents(balasanInput));
-
             await interaction.showModal(modal);
         }
     }
@@ -242,10 +244,18 @@ client.on('interactionCreate', async (interaction) => {
             if (channel) {
                 const message = await channel.send({ embeds: [embed], components: [buttons] });
 
-                // Buat thread dari pesan yang baru dikirim
+                // Membuat thread dan mendapatkan ID thread
                 const thread = await message.startThread({
-                    name: `curhat-${message.id}`, // Gunakan ID pesan langsung sebagai nama thread
+                    name: `curhat-${message.id}`, // Nama thread menggunakan ID pesan
                     autoArchiveDuration: 1440,
+                });
+
+                // Simpan thread ID di dalam pesan atau database (misalnya di dalam embed atau di cache)
+                await message.edit({
+                    embeds: [
+                        new EmbedBuilder(message.embeds[0])
+                            .setFooter({ text: `Thread ID: ${thread.id}` })
+                    ]
                 });
 
                 await interaction.reply({ content: 'Curhat Anda berhasil dikirim!', ephemeral: true });
@@ -253,7 +263,6 @@ client.on('interactionCreate', async (interaction) => {
                 await interaction.reply({ content: 'Gagal mengirim curhat. Channel tidak ditemukan.', ephemeral: true });
             }
         } else if (interaction.customId.startsWith('balas_modal_')) {
-            // Proses Form Balasan
             const curhatId = interaction.customId.split('_')[2];
             const balasan = interaction.fields.getTextInputValue('balasan');
 
@@ -272,13 +281,20 @@ client.on('interactionCreate', async (interaction) => {
 
             const channel = client.channels.cache.get(CURHAT_CHANNEL_ID);
             if (channel) {
-                // Cari thread berdasarkan ID pesan, ID thread diambil dari ID pesan
-                const thread = channel.threads.cache.find(t => t.name === `curhat-${curhatId}`);
-                if (thread) {
-                    await thread.send({ embeds: [embed], components: [buttons] });
-                    await interaction.reply({ content: 'Balasan Anda berhasil dikirim ke thread!', ephemeral: true });
+                // Cari thread berdasarkan ID thread yang tersimpan di footer embed
+                const message = await channel.messages.fetch({ message: curhatId });
+                if (message && message.embeds[0]?.footer?.text) {
+                    const threadId = message.embeds[0].footer.text.split('Thread ID: ')[1];
+                    const thread = await channel.threads.fetch(threadId);
+
+                    if (thread) {
+                        await thread.send({ embeds: [embed], components: [buttons] });
+                        await interaction.reply({ content: 'Balasan Anda berhasil dikirim ke thread!', ephemeral: true });
+                    } else {
+                        await interaction.reply({ content: 'Thread tidak ditemukan.', ephemeral: true });
+                    }
                 } else {
-                    await interaction.reply({ content: 'Gagal mengirim balasan. Thread tidak ditemukan.', ephemeral: true });
+                    await interaction.reply({ content: 'Pesan curhat tidak ditemukan.', ephemeral: true });
                 }
             } else {
                 await interaction.reply({ content: 'Gagal mengirim balasan. Channel tidak ditemukan.', ephemeral: true });
