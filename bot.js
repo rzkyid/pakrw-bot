@@ -32,6 +32,7 @@ const ALLOWED_CHANNELS = [
 ];
 const CONFESSIONS_CHANNEL_ID = '1221377162020651008';
 
+
 // Prefix
 const PREFIX = 'rw';
 const LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID;
@@ -144,6 +145,108 @@ client.once('ready', () => {
   updateStatus();
   setInterval(updateStatus, 10000);
   heartbeat();
+});
+
+// Fitur Curhat
+let confessionCounter = 1;
+
+const createCurhatButton = () => {
+    return new ActionRowBuilder().addComponents(
+        new ButtonBuilder()
+            .setCustomId('curhat_yuk')
+            .setLabel('Curhat Yuk')
+            .setStyle(ButtonStyle.Primary)
+    );
+};
+
+client.on('interactionCreate', async (interaction) => {
+    if (interaction.isButton()) {
+        if (interaction.customId === 'curhat_yuk') {
+            await interaction.reply({
+                content: 'Ketik curhatmu secara anonim dengan mengetik `rwcurhat <isi_curhat>`!',
+                ephemeral: true,
+            });
+        } else if (interaction.customId.startsWith('reply_')) {
+            const confessionId = interaction.customId.split('_')[1];
+            await interaction.reply({
+                content: `Ketik balasanmu untuk curhat #${confessionId} dengan mengetik \`rwreply ${confessionId} <isi_balasan>\`!`,
+                ephemeral: true,
+            });
+        }
+    }
+});
+
+client.on('messageCreate', async (message) => {
+    // Perintah rwcurhat
+    if (message.content.startsWith('rwcurhat')) {
+        const confession = message.content.slice(9).trim();
+
+        if (!confession) {
+            await message.reply('Curhatmu kosong! Ketik `rwcurhat <isi_curhat>` untuk mengirim curhat.');
+            return;
+        }
+
+        const channel = client.channels.cache.get(CONFESSIONS_CHANNEL_ID);
+
+        if (!channel) {
+            await message.reply('Channel curhat tidak ditemukan! Pastikan bot memiliki akses ke channel tersebut.');
+            return;
+        }
+
+        const embed = new EmbedBuilder()
+            .setColor('#ff69b4')
+            .setTitle(`Anonymous Confession (#${confessionCounter})`)
+            .setDescription(`"${confession}"`)
+            .setFooter({ text: 'Balas dengan mengetik "rwreply <ID_curhat> <isi_balasan>" atau gunakan tombol di bawah.' })
+            .setTimestamp();
+
+        const replyButton = new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
+                .setCustomId(`reply_${confessionCounter}`)
+                .setLabel('Balas')
+                .setStyle(ButtonStyle.Secondary)
+        );
+
+        await channel.send({ embeds: [embed], components: [replyButton] });
+        await message.reply('Curhatmu berhasil dikirim secara anonim!');
+
+        confessionCounter++;
+    }
+
+    // Perintah rwreply
+    if (message.content.startsWith('rwreply')) {
+        const args = message.content.slice(8).trim().split(' ');
+        const confessionId = args.shift();
+        const replyText = args.join(' ');
+
+        if (!confessionId || !replyText) {
+            await message.reply('Format salah! Ketik `rwreply <ID_curhat> <isi_balasan>` untuk membalas curhat.');
+            return;
+        }
+
+        const channel = client.channels.cache.get(CONFESSIONS_CHANNEL_ID);
+
+        if (!channel) {
+            await message.reply('Channel curhat tidak ditemukan! Pastikan bot memiliki akses ke channel tersebut.');
+            return;
+        }
+
+        const replyEmbed = new EmbedBuilder()
+            .setColor('#00bfff')
+            .setTitle(`Balasan untuk Curhat #${confessionId}`)
+            .setDescription(`"${replyText}"`)
+            .setFooter({ text: 'Dikirim secara anonim' })
+            .setTimestamp();
+
+        await channel.send({ embeds: [replyEmbed] });
+        await message.reply(`Balasan untuk curhat #${confessionId} berhasil dikirim!`);
+    }
+
+    // Perintah untuk memunculkan tombol "Curhat Yuk"
+    if (message.content === 'rwtombolcurhat') {
+        const row = createCurhatButton();
+        await message.channel.send({ content: 'Klik tombol berikut untuk memulai curhat!', components: [row] });
+    }
 });
 
 // Respons Otomatis dan Logging
