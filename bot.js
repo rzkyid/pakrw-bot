@@ -192,12 +192,6 @@ client.on('interactionCreate', async (interaction) => {
                 new ActionRowBuilder().addComponents(linkGambarInput)
             );
 
-            // Log ke channel ID 1099916187044941914
-            const logChannel = client.channels.cache.get('1099916187044941914');
-            if (logChannel) {
-                logChannel.send(`📝 **${interaction.user.username}** menekan tombol "Curhat Yuk"`);
-            }
-
             await interaction.showModal(modal);
         }
 
@@ -215,13 +209,6 @@ client.on('interactionCreate', async (interaction) => {
                 .setRequired(true);
 
             modal.addComponents(new ActionRowBuilder().addComponents(balasanInput));
-
-            // Log ke channel ID 1099916187044941914
-            const logChannel = client.channels.cache.get('1099916187044941914');
-            if (logChannel) {
-                logChannel.send(`💬 **${interaction.user.username}** menekan tombol "Balas" untuk curhat ID: ${curhatId}`);
-            }
-
             await interaction.showModal(modal);
         }
     }
@@ -229,6 +216,7 @@ client.on('interactionCreate', async (interaction) => {
     if (interaction.type === InteractionType.ModalSubmit) {
         if (interaction.customId === 'curhat_modal') {
             // Proses Form Curhat
+            const curhatId = generateShortId();
             const pesanCurhat = interaction.fields.getTextInputValue('pesan_curhat');
             const linkGambar = interaction.fields.getTextInputValue('link_gambar');
 
@@ -236,6 +224,7 @@ client.on('interactionCreate', async (interaction) => {
                 .setColor('#4B5320')
                 .setTitle('Pesan Curhat')
                 .setDescription(pesanCurhat)
+                .setFooter({ text: `Curhat ID: ${curhatId}` }) // Gunakan ID singkat
                 .setTimestamp();
 
             if (linkGambar) {
@@ -244,45 +233,49 @@ client.on('interactionCreate', async (interaction) => {
 
             const buttons = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
-                    .setCustomId(`balas_${interaction.id}`)
+                    .setCustomId('curhat_yuk')
+                    .setLabel('✨ Curhat Yuk')
+                    .setStyle(ButtonStyle.Primary),
+                new ButtonBuilder()
+                    .setCustomId(`balas_${curhatId}`)
                     .setLabel('💬 Balas')
                     .setStyle(ButtonStyle.Secondary)
             );
 
             const channel = client.channels.cache.get(CURHAT_CHANNEL_ID);
             if (channel) {
-                const message = await channel.send({ embeds: [embed], components: [buttons] });
+                // Kirim pesan curhat
+                await channel.send({ embeds: [embed], components: [buttons] });
 
                 // Log ke channel ID 1099916187044941914
                 const logChannel = client.channels.cache.get('1099916187044941914');
                 if (logChannel) {
-                    logChannel.send(`🔊 **${interaction.user.username}** mengirim curhat: "${pesanCurhat}"`);
+                    logChannel.send(`[LOG] **${interaction.user.username}** mengirim curhat: "${pesanCurhat}"`);
                 }
 
                 await interaction.reply({ content: 'Curhat Anda berhasil dikirim!', ephemeral: true });
+            } else {
+                await interaction.reply({ content: 'Gagal mengirim curhat. Channel tidak ditemukan.', ephemeral: true });
             }
         } else if (interaction.customId.startsWith('balas_modal_')) {
             const curhatId = interaction.customId.split('_')[2];
             const balasan = interaction.fields.getTextInputValue('balasan');
 
-            const embed = new EmbedBuilder()
-                .setColor('#DDF35E')
-                .setTitle('Balasan Curhat')
-                .setDescription(balasan)
-                .setTimestamp();
-
-            const buttons = new ActionRowBuilder().addComponents(
-                new ButtonBuilder()
-                    .setCustomId('curhat_yuk')
-                    .setLabel('📝 Curhat Yuk')
-                    .setStyle(ButtonStyle.Primary)
-            );
-
             const channel = client.channels.cache.get(CURHAT_CHANNEL_ID);
             if (channel) {
                 try {
-                    // Cari pesan curhat yang akan dibalas
-                    const message = await channel.messages.fetch(curhatId);
+                    // Cari pesan curhat berdasarkan curhatId
+                    let message;
+                    try {
+                        message = await channel.messages.fetch(curhatId);
+                    } catch (error) {
+                        // Jika pesan tidak ditemukan, coba cari dari footer embed
+                        const allMessages = await channel.messages.fetch({ limit: 100 });
+                        message = allMessages.find((msg) =>
+                            msg.embeds[0]?.footer?.text === `Curhat ID: ${curhatId}`
+                        );
+                    }
+
                     if (message) {
                         // Cek apakah thread sudah ada, jika belum buat thread baru
                         let thread;
@@ -290,20 +283,28 @@ client.on('interactionCreate', async (interaction) => {
                             thread = message.thread;
                         } else {
                             thread = await message.startThread({
-                                name: `Balasan - ${message.id}`,
+                                name: `Balasan - ${curhatId}`,
                                 autoArchiveDuration: 1440,
                             });
                         }
 
+                        // Membuat embed balasan
+                        const embed = new EmbedBuilder()
+                            .setColor('#DDF35E')
+                            .setTitle('Balasan Curhat')
+                            .setDescription(balasan)
+                            .setFooter({ text: `Curhat ID: ${curhatId}` }) // Gunakan ID singkat
+                            .setTimestamp();
+
                         // Kirim balasan ke thread yang ada
-                        await thread.send({ embeds: [embed], components: [buttons] });
+                        await thread.send({ embeds: [embed] });
 
                         // Log ke channel ID 1099916187044941914
                         const logChannel = client.channels.cache.get('1099916187044941914');
                         if (logChannel) {
-                            logChannel.send(`🔊 **${interaction.user.username}** mengirim balasan ke curhat ID: ${curhatId} - "${balasan}"`);
+                            logChannel.send(`[LOG] **${interaction.user.username}** mengirim balasan ke curhat ID: ${curhatId} - "${balasan}"`);
                         }
-
+                        
                         await interaction.reply({ content: 'Balasan Anda berhasil dikirim ke thread!', ephemeral: true });
                     } else {
                         await interaction.reply({ content: 'Pesan curhat tidak ditemukan di channel yang sama.', ephemeral: true });
@@ -318,7 +319,6 @@ client.on('interactionCreate', async (interaction) => {
         }
     }
 });
-
 
 // Respons Otomatis dan Logging
 client.on('messageCreate', async (message) => {
