@@ -80,7 +80,7 @@ client.on('interactionCreate', async (interaction) => {
         // Periksa apakah member sudah memiliki role tersebut
         if (member.roles.cache.has(role.id)) {
             return interaction.reply({
-                content: `✅ ${member.user.tag} sudah memiliki role **${role.name}**!`,
+                content: `✅ ${member} sudah memiliki role **${role.name}**!`,
                 ephemeral: false // Pesan ini dapat dilihat oleh semua member
             });
         }
@@ -93,7 +93,7 @@ client.on('interactionCreate', async (interaction) => {
         try {
             await member.roles.add(role);
             return interaction.reply({
-                content: `✅ Berhasil memberikan role **${role.name}** kepada ${member.user.tag}.`,
+                content: `✅ Berhasil memberikan role **${role.name}** kepada ${member}.`,
                 ephemeral: false // Pesan ini dapat dilihat oleh semua member
             });
         } catch (error) {
@@ -114,7 +114,7 @@ client.on('interactionCreate', async (interaction) => {
         // Periksa apakah member sudah memiliki role tersebut
         if (!member.roles.cache.has(role.id)) {
             return interaction.reply({
-                content: `✅ ${member.user.tag} tidak memiliki role **${role.name}**!`,
+                content: `✅ ${member} tidak memiliki role **${role.name}**!`,
                 ephemeral: false // Pesan ini dapat dilihat oleh semua member
             });
         }
@@ -127,7 +127,7 @@ client.on('interactionCreate', async (interaction) => {
         try {
             await member.roles.remove(role);
             return interaction.reply({
-                content: `✅ Berhasil menghapus role **${role.name}** dari ${member.user.tag}.`,
+                content: `✅ Berhasil menghapus role **${role.name}** dari ${member}.`,
                 ephemeral: false // Pesan ini dapat dilihat oleh semua member
             });
         } catch (error) {
