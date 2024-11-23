@@ -586,7 +586,7 @@ client.on('messageCreate', async (message) => {
  const lowerContent = message.content.toLowerCase();
 
     if (lowerContent.includes('rwsupport')) {
-        message.channel.send('👋 Halo kak ada yang bisa dibantu? <:What:1099424830283055235>\nKalau mau ambil role bisa cek dulu listnya di <#1052123748137963550>, nanti bakal aku kasih jika memenuhi kriteria ya. <:Wink:1099424794350473216>');
+        message.channel.send('👋 Halo kak ada yang bisa dibantu? <:What:1099424830283055235>\nKalau mau ambil role bisa cek dulu listnya di <#1052123748137963550>, nanti bakal saya kasih jika memenuhi kriteria ya. <:Wink:1099424794350473216>');
     } else if (lowerContent.includes('rwverif')) {
         message.channel.send('👩 Untuk verifikasi role Nona, cukup kirimkan voice note (vn) disini atau bisa bergabung ke voice channel yang ada Pengurusnya ya. <:Hehe:1099424821974151310>');
     } else if (lowerContent.includes('rwthanks')) {
