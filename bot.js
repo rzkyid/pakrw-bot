@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Client, GatewayIntentBits, EmbedBuilder, ActivityType, MessageAttachment, ActionRowBuilder, ButtonBuilder, ButtonStyle, 
+const { Client, GatewayIntentBits, Partials, EmbedBuilder, ActivityType, MessageAttachment, ActionRowBuilder, ButtonBuilder, ButtonStyle, 
        ModalBuilder, TextInputBuilder, TextInputStyle, InteractionType, Intents, MessageActionRow, MessageButton, MessageEmbed,
        SlashCommandBuilder, PermissionFlagsBits
       } = require('discord.js');
@@ -25,6 +25,10 @@ const client = new Client({
         GatewayIntentBits.MessageContent,
         GatewayIntentBits.GuildMembers
     ],
+    partials: [
+        Partials.Message,
+        Partials.Channel
+    ],
 });
 
 // Channel yang diizinkan untuk autoresponder
@@ -34,6 +38,15 @@ const ALLOWED_CHANNELS = [
     '1307965818654560368', // ID Channel Kantor Pejabat
 ];
 const CURHAT_CHANNEL_ID = '1221377162020651008';
+const GALLERY_CHANNEL_IDS = [
+    '1100632084051140669', // Random
+    '1311277162753425429', // Selfie
+    '1311277387148951582', // Hewan
+    '1311277512558510090', // Makanan
+    '1311278033969090610', // Fotografi
+    '1311278783344676884', // Karya Seni
+    '1311278954245787698', // Cosplay
+];
 
 // Prefix
 const PREFIX = 'rw';
@@ -666,6 +679,31 @@ if (message.content.startsWith(`${PREFIX}tanya`)) {
         message.reply('Maaf, Pak RW lagi bingung nih sama pertanyaannya');
     }
 }
+});
+
+// Fitur Auto Thread Galeri Warga
+client.on('messageCreate', async (message) => {
+    // Pastikan pesan berasal dari salah satu channel galeri, bukan dari bot, dan berisi gambar
+    if (
+        GALLERY_CHANNEL_IDS.includes(message.channel.id) && // Channel harus salah satu dari yang diatur
+        !message.author.bot && // Jangan memproses pesan dari bot
+        message.attachments.size > 0 // Pastikan ada lampiran
+    ) {
+        // Buat thread dengan nama "Post by username"
+        try {
+            const thread = await message.startThread({
+                name: `Post by ${message.author.username}`,
+                autoArchiveDuration: 1440, // Thread akan diarsipkan otomatis setelah 24 jam
+            });
+
+            console.log(`Thread "${thread.name}" berhasil dibuat untuk ${message.author.tag}.`);
+
+            // Tambahkan reaksi ❤️ ke pesan asli
+            await message.react('❤️');
+        } catch (error) {
+            console.error(`Gagal membuat thread: ${error.message}`);
+        }
+    }
 });
 
 // Login ke bot
