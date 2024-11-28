@@ -700,7 +700,7 @@ client.on('messageCreate', async (message) => {
             try {
                 await message.delete();
                 const warning = await message.channel.send(
-                    `${message.author}, hanya gambar yang diperbolehkan di channel ini!`
+                    `${message.author}, hanya foto dan video yang diperbolehkan di channel ini!`
                 );
                 setTimeout(() => warning.delete(), 5000);
             } catch (error) {
