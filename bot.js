@@ -683,25 +683,39 @@ if (message.content.startsWith(`${PREFIX}tanya`)) {
 
 // Fitur Auto Thread Galeri Warga
 client.on('messageCreate', async (message) => {
-    // Pastikan pesan berasal dari salah satu channel galeri, bukan dari bot, dan berisi gambar
-    if (
-        GALLERY_CHANNEL_IDS.includes(message.channel.id) && // Channel harus salah satu dari yang diatur
-        !message.author.bot && // Jangan memproses pesan dari bot
-        message.attachments.size > 0 // Pastikan ada lampiran
-    ) {
-        // Buat thread dengan nama "Post by username"
-        try {
-            const thread = await message.startThread({
-                name: `Post by ${message.author.username}`,
-                autoArchiveDuration: 1440, // Thread akan diarsipkan otomatis setelah 24 jam
-            });
+    // Pastikan pesan berasal dari salah satu channel galeri
+    if (GALLERY_CHANNEL_IDS.includes(message.channel.id)) {
+        // Jika pesan bukan dari bot dan tidak memiliki lampiran, hapus pesan
+        if (!message.author.bot && message.attachments.size === 0) {
+            try {
+                await message.delete();
+                console.log(`Pesan teks dari ${message.author.tag} dihapus di channel ${message.channel.name}.`);
 
-            console.log(`Thread "${thread.name}" berhasil dibuat untuk ${message.author.tag}.`);
+                // Kirim peringatan (dihapus otomatis setelah 5 detik)
+                const warning = await message.channel.send(
+                    `${message.author}, hanya gambar yang diperbolehkan di channel ini!`
+                );
+                setTimeout(() => warning.delete(), 5000);
+            } catch (error) {
+                console.error(`Gagal menghapus pesan teks: ${error.message}`);
+            }
+        }
 
-            // Tambahkan reaksi ❤️ ke pesan asli
-            await message.react('❤️');
-        } catch (error) {
-            console.error(`Gagal membuat thread: ${error.message}`);
+        // Jika pesan memiliki gambar, buat thread dan tambahkan reaksi
+        if (!message.author.bot && message.attachments.size > 0) {
+            try {
+                const thread = await message.startThread({
+                    name: `Post by ${message.author.username}`,
+                    autoArchiveDuration: 1440, // Thread akan diarsipkan otomatis setelah 24 jam
+                });
+
+                console.log(`Thread "${thread.name}" berhasil dibuat untuk ${message.author.tag}.`);
+
+                // Tambahkan reaksi ❤️ ke pesan asli
+                await message.react('❤️');
+            } catch (error) {
+                console.error(`Gagal membuat thread: ${error.message}`);
+            }
         }
     }
 });
