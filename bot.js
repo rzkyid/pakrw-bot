@@ -690,40 +690,67 @@ if (message.content.startsWith(`${PREFIX}tanya`)) {
 }
 });
 
-// Fitur Auto Thread Galeri Warga
+// Fitur Auto Thread Galeri Warga & Auto Role
 client.on('messageCreate', async (message) => {
-    // Pastikan pesan berasal dari salah satu channel galeri
-    if (GALLERY_CHANNEL_IDS.includes(message.channel.id)) {
-        // Jika pesan bukan dari bot dan tidak memiliki lampiran, hapus pesan
+    // Pastikan pesan berasal dari channel yang dikonfigurasi
+    const channelConfig = CHANNEL_CONFIG[message.channel.id];
+    if (channelConfig) {
+        // Jika pesan tidak memiliki lampiran, hapus
         if (!message.author.bot && message.attachments.size === 0) {
             try {
                 await message.delete();
-                console.log(`Pesan teks dari ${message.author.tag} dihapus di channel ${message.channel.name}.`);
-
-                // Kirim peringatan (dihapus otomatis setelah 5 detik)
                 const warning = await message.channel.send(
                     `${message.author}, hanya gambar yang diperbolehkan di channel ini!`
                 );
                 setTimeout(() => warning.delete(), 5000);
             } catch (error) {
-                console.error(`Gagal menghapus pesan teks: ${error.message}`);
+                console.error(`Gagal menghapus pesan: ${error.message}`);
             }
+            return;
         }
 
-        // Jika pesan memiliki gambar, buat thread dan tambahkan reaksi
+        // Jika pesan memiliki gambar, buat thread dan berikan role
         if (!message.author.bot && message.attachments.size > 0) {
             try {
+                // Membuat thread
                 const thread = await message.startThread({
-                    name: `Post by ${message.author.username}`,
-                    autoArchiveDuration: 1440, // Thread akan diarsipkan otomatis setelah 24 jam
+                    name: `${channelConfig.threadName} ${message.author.username}`,
+                    autoArchiveDuration: 1440, // Thread otomatis diarsipkan setelah 24 jam
                 });
 
-                console.log(`Thread "${thread.name}" berhasil dibuat untuk ${message.author.tag}.`);
-
-                // Tambahkan reaksi ❤️ ke pesan asli
+                // Tambahkan reaksi ❤️
                 await message.react('❤️');
+
+                // Berikan role sesuai channel
+                const guildMember = await message.guild.members.fetch(message.author.id);
+
+                if (channelConfig.roleId) {
+                    if (!guildMember.roles.cache.has(channelConfig.roleId)) {
+                        await guildMember.roles.add(channelConfig.roleId);
+                        console.log(`Role ${channelConfig.roleId} diberikan ke ${message.author.tag}`);
+                    }
+                } else if (message.channel.id === 'CHANNEL_ID_SELFIE') {
+                    // Logika khusus untuk channel Selfie
+                    if (
+                        guildMember.roles.cache.has(channelConfig.requirementCogan) &&
+                        !guildMember.roles.cache.has(channelConfig.roleIdCogan)
+                    ) {
+                        await guildMember.roles.add(channelConfig.roleIdCogan);
+                        console.log(`Role Cogan diberikan ke ${message.author.tag}`);
+                    }
+
+                    if (
+                        channelConfig.requirementKembangDesa.some((roleId) => 
+                            guildMember.roles.cache.has(roleId)
+                        ) &&
+                        !guildMember.roles.cache.has(channelConfig.roleIdKembangDesa)
+                    ) {
+                        await guildMember.roles.add(channelConfig.roleIdKembangDesa);
+                        console.log(`Role Kembang Desa diberikan ke ${message.author.tag}`);
+                    }
+                }
             } catch (error) {
-                console.error(`Gagal membuat thread: ${error.message}`);
+                console.error(`Gagal memproses pesan: ${error.message}`);
             }
         }
     }
