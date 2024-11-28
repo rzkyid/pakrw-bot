@@ -27,7 +27,8 @@ const client = new Client({
     ],
     partials: [
         Partials.Message,
-        Partials.Channel
+        Partials.Channel,
+        Partials.GuildMember
     ],
 });
 
@@ -38,15 +39,23 @@ const ALLOWED_CHANNELS = [
     '1307965818654560368', // ID Channel Kantor Pejabat
 ];
 const CURHAT_CHANNEL_ID = '1221377162020651008';
-const GALLERY_CHANNEL_IDS = [
-    '1100632084051140669', // Random
-    '1311277162753425429', // Selfie
-    '1311277387148951582', // Hewan
-    '1311277512558510090', // Makanan
-    '1311278033969090610', // Fotografi
-    '1311278783344676884', // Karya Seni
-    '1311278954245787698', // Cosplay
-];
+
+// Konfigurasi channel galeri dan role
+const CHANNEL_CONFIG = {
+    '1100632084051140669': { roleId: '1311282573699190854', threadName: 'Post by' },
+    '1311277162753425429': { 
+        roleIdCogan: '1135459439558791219',
+        roleIdKembangDesa: '1135458269670944879',
+        requirementCogan: '1052230151984906300',
+        requirementKembangDesa: ['1052128766777901087', '1221368730110656532'],
+        threadName: 'Post by'
+    },
+    '1311277387148951582': { roleId: 'ROLE_ID_ANIMAL_LOVERS', threadName: 'Post by' },
+    '1311277512558510090': { roleId: 'ROLE_ID_FOODIE', threadName: 'Post by' },
+    '1311278033969090610': { roleId: 'ROLE_ID_PHOTOGRAPHER', threadName: 'Post by' },
+    '1311278783344676884': { roleId: 'ROLE_ID_SENIMAN', threadName: 'Post by' },
+    '1311278954245787698': { roleId: 'ROLE_ID_COSPLAYER', threadName: 'Post by' },
+};
 
 // Prefix
 const PREFIX = 'rw';
