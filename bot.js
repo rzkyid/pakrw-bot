@@ -50,11 +50,11 @@ const CHANNEL_CONFIG = {
         requirementKembangDesa: ['1052128766777901087', '1221368730110656532'],
         threadName: 'Post by'
     },
-    '1311277387148951582': { roleId: 'ROLE_ID_ANIMAL_LOVERS', threadName: 'Post by' },
-    '1311277512558510090': { roleId: 'ROLE_ID_FOODIE', threadName: 'Post by' },
-    '1311278033969090610': { roleId: 'ROLE_ID_PHOTOGRAPHER', threadName: 'Post by' },
-    '1311278783344676884': { roleId: 'ROLE_ID_SENIMAN', threadName: 'Post by' },
-    '1311278954245787698': { roleId: 'ROLE_ID_COSPLAYER', threadName: 'Post by' },
+    '1311277387148951582': { roleId: '1311283067058524190', threadName: 'Post by' },
+    '1311277512558510090': { roleId: '1311283485847195648', threadName: 'Post by' },
+    '1311278033969090610': { roleId: '1287745130106847313', threadName: 'Post by' },
+    '1311278783344676884': { roleId: '1285971566366032004', threadName: 'Post by' },
+    '1311278954245787698': { roleId: '1135121270078451752', threadName: 'Post by' },
 };
 
 // Prefix
