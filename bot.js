@@ -75,6 +75,18 @@ app.listen(PORT, () => {
     console.log(`Server Express berjalan di port ${PORT}`);
 });
 
+// Pesan otomatis ketika ada member baru bergabung
+const WELCOME_CHANNEL_ID = '1052123058678276106';
+client.on('guildMemberAdd', (member) => {
+  // Dapatkan channel berdasarkan ID
+  const channel = member.guild.channels.cache.get(WELCOME_CHANNEL_ID);
+
+  // Pastikan channel ditemukan dan dapat dikirim pesan
+  if (channel && channel.isTextBased()) {
+    channel.send(`Halo ada warga baru nih! <@${member.id}> Salam kenal, semoga betah jadi warga disini hehe, jangan lupa di sapa ya.`);
+  }
+});
+
 // Fitur kasih role
 client.on('interactionCreate', async (interaction) => {
     // Pastikan hanya menangani Slash Command
