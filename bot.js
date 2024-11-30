@@ -480,43 +480,12 @@ client.on('interactionCreate', async (interaction) => {
 });
 
 
-// Respons Otomatis dan Logging
+// Fitur Auto Respon di Chat Warga
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
 
      // Cek jika channel termasuk dalam daftar channel yang diizinkan
     if (!ALLOWED_CHANNELS.includes(message.channel.id)) return;
-
-    // Logging penggunaan perintah
-    const logChannel = client.channels.cache.get(LOG_CHANNEL_ID);
-    if (logChannel && message.content.startsWith(PREFIX)) {
-        logChannel.send(`[LOG] ${message.author.tag} menggunakan perintah: ${message.content}`);
-    }
-
-    // Perintah untuk bergabung ke voice channel dan memutar audio
-    if (message.content.startsWith(`${PREFIX}join`)) {
-        const voiceChannel = message.member.voice.channel;
-
-        if (!voiceChannel) {
-            message.reply('Anda harus berada di voice channel untuk menggunakan perintah ini.');
-            return;
-        }
-
-        await playAudio(voiceChannel);
-        message.reply('Pak RW telah bergabung ke channel.');
-    }
-
-    // Perintah untuk keluar dari voice channel
-    if (message.content.startsWith(`${PREFIX}leave`)) {
-        if (connection) {
-            connection.destroy();
-            connection = null;
-            player = null;
-            message.reply('Pak RW telah keluar dari voice channel.');
-        } else {
-            message.reply('Pak RW tidak berada di voice channel.');
-        }
-    }
 
     // Respons otomatis untuk kata kunci
     const lowerContent = message.content.toLowerCase();
@@ -605,6 +574,12 @@ client.on('messageCreate', async (message) => {
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
 
+// Logging penggunaan perintah
+ const logChannel = client.channels.cache.get(LOG_CHANNEL_ID);
+    if (logChannel && message.content.startsWith(PREFIX)) {
+        logChannel.send(`[LOG] ${message.author.tag} menggunakan perintah: ${message.content}`);
+    }
+
  const lowerContent = message.content.toLowerCase();
 
     if (lowerContent.includes('rwsupport')) {
@@ -614,7 +589,32 @@ client.on('messageCreate', async (message) => {
     } else if (lowerContent.includes('rwthanks')) {
         message.channel.send('👍 Baik kak jika sudah cukup, saya izin close tiketnya ya.\nTerima kasih sudah menghubungi admin. <:Wink:1099424794350473216>');
     } 
-       
+
+// Perintah untuk bergabung ke voice channel dan memutar audio
+    if (message.content.startsWith(`${PREFIX}join`)) {
+        const voiceChannel = message.member.voice.channel;
+
+        if (!voiceChannel) {
+            message.reply('Anda harus berada di voice channel untuk menggunakan perintah ini.');
+            return;
+        }
+
+        await playAudio(voiceChannel);
+        message.reply('Pak RW telah bergabung ke channel.');
+    }
+
+    // Perintah untuk keluar dari voice channel
+    if (message.content.startsWith(`${PREFIX}leave`)) {
+        if (connection) {
+            connection.destroy();
+            connection = null;
+            player = null;
+            message.reply('Pak RW telah keluar dari voice channel.');
+        } else {
+            message.reply('Pak RW tidak berada di voice channel.');
+        }
+    }
+
 });
 
 // Perintah untuk ngobrol dengan Gemini Chat
@@ -639,7 +639,7 @@ const makeRequestWithRetry = async (query) => {
                     messages: [
                         {
                             role: 'system',
-                            content: 'Kamu berperan sebagai seorang Pak RW di server discord bernama Gang Desa, discord tersebut memiliki konsep perdesaan dan kamu dapat menjawab semua pertanyaan warga desa. Jawab dengan bijak dan gunakan bahasa yang santai dan sedikit humoris. Jawabanmu harus singkat, langsung ke poin, dan tidak lebih dari 2000 karakter.',
+                            content: 'Kamu berperan sebagai seorang Pak RW di server discord bernama Gang Desa, Gang Desa adalah sebuah komunitas discord dengan konsep perdesaan untuk cari teman ngobrol, tempat curhat, sharing, mabar, nobar, atau bahkan cari jodoh. Dan kamu dapat menjawab semua pertanyaan warga desa. Jawab dengan bijak dan gunakan bahasa yang santai dengan sedikit humoris. Jawabanmu harus singkat, dan tidak lebih dari 2000 karakter.',
                         },
                         {
                             role: 'user',
