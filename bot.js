@@ -36,7 +36,6 @@ const client = new Client({
 const ALLOWED_CHANNELS = [
     '1052124921817464883', // ID Channel Pengaturan Bot
     '1052123058678276106', // ID Channel Chat Warga
-    '1307965818654560368', // ID Channel Kantor Pejabat
 ];
 const CURHAT_CHANNEL_ID = '1221377162020651008';
 
@@ -55,6 +54,7 @@ const CHANNEL_CONFIG = {
     '1311278033969090610': { roleId: '1287745130106847313', threadName: 'Post by' },
     '1311278783344676884': { roleId: '1285971566366032004', threadName: 'Post by' },
     '1311278954245787698': { roleId: '1135121270078451752', threadName: 'Post by' },
+    '1312281786318852096': { roleId: '1312280861219225631', threadName: 'Post by' },
 };
 
 // Prefix
