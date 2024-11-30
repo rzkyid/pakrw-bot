@@ -83,7 +83,7 @@ client.on('guildMemberAdd', (member) => {
 
   // Pastikan channel ditemukan dan dapat dikirim pesan
   if (channel && channel.isTextBased()) {
-    channel.send(`Halo ada warga baru nih! <@${member.id}> Salam kenal, semoga betah jadi warga disini hehe, jangan lupa di sapa ya.`);
+    channel.send(`Halo ada warga baru nih! <@${member.id}>\nSalam kenal, semoga betah jadi warga disini hehe <:Hehe:1099424821974151310>\nJangan lupa di sapa ya!`);
   }
 });
 
