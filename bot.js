@@ -741,7 +741,7 @@ client.on('messageCreate', async (message) => {
                         await guildMember.roles.add(channelConfig.roleId);
                         console.log(`Role ${channelConfig.roleId} diberikan ke ${message.author.tag}`);
                     }
-                } else if (message.channel.id === 'CHANNEL_ID_SELFIE') {
+                } else if (message.channel.id === '1311277162753425429') {
                     // Logika khusus untuk channel Selfie
                     if (
                         guildMember.roles.cache.has(channelConfig.requirementCogan) &&
