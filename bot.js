@@ -46,7 +46,7 @@ const CHANNEL_CONFIG = {
         roleIdCogan: '1135459439558791219',
         roleIdKembangDesa: '1135458269670944879',
         requirementCogan: '1052230151984906300',
-        requirementKembangDesa: ['1052128766777901087', '1221368730110656532'],
+        requirementKembangDesa: '1052128766777901087',
         threadName: 'Post by'
     },
     '1311277387148951582': { roleId: '1311283067058524190', threadName: 'Post by' },
