@@ -102,7 +102,7 @@ client.on('interactionCreate', async (interaction) => {
     }
 });
 
-// Fitur kasih role
+// Fitur kasih role & mengirim pesan melalui bot
 client.on('interactionCreate', async (interaction) => {
     // Pastikan hanya menangani Slash Command
     if (!interaction.isCommand()) return;
@@ -184,6 +184,16 @@ client.on('interactionCreate', async (interaction) => {
             return interaction.reply({ content: "Terjadi kesalahan saat menghapus role.", ephemeral: true });
         }
     }
+       
+// Fitur /say untuk mengirim pesan melalui Bot
+    if (interaction.commandName === 'say') {
+        // Mendapatkan pesan dari opsi
+        const pesan = interaction.options.getString('pesan');
+
+        // Mengirimkan pesan
+        await interaction.reply({ content: 'Pesan berhasil dikirim!', ephemeral: true });
+        await interaction.channel.send(pesan); // Pesan dikirim ke channel tempat command digunakan
+    }  
 });
 
 // Register Slash Commands
