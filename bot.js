@@ -230,7 +230,6 @@ client.on('ready', () => {
                 .setDescription('Ketik pesan yang akan dikirim oleh bot')
                 .setRequired(true)
         )
-        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator); 
     );
 });
 
