@@ -87,6 +87,34 @@ client.on('guildMemberAdd', (member) => {
   }
 });
 
+// Fitur /say untuk mengirim pesan melalui Bot
+    const sayCommand = new SlashCommandBuilder()
+        .setName('say')
+        .setDescription('Bot akan mengirimkan pesan yang kamu ketik.')
+        .addStringOption((option) =>
+            option
+                .setName('pesan')
+                .setDescription('Ketik pesan yang akan dikirim oleh bot')
+                .setRequired(true)
+        )
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator); // Hanya admin yang dapat menggunakan perintah ini
+
+    client.application?.commands.create(sayCommand);
+});
+
+client.on('interactionCreate', async (interaction) => {
+    if (!interaction.isCommand()) return;
+
+    if (interaction.commandName === 'say') {
+        // Mendapatkan pesan dari opsi
+        const pesan = interaction.options.getString('pesan');
+
+        // Mengirimkan pesan
+        await interaction.reply({ content: 'Pesan berhasil dikirim!', ephemeral: true });
+        await interaction.channel.send(pesan); // Pesan dikirim ke channel tempat command digunakan
+    }
+});
+
 // Fitur kasih role
 client.on('interactionCreate', async (interaction) => {
     // Pastikan hanya menangani Slash Command
