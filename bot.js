@@ -774,9 +774,7 @@ client.on('messageCreate', async (message) => {
                     }
 
                     if (
-                        channelConfig.requirementKembangDesa.some((roleId) => 
-                            guildMember.roles.cache.has(roleId)
-                        ) &&
+                        guildMember.roles.cache.has(channelConfig.requirementKembangDesa) &&
                         !guildMember.roles.cache.has(channelConfig.roleIdKembangDesa)
                     ) {
                         await guildMember.roles.add(channelConfig.roleIdKembangDesa);
