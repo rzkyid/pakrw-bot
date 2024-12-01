@@ -87,21 +87,6 @@ client.on('guildMemberAdd', (member) => {
   }
 });
 
-// Fitur /say untuk mengirim pesan melalui Bot
-
-client.on('interactionCreate', async (interaction) => {
-    if (!interaction.isCommand()) return;
-
-    if (interaction.commandName === 'say') {
-        // Mendapatkan pesan dari opsi
-        const pesan = interaction.options.getString('pesan');
-
-        // Mengirimkan pesan
-        await interaction.reply({ content: 'Pesan berhasil dikirim!', ephemeral: true });
-        await interaction.channel.send(pesan); // Pesan dikirim ke channel tempat command digunakan
-    }
-});
-
 // Fitur kasih role & mengirim pesan melalui bot
 client.on('interactionCreate', async (interaction) => {
     // Pastikan hanya menangani Slash Command
