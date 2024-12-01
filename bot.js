@@ -88,19 +88,6 @@ client.on('guildMemberAdd', (member) => {
 });
 
 // Fitur /say untuk mengirim pesan melalui Bot
-    const sayCommand = new SlashCommandBuilder()
-        .setName('say')
-        .setDescription('Bot akan mengirimkan pesan yang kamu ketik.')
-        .addStringOption((option) =>
-            option
-                .setName('pesan')
-                .setDescription('Ketik pesan yang akan dikirim oleh bot')
-                .setRequired(true)
-        )
-        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator); // Hanya admin yang dapat menggunakan perintah ini
-
-    client.application?.commands.create(sayCommand);
-});
 
 client.on('interactionCreate', async (interaction) => {
     if (!interaction.isCommand()) return;
@@ -231,6 +218,19 @@ client.on('ready', () => {
                     .setDescription('Pilih role yang akan dihapus')
                     .setRequired(true)
             )
+    );
+
+    client.application.commands.create(
+        new SlashCommandBuilder()
+        .setName('say')
+        .setDescription('Bot akan mengirimkan pesan yang kamu ketik.')
+        .addStringOption((option) =>
+            option
+                .setName('pesan')
+                .setDescription('Ketik pesan yang akan dikirim oleh bot')
+                .setRequired(true)
+        )
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator); 
     );
 });
 
