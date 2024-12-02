@@ -660,7 +660,7 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 // Fungsi untuk mencoba kembali dengan retry (Exponential backoff)
 const makeRequestWithRetry = async (query) => {
     const MAX_RETRIES = 5; // Maksimal percobaan ulang
-    const RETRY_DELAY = 1000; // Delay awal 1 detik
+    const RETRY_DELAY = 3000; // Delay awal 1 detik
 
     let attempts = 0;
     while (attempts < MAX_RETRIES) {
