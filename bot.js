@@ -87,6 +87,53 @@ client.on('guildMemberAdd', (member) => {
   }
 });
 
+// Register Slash Commands
+client.on('ready', () => {
+    client.application.commands.create(
+        new SlashCommandBuilder()
+            .setName('kasihrole')  // Nama command untuk memberikan role
+            .setDescription('Memberikan role kepada member')
+            .addUserOption(option => 
+                option.setName('member')
+                    .setDescription('Pilih member')
+                    .setRequired(true)
+            )
+            .addRoleOption(option => 
+                option.setName('role')
+                    .setDescription('Pilih role yang akan diberikan')
+                    .setRequired(true)
+            )
+    );
+
+    client.application.commands.create(
+        new SlashCommandBuilder()
+            .setName('hapusrole')  // Nama command untuk menghapus role
+            .setDescription('Menghapus role dari member')
+            .addUserOption(option => 
+                option.setName('member')
+                    .setDescription('Pilih member')
+                    .setRequired(true)
+            )
+            .addRoleOption(option => 
+                option.setName('role')
+                    .setDescription('Pilih role yang akan dihapus')
+                    .setRequired(true)
+            )
+    );
+
+    client.application.commands.create(
+        new SlashCommandBuilder()
+        .setName('say')
+        .setDescription('Bot akan mengirimkan pesan yang kamu ketik.')
+        .addStringOption((option) =>
+            option
+                .setName('pesan')
+                .setDescription('Ketik pesan yang akan dikirim oleh bot')
+                .setRequired(true)
+        )
+    );
+});
+
 // Fitur kasih role & mengirim pesan melalui bot
 client.on('interactionCreate', async (interaction) => {
     // Pastikan hanya menangani Slash Command
@@ -170,7 +217,7 @@ client.on('interactionCreate', async (interaction) => {
         }
     }
        
-// Fitur /say untuk mengirim pesan melalui Bot
+// Commoand say untuk mengirim pesan melalui Bot
     if (interaction.commandName === 'say') {
         // Mendapatkan pesan dari opsi
         const pesan = interaction.options.getString('pesan');
@@ -179,53 +226,6 @@ client.on('interactionCreate', async (interaction) => {
         await interaction.reply({ content: 'Pesan berhasil dikirim!', ephemeral: true });
         await interaction.channel.send(pesan); // Pesan dikirim ke channel tempat command digunakan
     }  
-});
-
-// Register Slash Commands
-client.on('ready', () => {
-    client.application.commands.create(
-        new SlashCommandBuilder()
-            .setName('kasihrole')  // Nama command untuk memberikan role
-            .setDescription('Memberikan role kepada member')
-            .addUserOption(option => 
-                option.setName('member')
-                    .setDescription('Pilih member')
-                    .setRequired(true)
-            )
-            .addRoleOption(option => 
-                option.setName('role')
-                    .setDescription('Pilih role yang akan diberikan')
-                    .setRequired(true)
-            )
-    );
-
-    client.application.commands.create(
-        new SlashCommandBuilder()
-            .setName('hapusrole')  // Nama command untuk menghapus role
-            .setDescription('Menghapus role dari member')
-            .addUserOption(option => 
-                option.setName('member')
-                    .setDescription('Pilih member')
-                    .setRequired(true)
-            )
-            .addRoleOption(option => 
-                option.setName('role')
-                    .setDescription('Pilih role yang akan dihapus')
-                    .setRequired(true)
-            )
-    );
-
-    client.application.commands.create(
-        new SlashCommandBuilder()
-        .setName('say')
-        .setDescription('Bot akan mengirimkan pesan yang kamu ketik.')
-        .addStringOption((option) =>
-            option
-                .setName('pesan')
-                .setDescription('Ketik pesan yang akan dikirim oleh bot')
-                .setRequired(true)
-        )
-    );
 });
 
 // Untuk menyimpan status player
