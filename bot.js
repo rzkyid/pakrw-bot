@@ -98,11 +98,11 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
         await channel.send(`Wih ada Juragan baru nih! ${newMember.toString()}`);
 
         // Membuat Embed
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle('<a:ServerBoosterGif:1082918277858213919> SELAMAT DATANG JURAGAN! <a:ServerBoosterGif:1082918277858213919>')
             .setDescription(`Terima kasih sudah mendukung server ini Juragan ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice)`)
             .setColor('#f47fff')
-            .setFooter(`${channel.name} - ${new Date().toLocaleString()}`, newMember.user.displayAvatarURL())
+            .setFooter({ text: `${channel.name} - ${new Date().toLocaleString()}`, iconURL: newMember.user.displayAvatarURL() })
             .setTimestamp()
             .setImage(newMember.user.displayAvatarURL({ dynamic: true, size: 1024 }));
 
@@ -113,17 +113,17 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
 
 // Perintah rwboost manual
 client.on('messageCreate', async (message) => {
-    // Cek apakah pesan dimulai dengan prefix dan perintah 'boost'
+    // Cek apakah pesan dimulai dengan perintah 'rwboost'
     if (message.content.startsWith(`${PREFIX}boost`)) {
         // Mendapatkan user yang mengirim perintah
         const user = message.author;
 
         // Membuat Embed
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle('<a:ServerBoosterGif:1082918277858213919> SELAMAT DATANG JURAGAN! <a:ServerBoosterGif:1082918277858213919>')
             .setDescription(`Terima kasih sudah mendukung server ini Juragan ${user.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice)`)
             .setColor('#f47fff')
-            .setFooter(`${message.channel.name} - ${new Date().toLocaleString()}`, user.displayAvatarURL())
+            .setFooter({ text: `${message.channel.name} - ${new Date().toLocaleString()}`, iconURL: user.displayAvatarURL() })
             .setTimestamp()
             .setImage(user.displayAvatarURL({ dynamic: true, size: 1024 }));
 
