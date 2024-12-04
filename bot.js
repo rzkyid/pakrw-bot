@@ -9,13 +9,6 @@ const path = require('path');
 const fs = require('fs');
 const axios = require('axios');
 
-// Konfigurasi API Gemini AI
-const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/chat/completions";
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-
-// Token Bot Discord
-const TOKEN = process.env.DISCORD_TOKEN;
-
 // Konfigurasi Bot
 const client = new Client({
     intents: [
@@ -32,15 +25,21 @@ const client = new Client({
     ],
 });
 
-// Channel yang diizinkan untuk autoresponder
-const ALLOWED_CHANNELS = [
+// Token Bot Discord
+const TOKEN = process.env.DISCORD_TOKEN;
+
+// Prefix
+const PREFIX = 'rw';
+
+// Konfigurasi channel
+const AUTORESPON_CHANNEL_ID = [
     '1052124921817464883', // ID Channel Pengaturan Bot
     '1052123058678276106', // ID Channel Chat Warga
 ];
 const CURHAT_CHANNEL_ID = '1221377162020651008';
-
-// Konfigurasi channel galeri dan role
-const CHANNEL_CONFIG = {
+const BOOST_CHANNEL_ID = '1052124921817464883'; 
+const LOG_CHANNEL_ID = '1099916187044941914';
+const GALERI_CHANNEL_ID = {
     '1100632084051140669': { roleId: '1311282573699190854', threadName: 'Post by' },
     '1311277162753425429': { 
         roleIdCogan: '1135459439558791219',
@@ -57,13 +56,13 @@ const CHANNEL_CONFIG = {
     '1312281786318852096': { roleId: '1312280861219225631', threadName: 'Post by' },
 };
 
-// Prefix
-const PREFIX = 'rw';
-const LOG_CHANNEL_ID = '1099916187044941914';
-
 // Konfigurasi Express untuk menangani port
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Konfigurasi API Gemini AI
+const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/chat/completions";
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 // Routing dasar untuk memastikan aplikasi web berjalan
 app.get('/', (req, res) => {
@@ -513,13 +512,12 @@ client.on('interactionCreate', async (interaction) => {
     }
 });
 
-
 // Fitur Auto Respon di Chat Warga
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
 
      // Cek jika channel termasuk dalam daftar channel yang diizinkan
-    if (!ALLOWED_CHANNELS.includes(message.channel.id)) return;
+    if (!AUTORESPON_CHANNEL_ID.includes(message.channel.id)) return;
 
     // Respons otomatis untuk kata kunci
     const lowerContent = message.content.toLowerCase();
@@ -727,7 +725,7 @@ if (message.content.startsWith(`${PREFIX}tanya`)) {
 // Fitur Auto Thread Galeri Warga & Auto Role
 client.on('messageCreate', async (message) => {
     // Pastikan pesan berasal dari channel yang dikonfigurasi
-    const channelConfig = CHANNEL_CONFIG[message.channel.id];
+    const channelConfig = GALERI_CHANNEL_ID[message.channel.id];
     if (channelConfig) {
         // Jika pesan tidak memiliki lampiran, hapus
         if (!message.author.bot && message.attachments.size === 0) {
