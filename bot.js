@@ -103,7 +103,7 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
             .setDescription(`Terima kasih sudah mendukung server ini Juragan ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice)`)
             .setColor('#f47fff')
             .setTimestamp()
-            .setImage(newMember.user.displayAvatarURL({ dynamic: true, size: 256 })) 
+            .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 1024 })) // Gambar di thumbnail, ukuran lebih kecil
             .setFooter({ text: `${channel.name}`, iconURL: channel.guild.iconURL() }); // Footer dengan nama channel dan logo server
 
         // Kirim Embed ke channel
@@ -127,7 +127,7 @@ client.on('messageCreate', async (message) => {
             .setDescription(`Terima kasih sudah mendukung server ini Juragan ${user.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice)`)
             .setColor('#f47fff')
             .setTimestamp()
-            .setImage(user.displayAvatarURL({ dynamic: true, size: 256 })) 
+            .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 1024 })) // Gambar di thumbnail, ukuran lebih kecil
             .setFooter({ text: `${channel.name}`, iconURL: channel.guild.iconURL() }); // Footer dengan nama channel dan logo server
 
         // Kirim Embed ke channel
