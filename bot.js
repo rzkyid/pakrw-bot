@@ -31,7 +31,7 @@ const TOKEN = process.env.DISCORD_TOKEN;
 // Prefix
 const PREFIX = 'rw';
 
-// Konfigurasi channel
+// Konfigurasi Channel ID
 const AUTORESPON_CHANNEL_ID = [
     '1052124921817464883', // ID Channel Pengaturan Bot
     '1052123058678276106', // ID Channel Chat Warga
@@ -56,13 +56,13 @@ const GALERI_CHANNEL_ID = {
     '1312281786318852096': { roleId: '1312280861219225631', threadName: 'Post by' },
 };
 
-// Konfigurasi Express untuk menangani port
-const app = express();
-const PORT = process.env.PORT || 3000;
-
 // Konfigurasi API Gemini AI
 const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/chat/completions";
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+
+// Konfigurasi Express untuk menangani port
+const app = express();
+const PORT = process.env.PORT || 3000;
 
 // Routing dasar untuk memastikan aplikasi web berjalan
 app.get('/', (req, res) => {
