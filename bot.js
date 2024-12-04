@@ -101,9 +101,6 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
             return console.log('Bot tidak memiliki izin untuk mengirim pesan ke channel ini');
         }
 
-        // Kirim pesan ke channel
-        await channel.send(`Wih ada Juragan baru nih! ${newMember.toString()}`);
-
         // Membuat Embed
         const embed = new EmbedBuilder()
             .setTitle('<a:ServerBoosterGif:1082918277858213919> SELAMAT DATANG JURAGAN!')
@@ -113,8 +110,11 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
             .setThumbnail(newMember.user.displayAvatarURL({ dynamic: true, size: 1024 })) // Gambar di thumbnail, ukuran lebih kecil
             .setFooter({ text: `Channel: ${channel.name}`, iconURL: channel.guild.iconURL() }); // Footer dengan nama channel dan logo server
 
-        // Kirim Embed ke channel
-        await channel.send({ embeds: [embed] });
+        // Kirim pesan dan Embed dalam satu kiriman
+        await channel.send({
+            content: `Wih ada Juragan baru nih! ${newMember.toString()}`, // Pesan teks
+            embeds: [embed] // Embed
+        });
     }
 });
 
@@ -128,9 +128,6 @@ client.on('messageCreate', async (message) => {
         // Mendapatkan channel yang digunakan untuk perintah rwboost
         const channel = message.channel;
 
-        // Kirim pesan "Juragan baru" manual
-        await channel.send(`Wih ada Juragan baru nih! ${user.toString()}`);
-
         // Membuat Embed
         const embed = new EmbedBuilder()
             .setTitle('<a:ServerBoosterGif:1082918277858213919> SELAMAT DATANG JURAGAN! <a:ServerBoosterGif:1082918277858213919>')
@@ -140,8 +137,11 @@ client.on('messageCreate', async (message) => {
             .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 1024 })) // Gambar di thumbnail, ukuran lebih kecil
             .setFooter({ text: `Channel: ${channel.name}`, iconURL: channel.guild.iconURL() }); // Footer dengan nama channel dan logo server
 
-        // Kirim Embed ke channel
-        await channel.send({ embeds: [embed] });
+        // Kirim pesan dan Embed dalam satu kiriman
+        await channel.send({
+            content: `Wih ada Juragan baru nih! ${user.toString()}`, // Pesan teks
+            embeds: [embed] // Embed
+        });
     }
 });
 
