@@ -108,7 +108,7 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
             .setColor('#f47fff')
             .setTimestamp()
             .setThumbnail(newMember.user.displayAvatarURL({ dynamic: true, size: 1024 })) // Gambar di thumbnail, ukuran lebih kecil
-            .setFooter({ text: `Channel: ${channel.name}`, iconURL: channel.guild.iconURL() }); // Footer dengan nama channel dan logo server
+            .setFooter({ text: `${channel.name}`, iconURL: channel.guild.iconURL() }); // Footer dengan nama channel dan logo server
 
         // Kirim pesan dan Embed dalam satu kiriman
         await channel.send({
@@ -135,7 +135,7 @@ client.on('messageCreate', async (message) => {
             .setColor('#f47fff')
             .setTimestamp()
             .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 1024 })) // Gambar di thumbnail, ukuran lebih kecil
-            .setFooter({ text: `Channel: ${channel.name}`, iconURL: channel.guild.iconURL() }); // Footer dengan nama channel dan logo server
+            .setFooter({ text: `${channel.name}`, iconURL: channel.guild.iconURL() }); // Footer dengan nama channel dan logo server
 
         // Kirim pesan dan Embed dalam satu kiriman
         await channel.send({
