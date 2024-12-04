@@ -90,11 +90,18 @@ client.on('guildMemberAdd', (member) => {
 client.on('guildMemberUpdate', async (oldMember, newMember) => {
     // Cek apakah member baru saja melakukan boost server
     if (oldMember.premiumSince === null && newMember.premiumSince !== null) {
-        // Kirim pesan ke channel khusus server booster
+        // Pastikan channel ID sudah benar
         const channel = newMember.guild.channels.cache.get(BOOST_CHANNEL_ID);
-        if (!channel) return;
+        
+        // Pastikan channel ditemukan
+        if (!channel) return console.log('Channel tidak ditemukan!');
+        
+        // Cek apakah bot memiliki izin untuk mengirim pesan ke channel
+        if (!channel.permissionsFor(newMember.guild.me).has('SEND_MESSAGES')) {
+            return console.log('Bot tidak memiliki izin untuk mengirim pesan ke channel ini');
+        }
 
-        // Kirim pesan di channel
+        // Kirim pesan ke channel
         await channel.send(`Wih ada Juragan baru nih! ${newMember.toString()}`);
 
         // Membuat Embed
@@ -103,8 +110,8 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
             .setDescription(`Terima kasih sudah mendukung server ini Juragan ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice)`)
             .setColor('#f47fff')
             .setTimestamp()
-            .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 1024 })) // Gambar di thumbnail, ukuran lebih kecil
-            .setFooter({ text: `${channel.name}`, iconURL: channel.guild.iconURL() }); // Footer dengan nama channel dan logo server
+            .setThumbnail(newMember.user.displayAvatarURL({ dynamic: true, size: 1024 })) // Gambar di thumbnail, ukuran lebih kecil
+            .setFooter({ text: `Channel: ${channel.name}`, iconURL: channel.guild.iconURL() }); // Footer dengan nama channel dan logo server
 
         // Kirim Embed ke channel
         await channel.send({ embeds: [embed] });
@@ -121,6 +128,9 @@ client.on('messageCreate', async (message) => {
         // Mendapatkan channel yang digunakan untuk perintah rwboost
         const channel = message.channel;
 
+        // Kirim pesan "Juragan baru" manual
+        await channel.send(`Wih ada Juragan baru nih! ${user.toString()}`);
+
         // Membuat Embed
         const embed = new EmbedBuilder()
             .setTitle('<a:ServerBoosterGif:1082918277858213919> SELAMAT DATANG JURAGAN! <a:ServerBoosterGif:1082918277858213919>')
@@ -128,7 +138,7 @@ client.on('messageCreate', async (message) => {
             .setColor('#f47fff')
             .setTimestamp()
             .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 1024 })) // Gambar di thumbnail, ukuran lebih kecil
-            .setFooter({ text: `${channel.name}`, iconURL: channel.guild.iconURL() }); // Footer dengan nama channel dan logo server
+            .setFooter({ text: `Channel: ${channel.name}`, iconURL: channel.guild.iconURL() }); // Footer dengan nama channel dan logo server
 
         // Kirim Embed ke channel
         await channel.send({ embeds: [embed] });
