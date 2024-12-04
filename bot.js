@@ -104,7 +104,7 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
         // Membuat Embed
         const embed = new EmbedBuilder()
             .setTitle('<a:ServerBoosterGif:1082918277858213919> SELAMAT DATANG JURAGAN!')
-            .setDescription(`Terima kasih sudah mendukung server ini Juragan ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice)`)
+            .setDescription(`Terima kasih sudah mendukung server ini Juragan ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice) dan Role <@&1052585457965346848>`)
             .setColor('#f47fff')
             .setTimestamp()
             .setThumbnail(newMember.user.displayAvatarURL({ dynamic: true, size: 1024 })) // Gambar di thumbnail, ukuran lebih kecil
@@ -131,7 +131,7 @@ client.on('messageCreate', async (message) => {
         // Membuat Embed
         const embed = new EmbedBuilder()
             .setTitle('<a:ServerBoosterGif:1082918277858213919> SELAMAT DATANG JURAGAN! <a:ServerBoosterGif:1082918277858213919>')
-            .setDescription(`Terima kasih sudah mendukung server ini Juragan ${user.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice)`)
+            .setDescription(`Terima kasih sudah mendukung server ini Juragan ${user.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice) dan Role <@&1052585457965346848>`)
             .setColor('#f47fff')
             .setTimestamp()
             .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 1024 })) // Gambar di thumbnail, ukuran lebih kecil
