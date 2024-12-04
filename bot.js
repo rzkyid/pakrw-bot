@@ -102,9 +102,10 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
             .setTitle('<a:ServerBoosterGif:1082918277858213919> SELAMAT DATANG JURAGAN! <a:ServerBoosterGif:1082918277858213919>')
             .setDescription(`Terima kasih sudah mendukung server ini Juragan ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice)`)
             .setColor('#f47fff')
-            .setFooter({ text: `${channel.name} - ${new Date().toLocaleString()}`, iconURL: newMember.user.displayAvatarURL() })
             .setTimestamp()
-            .setImage(newMember.user.displayAvatarURL({ dynamic: true, size: 1024 }));
+            .setThumbnail(newMember.user.displayAvatarURL({ dynamic: true, size: 1024 })) // Gambar di thumbnail, ukuran lebih kecil
+            .setImage(newMember.user.displayAvatarURL({ dynamic: true, size: 256 })) // Gambar profil kecil di sebelah kanan teks
+            .setFooter(`Channel: ${channel.name}`, newMember.user.displayAvatarURL({ dynamic: true, size: 64 })); // Menampilkan nama channel di footer
 
         // Kirim Embed ke channel
         await channel.send({ embeds: [embed] });
@@ -118,17 +119,21 @@ client.on('messageCreate', async (message) => {
         // Mendapatkan user yang mengirim perintah
         const user = message.author;
 
+        // Mendapatkan channel yang digunakan untuk perintah rwboost
+        const channel = message.channel;
+
         // Membuat Embed
         const embed = new EmbedBuilder()
             .setTitle('<a:ServerBoosterGif:1082918277858213919> SELAMAT DATANG JURAGAN! <a:ServerBoosterGif:1082918277858213919>')
             .setDescription(`Terima kasih sudah mendukung server ini Juragan ${user.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice)`)
             .setColor('#f47fff')
-            .setFooter({ text: `${message.channel.name} - ${new Date().toLocaleString()}`, iconURL: user.displayAvatarURL() })
             .setTimestamp()
-            .setImage(user.displayAvatarURL({ dynamic: true, size: 1024 }));
+            .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 1024 })) // Gambar di thumbnail, ukuran lebih kecil
+            .setImage(user.displayAvatarURL({ dynamic: true, size: 256 })) // Gambar profil kecil di sebelah kanan teks
+            .setFooter(`Channel: ${channel.name}`, user.displayAvatarURL({ dynamic: true, size: 64 })); // Menampilkan nama channel di footer
 
         // Kirim Embed ke channel
-        await message.channel.send({ embeds: [embed] });
+        await channel.send({ embeds: [embed] });
     }
 });
 
