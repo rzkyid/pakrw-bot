@@ -88,32 +88,31 @@ client.on('guildMemberAdd', (member) => {
 
 // Event ketika member baru melakukan boost server
 client.on('guildMemberUpdate', async (oldMember, newMember) => {
-    // Cek apakah member baru saja melakukan boost server
     if (oldMember.premiumSince === null && newMember.premiumSince !== null) {
-        // Pastikan channel ID sudah benar
         const channel = newMember.guild.channels.cache.get(BOOST_CHANNEL_ID);
-        
-        // Pastikan channel ditemukan
+
         if (!channel) return console.log('Channel tidak ditemukan!');
         
-        // Cek apakah bot memiliki izin untuk mengirim pesan ke channel
-        if (!channel.permissionsFor(newMember.guild.me).has('SEND_MESSAGES')) {
+        // Pastikan guild.me tersedia
+        const botMember = newMember.guild.me;
+        if (!botMember) return console.log('Bot belum bergabung dengan server.');
+
+        // Pastikan bot memiliki izin untuk mengirim pesan ke channel
+        if (!channel.permissionsFor(botMember).has('SEND_MESSAGES')) {
             return console.log('Bot tidak memiliki izin untuk mengirim pesan ke channel ini');
         }
 
-        // Membuat Embed
         const embed = new EmbedBuilder()
             .setTitle('<a:ServerBoosterGif:1082918277858213919> SELAMAT DATANG JURAGAN!')
-            .setDescription(`Terima kasih sudah mendukung server ini Juragan ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice) dari Role khusus <@&1052585457965346848>`)
+            .setDescription(`Terima kasih sudah mendukung server ini Juragan ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice)`)
             .setColor('#f47fff')
             .setTimestamp()
-            .setThumbnail(newMember.user.displayAvatarURL({ dynamic: true, size: 1024 })) // Gambar di thumbnail, ukuran lebih kecil
-            .setFooter({ text: `${channel.name}`, iconURL: channel.guild.iconURL() }); // Footer dengan nama channel dan logo server
+            .setThumbnail(newMember.user.displayAvatarURL({ dynamic: true, size: 1024 }))
+            .setFooter({ text: `Channel: ${channel.name}`, iconURL: channel.guild.iconURL() });
 
-        // Kirim pesan dan Embed dalam satu kiriman
         await channel.send({
-            content: `Wih ada Juragan baru nih! ${newMember.toString()}`, // Pesan teks
-            embeds: [embed] // Embed
+            content: `Wih ada Juragan baru nih! ${newMember.toString()}`,
+            embeds: [embed]
         });
     }
 });
