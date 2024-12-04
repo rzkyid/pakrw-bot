@@ -105,7 +105,7 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
             .setTimestamp()
             .setThumbnail(newMember.user.displayAvatarURL({ dynamic: true, size: 1024 })) // Gambar di thumbnail, ukuran lebih kecil
             .setImage(newMember.user.displayAvatarURL({ dynamic: true, size: 256 })) // Gambar profil kecil di sebelah kanan teks
-            .setFooter(`Channel: ${channel.name}`, newMember.user.displayAvatarURL({ dynamic: true, size: 64 })); // Menampilkan nama channel di footer
+            .setFooter(`Channel: ${channel.name}`, channel.guild.iconURL()); // Footer dengan nama channel dan logo server
 
         // Kirim Embed ke channel
         await channel.send({ embeds: [embed] });
@@ -130,7 +130,7 @@ client.on('messageCreate', async (message) => {
             .setTimestamp()
             .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 1024 })) // Gambar di thumbnail, ukuran lebih kecil
             .setImage(user.displayAvatarURL({ dynamic: true, size: 256 })) // Gambar profil kecil di sebelah kanan teks
-            .setFooter(`Channel: ${channel.name}`, user.displayAvatarURL({ dynamic: true, size: 64 })); // Menampilkan nama channel di footer
+            .setFooter(`Channel: ${channel.name}`, channel.guild.iconURL()); // Footer dengan nama channel dan logo server
 
         // Kirim Embed ke channel
         await channel.send({ embeds: [embed] });
