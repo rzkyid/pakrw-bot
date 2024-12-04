@@ -86,6 +86,52 @@ client.on('guildMemberAdd', (member) => {
   }
 });
 
+// Event ketika member baru melakukan boost server
+client.on('guildMemberUpdate', async (oldMember, newMember) => {
+    // Cek apakah member baru saja melakukan boost server
+    if (oldMember.premiumSince === null && newMember.premiumSince !== null) {
+        // Kirim pesan ke channel khusus server booster
+        const channel = newMember.guild.channels.cache.get(BOOST_CHANNEL_ID);
+        if (!channel) return;
+
+        // Kirim pesan di channel
+        await channel.send(`Wih ada Juragan baru nih! ${newMember.toString()}`);
+
+        // Membuat Embed
+        const embed = new MessageEmbed()
+            .setTitle('<a:ServerBoosterGif:1082918277858213919> SELAMAT DATANG JURAGAN! <a:ServerBoosterGif:1082918277858213919>')
+            .setDescription(`Terima kasih sudah mendukung server ini Juragan ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice)`)
+            .setColor('#f47fff')
+            .setFooter(`${channel.name} - ${new Date().toLocaleString()}`, newMember.user.displayAvatarURL())
+            .setTimestamp()
+            .setImage(newMember.user.displayAvatarURL({ dynamic: true, size: 1024 }));
+
+        // Kirim Embed ke channel
+        await channel.send({ embeds: [embed] });
+    }
+});
+
+// Perintah rwboost manual
+client.on('messageCreate', async (message) => {
+    // Cek apakah pesan dimulai dengan prefix dan perintah 'boost'
+    if (message.content.startsWith(`${PREFIX}boost`)) {
+        // Mendapatkan user yang mengirim perintah
+        const user = message.author;
+
+        // Membuat Embed
+        const embed = new MessageEmbed()
+            .setTitle('<a:ServerBoosterGif:1082918277858213919> SELAMAT DATANG JURAGAN! <a:ServerBoosterGif:1082918277858213919>')
+            .setDescription(`Terima kasih sudah mendukung server ini Juragan ${user.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice)`)
+            .setColor('#f47fff')
+            .setFooter(`${message.channel.name} - ${new Date().toLocaleString()}`, user.displayAvatarURL())
+            .setTimestamp()
+            .setImage(user.displayAvatarURL({ dynamic: true, size: 1024 }));
+
+        // Kirim Embed ke channel
+        await message.channel.send({ embeds: [embed] });
+    }
+});
+
 // Register Slash Commands
 client.on('ready', () => {
     client.application.commands.create(
