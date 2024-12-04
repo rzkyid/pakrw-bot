@@ -89,6 +89,8 @@ client.on('guildMemberAdd', (member) => {
 // Event ketika member baru melakukan boost server
 client.on('guildMemberUpdate', async (oldMember, newMember) => {
     try {
+        // Log untuk debug
+        console.log(`[DEBUG] Member Update Detected: ${newMember.user.tag} - Premium Since: ${newMember.premiumSince}`);
         // Pastikan bahwa status premium berubah (pertama kali boost atau perpanjangan boost)
         if (oldMember.premiumSince === null && newMember.premiumSince !== null) {
             // Jika member baru pertama kali melakukan boost (perubahan dari null ke tanggal boost)
