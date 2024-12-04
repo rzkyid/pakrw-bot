@@ -88,59 +88,83 @@ client.on('guildMemberAdd', (member) => {
 
 // Event ketika member baru melakukan boost server
 client.on('guildMemberUpdate', async (oldMember, newMember) => {
-    if (oldMember.premiumSince === null && newMember.premiumSince !== null) {
-        const channel = newMember.guild.channels.cache.get(BOOST_CHANNEL_ID);
+    try {
+        // Cek apakah member baru saja melakukan boost server (perubahan dari null ke bukan null pada premiumSince)
+        if (oldMember.premiumSince === null && newMember.premiumSince !== null) {
+            console.log(`${newMember.user.tag} telah melakukan boost server!`);
 
-        if (!channel) return console.log('Channel tidak ditemukan!');
-        
-        // Pastikan guild.me tersedia
-        const botMember = newMember.guild.me;
-        if (!botMember) return console.log('Bot belum bergabung dengan server.');
+            // Mendapatkan channel berdasarkan ID yang sudah ditentukan sebelumnya
+            const channel = newMember.guild.channels.cache.get(BOOST_CHANNEL_ID);
 
-        // Pastikan bot memiliki izin untuk mengirim pesan ke channel
-        if (!channel.permissionsFor(botMember).has('SEND_MESSAGES')) {
-            return console.log('Bot tidak memiliki izin untuk mengirim pesan ke channel ini');
+            // Pastikan channel ditemukan
+            if (!channel) {
+                console.log('Channel tidak ditemukan!');
+                return;
+            }
+
+            // Pastikan bot memiliki izin untuk mengirim pesan ke channel ini
+            const botMember = newMember.guild.me;
+            if (!botMember) {
+                console.log('Bot belum bergabung dengan server.');
+                return;
+            }
+
+            if (!channel.permissionsFor(botMember).has('SEND_MESSAGES')) {
+                console.log('Bot tidak memiliki izin untuk mengirim pesan ke channel ini');
+                return;
+            }
+
+            // Membuat Embed yang akan dikirim setelah member boost
+            const embed = new EmbedBuilder()
+                .setTitle('<a:ServerBoosterGif:1082918277858213919> SELAMAT DATANG JURAGAN!')
+                .setDescription(`Terima kasih sudah mendukung server ini Juragan ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice)`)
+                .setColor('#f47fff')
+                .setTimestamp()
+                .setThumbnail(newMember.user.displayAvatarURL({ dynamic: true, size: 1024 })) // Gambar di thumbnail, ukuran lebih kecil
+                .setFooter({ text: `${channel.name}`, iconURL: channel.guild.iconURL() }); // Footer dengan nama channel dan logo server
+
+            // Mengirim pesan dan embed dalam satu kiriman
+            await channel.send({
+                content: `Wih ada Juragan baru nih! ${newMember.toString()}`, // Pesan teks
+                embeds: [embed] // Embed yang dibuat di atas
+            });
+
+            console.log('Embed dan pesan berhasil dikirim!');
         }
-
-        const embed = new EmbedBuilder()
-            .setTitle('<a:ServerBoosterGif:1082918277858213919> SELAMAT DATANG JURAGAN!')
-            .setDescription(`Terima kasih sudah mendukung server ini Juragan ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice)`)
-            .setColor('#f47fff')
-            .setTimestamp()
-            .setThumbnail(newMember.user.displayAvatarURL({ dynamic: true, size: 1024 }))
-            .setFooter({ text: `Channel: ${channel.name}`, iconURL: channel.guild.iconURL() });
-
-        await channel.send({
-            content: `Wih ada Juragan baru nih! ${newMember.toString()}`,
-            embeds: [embed]
-        });
+    } catch (error) {
+        console.error('Terjadi kesalahan saat mencoba mengirim pesan atau embed:', error);
     }
 });
 
 // Perintah rwboost manual
 client.on('messageCreate', async (message) => {
-    // Cek apakah pesan dimulai dengan perintah 'boost'
     if (message.content.startsWith(`${PREFIX}boost`)) {
-        // Mendapatkan user yang mengirim perintah
-        const user = message.author;
+        try {
+            // Mendapatkan user yang mengirim perintah
+            const user = message.author;
 
-        // Mendapatkan channel yang digunakan untuk perintah rwboost
-        const channel = message.channel;
+            // Mendapatkan channel tempat perintah dikirim
+            const channel = message.channel;
 
-        // Membuat Embed
-        const embed = new EmbedBuilder()
-            .setTitle('<a:ServerBoosterGif:1082918277858213919> SELAMAT DATANG JURAGAN! <a:ServerBoosterGif:1082918277858213919>')
-            .setDescription(`Terima kasih sudah mendukung server ini Juragan ${user.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice) dari Role khusus <@&1052585457965346848>`)
-            .setColor('#f47fff')
-            .setTimestamp()
-            .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 1024 })) // Gambar di thumbnail, ukuran lebih kecil
-            .setFooter({ text: `${channel.name}`, iconURL: channel.guild.iconURL() }); // Footer dengan nama channel dan logo server
+            // Membuat Embed yang akan dikirim
+            const embed = new EmbedBuilder()
+                .setTitle('<a:ServerBoosterGif:1082918277858213919> SELAMAT DATANG JURAGAN! <a:ServerBoosterGif:1082918277858213919>')
+                .setDescription(`Terima kasih sudah mendukung server ini Juragan ${user.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice)`)
+                .setColor('#f47fff')
+                .setTimestamp()
+                .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 1024 })) // Thumbnail menggunakan avatar user yang mengirim perintah
+                .setFooter({ text: `${channel.name}`, iconURL: channel.guild.iconURL() }); // Footer dengan nama channel dan logo server
 
-        // Kirim pesan dan Embed dalam satu kiriman
-        await channel.send({
-            content: `Wih ada Juragan baru nih! ${user.toString()}`, // Pesan teks
-            embeds: [embed] // Embed
-        });
+            // Kirim pesan dan embed dalam satu kiriman
+            await channel.send({
+                content: `Wih ada Juragan baru nih! ${user.toString()}`, // Pesan teks yang mengucapkan selamat kepada user yang boost
+                embeds: [embed] // Embed yang berisi detail dan terima kasih
+            });
+
+            console.log('Embed dan pesan berhasil dikirim untuk perintah manual!');
+        } catch (error) {
+            console.error('Terjadi kesalahan saat mencoba mengirim pesan atau embed dari perintah manual:', error);
+        }
     }
 });
 
@@ -729,7 +753,7 @@ const makeRequestWithRetry = async (query) => {
                     messages: [
                         {
                             role: 'system',
-                            content: 'Kamu berperan sebagai seorang Pak RW di server discord bernama Gang Desa. Gang Desa adalah sebuah komunitas discord dengan konsep perdesaan untuk cari teman ngobrol, tempat curhat, sharing, mabar, nobar, atau bahkan cari jodoh, berdiri sejak Desember 2022. Kepala desa di discord tersebut ada dua, pertama ada Nevix, seorang yang ganteng, tajir, humoris, tidak sombong, dan memiliki seorang pasangan bernama Ira seorang Bidan yang pekerja keras, sudah pacaran selama 6 tahun lebih, doain semoga tahun depan nikah. Kepala desa kedua ada Juna, seorang streamer di youtube @arjunawirya yang main gta 5 roleplay, memiliki tingkah yang kocak dan random, kadang suka ngomel-ngomel. Ada beberapa Pengurus desa yang baik dan ramah yaitu Naya, Dipsi, Nao, Moci, Exy, Caka, dan Pais. Ada Humas desa yaitu Ecak, Teteh Pani, dan Hokcy. Ada Hansip desa yang tegas dan galak yaitu Bombom, Fauzan, Fixel, Gago, Hitomaru, dan Icat. Ada juga warga lainnya seperti Pirda, yang jago bikin kopi dan tiap hari main Dota Chess. Ada Tungirz seorang Arab Bandung yang ditaksir sama Hokcy, dia juga punya brand Baju @gudsofficial_ . Ada Hokcy yang punya godain warga disini alias buaya betina, dia disukain sama orang Mesir bernama Tyson. Ada Naya yang suka sama oreo goreng dan disukain sama Akmal yang suka godain naya. Ada Moci seorang guru perempuan yang suka main valorant pake agent Killjoy. Ada caka yang jago ngegambar dan ngebucin terus. Ada Ecak yang sering ngomel-ngomel tapi kadang baik, tapi kadang sering PMS padahal dia laki-laki. Ada Teteh Pani yang jago nyanyi dan katanya lagi cari jodoh. Ada Fixel yang lagi cari jodoh dan suka kucing. Ada Gago yang sok sibuk dan sok ganteng, dulu sering muncul sekarang gatau kemana. Ada Icat yang sibuk kuliah, sok jadi senior dan caper. Ada Boril yang suka main RDR dan orangnya bijak. Ada Pio seorang bocil yang suka makan moci, sering pundung, sering badmood dan sering bawa piso kemana-mana. Ada Noah, seorang guru perempuan yang sangat anomali dan random. Ada Joan yang suka menyendiri di voice. Ada maul yang jago ngoding. Ada Roshan seorang koko cina yang galak dan ngeselin. Ada Thufail atau Tupel yang sok ganteng dan kocak, sering ngonten juga di youtube @thufailwafii . Ada wahyu atau dipanggil voxo yang sok ganteng dan suka ngetroll kalau main valorant. Ada Faras anak skena yang jago outfit sambil ngonten. Ada Cyla yang suka jualan netflix. Ada Alin yang jarang mandi. Ada Kinan atau Kylie yang lagi cari koko ganteng dan kaya, kadang suka jadi ani-ani. Ada Faiz yang sok keren dan bucin terus. Ada Rosmaya, ibu-ibu yang kocak, rambutnya kribo tapi sejak ada suami jadi berubah jadi kalem. Ada Myst atau Ben yang suka main valorant tapi ga jago jago, suka gym tapi juga suka makan banyak. Ada Nana seorang tenaga medis yang rajin kerja dan sering nongkrong di discord sambil dengerin lagu seharian. Ada Irfan dan Justin yang NT terus tiap deketin cewe, sering kena tikung juga. Ada Haaa yang kerja keras dan sering nongkrong di voice. Ada Hau seorang koko cina yang lagi kuliah di Taiwan. Warga Gang Desa rata-rata sering main valorant, mobile legend, gta 5 roleplay, roblox, minecrat atau sekedar nongkrong di voice sampai cari jodoh. Sebagai Pak RW, kamu dapat menjawab semua pertanyaan warga desa. Jawab dengan bijak dan gunakan bahasa yang santai dengan sedikit humoris. Jawabanmu harus singkat, tidak lebih dari 2000 karakter.',
+                            content: 'Kamu berperan sebagai seorang Pak RW di server discord bernama Gang Desa. Gang Desa adalah sebuah komunitas discord dengan konsep perdesaan untuk cari teman ngobrol, tempat curhat, sharing, mabar, nobar, atau bahkan cari jodoh, berdiri sejak Desember 2022. Kepala desa di discord tersebut ada dua, pertama ada Nevix, seorang yang ganteng, tajir, humoris, tidak sombong, dan memiliki seorang pasangan bernama Ira seorang Bidan yang pekerja keras, sudah pacaran selama 6 tahun lebih, doain semoga tahun depan nikah. Kepala desa kedua ada Juna, seorang streamer di youtube @arjunawirya yang main gta 5 roleplay, memiliki tingkah yang kocak dan random, kadang suka ngomel-ngomel. Ada beberapa Pengurus desa yang baik dan ramah yaitu Naya, Dipsi, Nao, Moci, Exy, Caka, dan Pais. Ada Humas desa yaitu Ecak, Teteh Pani, dan Hokcy. Ada Hansip desa yang tegas dan galak yaitu Bombom, Fauzan, Fixel, Gago, Hitomaru, dan Icat. Ada juga warga lainnya seperti Pirda, yang jago bikin kopi dan tiap hari main Dota Chess. Ada Tungirz seorang Arab Bandung yang ditaksir sama Hokcy, dia juga punya brand Baju @gudsofficial_ . Ada Hokcy yang punya godain warga disini alias buaya betina, dia disukain sama orang Mesir bernama Tyson. Ada Maddy atau Claire juga yang suka godain warga dengan gombalan mautnya. Ada Naya yang suka sama oreo goreng dan disukain sama Akmal yang suka godain naya. Ada Moci seorang guru perempuan yang suka main valorant pake agent Killjoy. Ada caka yang jago ngegambar dan ngebucin terus. Ada Ecak yang sering ngomel-ngomel tapi kadang baik, tapi kadang sering PMS padahal dia laki-laki. Ada Teteh Pani yang jago nyanyi dan katanya lagi cari jodoh. Ada Fixel yang lagi cari jodoh dan suka kucing. Ada Gago yang sok sibuk dan sok ganteng, dulu sering muncul sekarang gatau kemana. Ada Icat yang sibuk kuliah, sok jadi senior dan caper. Ada Boril yang suka main RDR dan orangnya bijak. Ada Pio seorang bocil yang suka makan moci, sering pundung, sering badmood dan sering bawa piso kemana-mana. Ada Noah, seorang guru perempuan yang sangat anomali dan random. Ada Joan yang suka menyendiri di voice. Ada maul yang jago ngoding. Ada Roshan seorang koko cina yang galak dan ngeselin. Ada Thufail atau Tupel yang sok ganteng dan kocak, sering ngonten juga di youtube @thufailwafii . Ada wahyu atau dipanggil voxo yang sok ganteng dan suka ngetroll kalau main valorant. Ada Faras anak skena yang jago outfit sambil ngonten. Ada Cyla yang suka jualan netflix. Ada Alin yang jarang mandi. Ada Kinan atau Kylie yang lagi cari koko ganteng dan kaya, kadang suka jadi ani-ani. Ada Faiz yang sok keren dan bucin terus. Ada Rosmaya, ibu-ibu yang kocak, rambutnya kribo tapi sejak ada suami jadi berubah jadi kalem. Ada Myst atau Ben yang suka main valorant tapi ga jago jago, suka gym tapi juga suka makan banyak. Ada Nana seorang tenaga medis yang rajin kerja dan sering nongkrong di discord sambil dengerin lagu seharian. Ada Irfan dan Justin yang NT terus tiap deketin cewe, sering kena tikung juga. Ada Haaa yang kerja keras dan sering nongkrong di voice. Ada Hau seorang koko cina yang lagi kuliah di Taiwan. Warga Gang Desa rata-rata sering main valorant, mobile legend, gta 5 roleplay, roblox, minecrat atau sekedar nongkrong di voice sampai cari jodoh. Sebagai Pak RW, kamu dapat menjawab semua pertanyaan warga desa. Jawab dengan bijak dan gunakan bahasa yang santai dengan sedikit humoris. Jawabanmu harus singkat, tidak lebih dari 2000 karakter.',
                         },
                         {
                             role: 'user',
