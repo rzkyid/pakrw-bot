@@ -89,12 +89,13 @@ client.on('guildMemberAdd', (member) => {
 // Event ketika member baru melakukan boost server
 client.on('guildMemberUpdate', async (oldMember, newMember) => {
     try {
-        // Log untuk debug
+        // Log untuk debugging
         console.log(`[DEBUG] Member Update Detected: ${newMember.user.tag} - Premium Since: ${newMember.premiumSince}`);
-        // Pastikan bahwa status premium berubah (pertama kali boost atau perpanjangan boost)
+
+        // Cek apakah member baru saja melakukan boost server
         if (oldMember.premiumSince === null && newMember.premiumSince !== null) {
             // Jika member baru pertama kali melakukan boost (perubahan dari null ke tanggal boost)
-            console.log(`${newMember.user.tag} telah melakukan boost server untuk pertama kali!`);
+            console.log(`${newMember.user.tag} telah melakukan boost server!`);
         } else if (oldMember.premiumSince !== null && newMember.premiumSince !== null && oldMember.premiumSince !== newMember.premiumSince) {
             // Jika member memperpanjang boost (status premium tetap ada, tetapi tanggal berubah)
             console.log(`${newMember.user.tag} telah memperpanjang boost mereka!`);
@@ -110,13 +111,19 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
             return;
         }
 
-        // Pastikan bot memiliki izin untuk mengirim pesan ke channel ini
-        const botMember = newMember.guild.me;
+        // Pastikan bot memiliki akses ke guild dan informasi member
+        let botMember = newMember.guild.me;
         if (!botMember) {
-            console.log('Bot belum bergabung dengan server.');
-            return;
+            console.log('Bot belum bergabung dengan server, mencoba fetch bot member...');
+            // Fetch data bot jika guild.me belum tersedia
+            botMember = await newMember.guild.members.fetch(client.user.id);
+            if (!botMember) {
+                console.log('Bot tidak dapat ditemukan di server.');
+                return;
+            }
         }
 
+        // Cek apakah bot memiliki izin untuk mengirim pesan ke channel ini
         if (!channel.permissionsFor(botMember).has('SEND_MESSAGES')) {
             console.log('Bot tidak memiliki izin untuk mengirim pesan ke channel ini');
             return;
@@ -124,7 +131,7 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
 
         // Membuat Embed yang akan dikirim setelah member boost
         const embed = new EmbedBuilder()
-            .setTitle('<a:ServerBoosterGif:1082918277858213919> SELAMAT DATANG JURAGAN! <a:ServerBoosterGif:1082918277858213919>')
+            .setTitle('<a:ServerBoosterGif:1082918277858213919> SELAMAT DATANG JURAGAN!')
             .setDescription(`Terima kasih sudah mendukung server ini Juragan ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice) dari Role <@&1052585457965346848>`)
             .setColor('#f47fff')
             .setTimestamp()
