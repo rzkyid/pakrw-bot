@@ -54,8 +54,6 @@ const GALERI_CHANNEL_ID = {
     '1311278954245787698': { roleId: '1135121270078451752', threadName: 'Post by' },
     '1312281786318852096': { roleId: '1312280861219225631', threadName: 'Post by' },
 };
-const TARGET_ROLE_ID = '1052585457965346848'; // ID role server boost
-const BOOST_CHANNEL_ID = '1052126042300624906'; // ID channel tempat mengirim embed
 
 // Konfigurasi API Gemini AI
 const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/chat/completions";
@@ -87,33 +85,65 @@ client.on('guildMemberAdd', (member) => {
   }
 });
 
-// Event ketika member baru melakukan boost server
+// Event ketika member baru melakukan boost dan donasi server
+const ROLE_CHANNELS = {
+    '1314097979514159206': '1052126042300624906',  // Role ID: Boost ke channel 1052126042300624906
+    '1221395908311384125': '1221386974003204126',  // Role ID: Donatur ke channel 1221386974003204126
+    '1081256438879485953': '1221386974003204126',  // Role ID: Raden ke channel 1221386974003204126
+    '1105536787725684848': '1221386974003204126',  // Role ID: Sultan ke channel 1221386974003204126
+};
+
+const EMBED_TITLES = {
+    '1314097979514159206': '<a:ServerBoosterGif:1082918277858213919> SELAMAT DATANG JURAGAN! <a:ServerBoosterGif:1082918277858213919>',
+    '1221395908311384125': '💶 SELAMAT DATANG DONATUR! 💶',
+    '1081256438879485953': '💵 SELAMAT DATANG RADEN! 💵',
+    '1105536787725684848': '💰 SELAMAT DATANG SULTAN! 💰',
+};
+
+const EMBED_COLORS = {
+    '1314097979514159206': '#f47fff',    // Boost color
+    '1221395908311384125': '#68bbff',    // Donatur color
+    '1081256438879485953': '#4caf50',    // Raden color
+    '1105536787725684848': '#ffeb3b',    // Sultan color
+};
+
+const EMBED_DESCRIPTIONS = {
+    '1314097979514159206': 'Terima kasih sudah mendukung server ini Juragan ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice) dari Role <@&1052585457965346848>',
+    '1221395908311384125': 'Terima kasih sudah mendukung server ini Donatur ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice) dari Role <@&1221395908311384125>',
+    '1081256438879485953': 'Terima kasih sudah mendukung server ini Raden ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice) dari Role <@&1081256438879485953>',
+    '1105536787725684848': 'Terima kasih sudah mendukung server ini Sultan ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice) dari Role <@&1105536787725684848>',
+};
+
 client.on('guildMemberUpdate', async (oldMember, newMember) => {
     try {
-        // Cek apakah member mendapatkan role dengan ID tertentu
-        const addedRole = newMember.roles.cache.find(role => role.id === TARGET_ROLE_ID);
-        
-        // Jika role baru saja ditambahkan, kirim embed
-        if (addedRole && !oldMember.roles.cache.has(TARGET_ROLE_ID)) {
-            // Membuat Embed yang akan dikirim setelah member mendapatkan role
-            const embed = new EmbedBuilder()
-                .setTitle('<a:ServerBoosterGif:1082918277858213919> SELAMAT DATANG JURAGAN! <a:ServerBoosterGif:1082918277858213919>')
-                .setDescription(`Terima kasih sudah mendukung server ini Juragan ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice) dari Role <@&1052585457965346848>`)
-                .setColor('#f47fff')
-                .setTimestamp()
-                .setThumbnail(newMember.user.displayAvatarURL({ dynamic: true, size: 1024 })) // Gambar di thumbnail, ukuran lebih kecil
-                .setFooter({ text: `${newMember.guild.name}`, iconURL: newMember.guild.iconURL() }); // Footer dengan nama server dan logo server
+        // Mengecek jika ada role baru yang ditambahkan
+        for (const roleId in ROLE_CHANNELS) {
+            if (newMember.roles.cache.has(roleId) && !oldMember.roles.cache.has(roleId)) {
+                const channelId = ROLE_CHANNELS[roleId];
+                const channel = newMember.guild.channels.cache.get(channelId);
 
-            // Mengirim embed ke channel yang sudah ditentukan
-            const channel = newMember.guild.channels.cache.get(BOOST_CHANNEL_ID); // Channel yang ditentukan
-            if (channel) {
+                if (!channel) {
+                    console.log(`Channel dengan ID ${channelId} tidak ditemukan!`);
+                    continue;
+                }
+
+                // Membuat Embed yang akan dikirim
+                const embed = new EmbedBuilder()
+                    .setTitle(EMBED_TITLES[roleId] || 'Selamat Datang!')
+                    .setDescription(EMBED_DESCRIPTIONS[roleId].replace('${newMember.toString()}', newMember.toString()) || `Terima kasih ${newMember.toString()}!`)
+                    .setColor(EMBED_COLORS[roleId] || '#f47fff')
+                    .setTimestamp()
+                    .setThumbnail(newMember.user.displayAvatarURL({ dynamic: true, size: 1024 })) // Gambar di thumbnail, ukuran lebih kecil
+                    .setFooter({ text: `${newMember.guild.name}`, iconURL: newMember.guild.iconURL() });
+
+                // Mengirim embed ke channel yang sesuai
                 await channel.send({
-                    content: `Wih ada Juragan baru nih! ${newMember.toString()}`, // Pesan teks
-                    embeds: [embed] // Embed yang dibuat di atas
+                    content: `Wih ada ${roleId === '1221395908311384125' ? 'Donatur' : roleId === '1081256438879485953' ? 'Raden' : roleId === '1105536787725684848' ? 'Sultan' : 'Juragan'} baru nih! ${newMember.toString()}`,
+                    embeds: [embed],
                 });
-                console.log('Embed dan pesan berhasil dikirim!');
-            } else {
-                console.log('Channel tidak ditemukan!');
+
+                console.log(`Embed dan pesan berhasil dikirim ke channel ${channelId}`);
+                break; // Hentikan loop setelah menemukan role yang sesuai
             }
         }
     } catch (error) {
