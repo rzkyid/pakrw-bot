@@ -87,7 +87,7 @@ client.on('guildMemberAdd', (member) => {
 
 // Event ketika member baru melakukan boost dan donasi server
 const ROLE_CHANNELS = {
-    '1314097979514159206': '1052126042300624906',  // Role ID: Boost ke channel 1052126042300624906
+    '1052585457965346848': '1052126042300624906',  // Role ID: Boost ke channel 1052126042300624906
     '1221395908311384125': '1221386974003204126',  // Role ID: Donatur ke channel 1221386974003204126
     '1081256438879485953': '1221386974003204126',  // Role ID: Raden ke channel 1221386974003204126
     '1105536787725684848': '1221386974003204126',  // Role ID: Sultan ke channel 1221386974003204126
