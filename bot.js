@@ -37,7 +37,6 @@ const AUTORESPON_CHANNEL_ID = [
     '1052123058678276106', // ID Channel Chat Warga
 ];
 const CURHAT_CHANNEL_ID = '1221377162020651008';
-const BOOST_CHANNEL_ID = '1052126042300624906'; 
 const LOG_CHANNEL_ID = '1099916187044941914';
 const GALERI_CHANNEL_ID = {
     '1100632084051140669': { roleId: '1311282573699190854', threadName: 'Post by' },
@@ -55,6 +54,8 @@ const GALERI_CHANNEL_ID = {
     '1311278954245787698': { roleId: '1135121270078451752', threadName: 'Post by' },
     '1312281786318852096': { roleId: '1312280861219225631', threadName: 'Post by' },
 };
+const TARGET_ROLE_ID = '1314090583404576788'; // ID role server boost
+const BOOST_CHANNEL_ID = '1052126042300624906'; // ID channel tempat mengirim embed
 
 // Konfigurasi API Gemini AI
 const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/chat/completions";
@@ -89,96 +90,34 @@ client.on('guildMemberAdd', (member) => {
 // Event ketika member baru melakukan boost server
 client.on('guildMemberUpdate', async (oldMember, newMember) => {
     try {
-        // Log untuk debugging
-        console.log(`[DEBUG] Member Update Detected: ${newMember.user.tag} - Premium Since: ${newMember.premiumSince}`);
-
-        // Cek apakah member baru saja melakukan boost server
-        if (oldMember.premiumSince === null && newMember.premiumSince !== null) {
-            // Jika member baru pertama kali melakukan boost (perubahan dari null ke tanggal boost)
-            console.log(`${newMember.user.tag} telah melakukan boost server!`);
-        } else if (oldMember.premiumSince !== null && newMember.premiumSince !== null && oldMember.premiumSince !== newMember.premiumSince) {
-            // Jika member memperpanjang boost (status premium tetap ada, tetapi tanggal berubah)
-            console.log(`${newMember.user.tag} telah memperpanjang boost mereka!`);
-        } else {
-            // Jika tidak ada perubahan pada status boost, keluar dari fungsi
-            return;
-        }
-
-        // Mendapatkan channel berdasarkan ID yang sudah ditentukan sebelumnya
-        const channel = newMember.guild.channels.cache.get(BOOST_CHANNEL_ID);
-        if (!channel) {
-            console.log('Channel tidak ditemukan!');
-            return;
-        }
-
-        // Pastikan bot memiliki akses ke guild dan informasi member
-        let botMember = newMember.guild.me;
-        if (!botMember) {
-            console.log('Bot belum bergabung dengan server, mencoba fetch bot member...');
-            // Fetch data bot jika guild.me belum tersedia
-            botMember = await newMember.guild.members.fetch(client.user.id);
-            if (!botMember) {
-                console.log('Bot tidak dapat ditemukan di server.');
-                return;
-            }
-        }
-
-        // Cek apakah bot memiliki izin untuk mengirim pesan ke channel ini
-        if (!channel.permissionsFor(botMember).has('SEND_MESSAGES')) {
-            console.log('Bot tidak memiliki izin untuk mengirim pesan ke channel ini');
-            return;
-        }
-
-        // Membuat Embed yang akan dikirim setelah member boost
-        const embed = new EmbedBuilder()
-            .setTitle('<a:ServerBoosterGif:1082918277858213919> SELAMAT DATANG JURAGAN!')
-            .setDescription(`Terima kasih sudah mendukung server ini Juragan ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice) dari Role <@&1052585457965346848>`)
-            .setColor('#f47fff')
-            .setTimestamp()
-            .setThumbnail(newMember.user.displayAvatarURL({ dynamic: true, size: 1024 })) // Gambar di thumbnail, ukuran lebih kecil
-            .setFooter({ text: `${channel.name}`, iconURL: channel.guild.iconURL() }); // Footer dengan nama channel dan logo server
-
-        // Mengirim pesan dan embed dalam satu kiriman
-        await channel.send({
-            content: `Wih ada Juragan baru nih! ${newMember.toString()}`, // Pesan teks
-            embeds: [embed] // Embed yang dibuat di atas
-        });
-
-        console.log('Embed dan pesan berhasil dikirim!');
-    } catch (error) {
-        console.error('Terjadi kesalahan saat mencoba mengirim pesan atau embed:', error);
-    }
-});
-
-// Perintah manual untuk memberi boost dengan perintah 'boost' di chat
-client.on('messageCreate', async (message) => {
-    if (message.content.startsWith(`${PREFIX}boost`)) {
-        try {
-            // Mendapatkan user yang mengirim perintah
-            const user = message.author;
-
-            // Mendapatkan channel tempat perintah dikirim
-            const channel = message.channel;
-
-            // Membuat Embed yang akan dikirim
+        // Cek apakah member mendapatkan role dengan ID tertentu
+        const addedRole = newMember.roles.cache.find(role => role.id === TARGET_ROLE_ID);
+        
+        // Jika role baru saja ditambahkan, kirim embed
+        if (addedRole && !oldMember.roles.cache.has(TARGET_ROLE_ID)) {
+            // Membuat Embed yang akan dikirim setelah member mendapatkan role
             const embed = new EmbedBuilder()
                 .setTitle('<a:ServerBoosterGif:1082918277858213919> SELAMAT DATANG JURAGAN! <a:ServerBoosterGif:1082918277858213919>')
-                .setDescription(`Terima kasih sudah mendukung server ini Juragan ${user.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice) dari Role <@&1052585457965346848>`)
+                .setDescription(`Terima kasih sudah mendukung server ini Juragan ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice)`)
                 .setColor('#f47fff')
                 .setTimestamp()
-                .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 1024 })) // Thumbnail menggunakan avatar user yang mengirim perintah
-                .setFooter({ text: `${channel.name}`, iconURL: channel.guild.iconURL() }); // Footer dengan nama channel dan logo server
+                .setThumbnail(newMember.user.displayAvatarURL({ dynamic: true, size: 1024 })) // Gambar di thumbnail, ukuran lebih kecil
+                .setFooter({ text: `${newMember.guild.name}`, iconURL: newMember.guild.iconURL() }); // Footer dengan nama server dan logo server
 
-            // Kirim pesan dan embed dalam satu kiriman
-            await channel.send({
-                content: `Wih ada Juragan baru nih! ${user.toString()}`, // Pesan teks yang mengucapkan selamat kepada user yang boost
-                embeds: [embed] // Embed yang berisi detail dan terima kasih
-            });
-
-            console.log('Embed dan pesan berhasil dikirim untuk perintah manual!');
-        } catch (error) {
-            console.error('Terjadi kesalahan saat mencoba mengirim pesan atau embed dari perintah manual:', error);
+            // Mengirim embed ke channel yang sudah ditentukan
+            const channel = newMember.guild.channels.cache.get(BOOST_CHANNEL_ID); // Channel yang ditentukan
+            if (channel) {
+                await channel.send({
+                    content: `Wih ada Juragan baru nih! ${newMember.toString()}`, // Pesan teks
+                    embeds: [embed] // Embed yang dibuat di atas
+                });
+                console.log('Embed dan pesan berhasil dikirim!');
+            } else {
+                console.log('Channel tidak ditemukan!');
+            }
         }
+    } catch (error) {
+        console.error('Terjadi kesalahan saat memproses perubahan member:', error);
     }
 });
 
