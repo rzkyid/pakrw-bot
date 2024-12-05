@@ -54,7 +54,7 @@ const GALERI_CHANNEL_ID = {
     '1311278954245787698': { roleId: '1135121270078451752', threadName: 'Post by' },
     '1312281786318852096': { roleId: '1312280861219225631', threadName: 'Post by' },
 };
-const TARGET_ROLE_ID = '1314090583404576788'; // ID role server boost
+const TARGET_ROLE_ID = '1052585457965346848'; // ID role server boost
 const BOOST_CHANNEL_ID = '1052126042300624906'; // ID channel tempat mengirim embed
 
 // Konfigurasi API Gemini AI
@@ -98,7 +98,7 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
             // Membuat Embed yang akan dikirim setelah member mendapatkan role
             const embed = new EmbedBuilder()
                 .setTitle('<a:ServerBoosterGif:1082918277858213919> SELAMAT DATANG JURAGAN! <a:ServerBoosterGif:1082918277858213919>')
-                .setDescription(`Terima kasih sudah mendukung server ini Juragan ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice)`)
+                .setDescription(`Terima kasih sudah mendukung server ini Juragan ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice) dari Role <@&1052585457965346848>`)
                 .setColor('#f47fff')
                 .setTimestamp()
                 .setThumbnail(newMember.user.displayAvatarURL({ dynamic: true, size: 1024 })) // Gambar di thumbnail, ukuran lebih kecil
