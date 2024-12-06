@@ -603,65 +603,65 @@ client.on('messageCreate', async (message) => {
         message.reply('Buat yang mau curhat bisa langsung aja ke <#1221377162020651008> <:Wink:1099424794350473216>');
     } else if (lowerContent.includes('pagi')) {
             const pagiReplies = [
-                'Pagi juga, Kak! Tau nggak, pagi ini beda banget 🌞… ada matahari, ada udara segar 🌿, tapi tetap kamu yang bikin aku semangat. ❤️💪',
-                'Selamat pagi juga, Kak 🌞. Hari ini rasanya indah banget, tapi tetep nggak seindah bayangan kamu di kepala aku. ❤️.',
-                'Pagi, Kak! Udah ngerasa spesial belum? Kalau belum, coba deh lihat cermin 🪞, karena pagi ini kamu alasanku tersenyum. 😊',
-                'Selamat pagi juga, Kak! Kalau aku punya superpower ✨, aku pasti bakal teleport ke kamu sekarang juga, biar pagiku makin lengkap. 💕',
-                'Pagi juga! Kalau kamu nggak sibuk, boleh dong aku jadi alasan kamu semangat hari ini. 💪❤️',
-                'Selamat pagi juga, Kak 🌅. Hari ini indah banget, tapi tetep nggak seindah senyuman kamu di pikiranku 😘.',
-                'Pagi juga! Kalau kamu butuh semangat, ingat ya, aku selalu ada jadi cheerleader buat kamu hari ini. 💃❤️',
-                'Pagi, Kak 🌞! Bayangan kamu di kepala aku aja bikin pagi ini terasa sempurna, apalagi kalau kamu ada di sini. ❤️',
-                'Selamat pagi, Kak. Kalau aku jadi kopi pagi ini ☕, kamu pasti gula yang bikin semuanya terasa manis 🍬',
-                'Pagi, Kak. Jangan lupa sarapan 🥪, biar kamu tetap semangat menjalani hari seperti biasanya. ☕',
+              'Pagi juga, warga Gang Desa! Udara pagi ini segar banget, semoga hari ini penuh berkah dan semangat untuk kita semua. 🌞🌻',
+              'Selamat pagi, warga! Jangan lupa sarapan dulu, biar tenaga cukup buat aktivitas seharian. 🍽️',
+              'Halo, warga Gang Desa! Matahari udah nyapa, saatnya kita mulai hari dengan semangat. 🌅',
+              'Warga Gang Desa, pagi ini cerah banget, kayak wajah ceria kalian yang bikin suasana makin hangat. 😊',
+              'Selamat pagi, warga! Yuk, kita bikin Gang Desa makin semarak dengan senyuman pagi ini. 🌸',
+              'Pagi, warga! Jangan lupa ngopi dulu sebelum kerja, biar makin fokus dan semangat. ☕️',
+              'Selamat pagi, semoga hari ini lancar semua urusannya, dan warga Gang Desa selalu diberkahi. 💪',
+              'Pagi warga Gang Desa, jangan lupa saling sapa dan berbagi senyum hari ini. 🌟',
+              'Udara pagi Gang Desa segar banget! Semoga kesejukan ini bikin kita semua tambah semangat. 🌬️',
+              'Selamat pagi, warga! Yuk, kita jadikan hari ini lebih baik dari kemarin. Salam dari Pak RW! 😊',
             ];
             const randomReply = pagiReplies[Math.floor(Math.random() * pagiReplies.length)];
             message.reply(randomReply);
     } 
         else if (lowerContent.includes('siang')) {
             const siangReplies = [
-                'Selamat siang, Kak! Semoga siang ini secerah senyuman kamu yang selalu bikin hariku lengkap. ☀️😊',
-                'Siang, Kak! Jangan lupa makan siang ya 🍴, biar kamu tetap punya energi buat terus bikin aku bahagia. ❤️',
-                'Selamat siang, Kak. Cuaca mungkin panas ☀️, tapi nggak ada yang lebih hangat dari pikiran tentang kamu. 💕',
-                'Siang juga, Kak! Kalau aku boleh jujur, siang ini jadi lebih indah karena kamu ada di hati aku. 🌤️😍',
-                'Selamat siang, Kak. Semoga hari ini kamu selalu ceria 😊, karena senyuman kamu adalah mood booster terbaik buat aku. 💖',
-                'Siang, Kak! Kamu tahu nggak, walau cuaca panas 🌞, hati aku selalu adem karena ingat kamu. ❄️',
-                'Selamat siang, Kak! Kalau siang ini terasa berat 💪, ingat aja aku selalu ada buat nyemangatin kamu. 💕',
-                'Selamat siang, Kak. Kamu itu kayak AC di siang panas ini ❄️, selalu bikin hati aku adem tiap mikirin kamu. 😊',
-                'Siang, Kak! Jangan lupa istirahat sejenak, ya 🍹. Kamu harus tetap jaga energi, karena kamu itu alasan aku terus semangat. 💖',
-                'Siang juga! Semoga siang ini penuh keberuntungan ☀️, kecuali aku, yang udah kalah sama pesona kamu. 😘',
+              'Siang, warga Gang Desa! Jangan lupa makan siang biar energi terisi penuh lagi. 🍛',
+              'Halo, warga! Siang-siang gini enaknya ngadem sebentar, biar kerja makin semangat. 🌞',
+              'Selamat siang, semoga siang ini penuh berkah buat warga Gang Desa semua. 🙌',
+              'Siang, warga Gang Desa! Jangan lupa minum air yang cukup biar tetap segar. 💧',
+              'Matahari lagi terik, semoga semangat kita juga makin menyala! Salam hangat dari Pak RW! ☀️',
+              'Selamat siang, warga! Kalau ada yang butuh bantuan, jangan ragu bilang ke Pak RW ya! 😊',
+              'Siang, warga Gang Desa! Kerja boleh serius, tapi jangan lupa senyum biar tetap asik. 😄',
+              'Siang yang cerah, semoga semua aktivitas warga berjalan lancar hari ini. 💪',
+              'Siang, warga! Kalau lelah, istirahat sebentar, biar semangat lagi melanjutkan tugas-tugas. ✨',
+              'Selamat siang, warga Gang Desa! Mari kita jalani siang ini dengan semangat dan kebersamaan. 🌻',
             ];
             const randomReply = siangReplies[Math.floor(Math.random() * siangReplies.length)];
             message.reply(randomReply);
     } 
         else if (lowerContent.includes('sore')) {
             const soreReplies = [
-                'Selamat sore, Kak! Langit sore ini mungkin indah 🌅, tapi tetap nggak seindah senyuman kamu. 😊',
-                'Sore, Kak! Udara sore ini sejuk banget 🌬️, kayak hati aku tiap kali inget kamu. ❤️',
-                'Selamat sore! Kalau aku bisa, aku mau jadi matahari sore 🌇, biar selalu bisa menemani kamu di setiap langkah. 💕',
-                'Sore, Kak! Langit mulai berubah warna 🌤️, tapi rasa aku ke kamu nggak pernah berubah. 😍',
-                'Selamat sore, Kak! Jangan lupa istirahat sebentar ya 🌄, biar kamu tetap segar dan semangat buat nanti malam. 💖',
-                'Sore ini tenang banget 🌅, tapi nggak ada yang lebih tenang dari hati aku tiap kali kamu ada di pikiranku. ❄️',
-                'Sore, Kak! Semoga sisa hari ini lancar 🌇, sama lancarnya senyuman kamu yang bikin aku nggak bisa lupa. 😊',
-                'Selamat sore! Matahari mungkin mulai tenggelam 🌄, tapi perhatian aku ke kamu nggak pernah surut. ❤️',
-                'Sore, Kak! Langit sore ini indah banget 🌅, tapi tetap kalah sama indahnya kehadiran kamu di hidupku.💕',
-                '"Selamat sore, Kak! Semoga sore ini kamu bahagia 🌤️, karena kebahagiaan kamu adalah pelengkap hari-hariku. 😊',
+              'Selamat sore, warga Gang Desa! Udah waktunya santai sebentar sambil ngopi atau ngobrol sama tetangga. ☕️',
+              'Sore ini tenang banget, semoga hati kita juga tenang dan damai ya! Salam hangat dari Pak RW! 🌇',
+              'Sore, warga Gang Desa! Jangan lupa cek tanaman di pekarangan, biar tetap subur dan cantik. 🌱',
+              'Sore, warga! Semoga sore ini jadi waktu yang menyenangkan buat keluarga dan istirahat sejenak. 😊',
+              'Sore, warga Gang Desa! Kalau lelah, jangan lupa untuk recharge energi dan istirahat yang cukup. 🌸',
+              'Sore ini rasanya pas banget buat menikmati keindahan desa kita. Yuk, bersantai sejenak! 🌿',
+              'Selamat sore, warga! Mari kita nikmati sore ini dengan kebersamaan, bisa ngobrol atau sekedar berbagi cerita. 🌇',
+              'Sore ini cuacanya enak banget, semoga semua yang kita kerjakan hari ini bisa bermanfaat. 🌷',
+              'Sore, warga Gang Desa! Apapun yang kita lakukan hari ini, semoga selalu penuh berkah. 💪',
+              'Selamat sore, warga! Jangan lupa untuk selalu menjaga kebersihan dan kenyamanan di gang desa kita. 🌻',
             ];
             const randomReply = soreReplies[Math.floor(Math.random() * soreReplies.length)];
             message.reply(randomReply);
     } 
         else if (lowerContent.includes('malam')) {
             const malamReplies = [
-                'Selamat malam, Kak! Semoga tidurmu nyenyak dan mimpi indah datang menghampiri 🌙, aku akan selalu ada di hati kamu. ❤️',
-                'Malam, Kak. Kalau malam ini kamu merasa sepi, ingatlah aku selalu ada, menunggumu dalam doa 💭, selalu ada di sini. 💕',
-                'Malam juga, Kak! Semoga mimpi indah menemani tidurmu 🌙, dan besok pagi kita bisa saling mengingat satu sama lain. 😊',
-                'Selamat malam, Kak. Kalau malam ini terasa sepi 🌙, jangan khawatir, aku ada di sini dan selalu siap nemenin kamu dalam mimpi. 😊',
-                'Malam, Kak! Setelah hari yang panjang, semoga kamu bisa beristirahat dengan tenang dan bangun besok pagi dengan senyuman yang cerah 🌟💤',
-                'Selamat malam juga, Kak. Kalau malam ini terasa panjang 🌙, ingat aku selalu ada di sini, di setiap doamu. 💌',
-                'Malam, Kak. Semoga setiap bintang yang bersinar malam ini membawa mimpi manis untuk kamu. ✨💭',
-                'Selamat malam juga, Kak! Bintang-bintang udah mulai muncul 🌟, semoga malam ini membawa ketenangan untuk kamu yang selalu ada di hati aku. ❤️',
-                'Selamat malam, Kak! Kalau malam ini kamu merasa kesepian 🌜, ingat ada aku yang selalu menemani kamu lewat doa-doa. 💕',
-                'Malam juga, Kak! Walau kita berpisah sementara 🌙, aku selalu berharap kita bisa bertemu dalam mimpi. 💭',
-                ];
+              'Selamat malam, warga Gang Desa! Semoga malam ini penuh kedamaian dan istirahat yang cukup. 🌙',
+              'Malam, warga! Jangan lupa tidur lebih awal, biar besok bisa bangun dengan semangat baru! 😴',
+              'Selamat malam, warga Gang Desa! Mari kita akhiri hari dengan syukur dan harapan yang baik untuk besok. 🌟',
+              'Malam yang tenang, semoga tidurmu nyenyak dan esok hari lebih cerah lagi. 🌙',
+              'Selamat malam, warga! Semoga malam ini membawa ketenangan dan kebahagiaan bagi kita semua. 🌙✨',
+              'Malam, warga Gang Desa! Jaga kesehatan dan selalu bersyukur atas semua yang kita miliki. 🌙',
+              'Malam yang indah, semoga mimpi indah menyertai warga semua, dan besok kita bisa lebih baik lagi. 😴',
+              'Selamat malam, warga! Jangan lupa berdoa sebelum tidur, semoga besok lebih baik dari hari ini. 🙏',
+              'Malam, warga Gang Desa! Terima kasih sudah menjaga suasana desa yang selalu harmonis. 🌙',
+              'Selamat malam, warga! Semoga tidurmu nyenyak dan besok kita semua bisa lebih semangat lagi! 🌟',
+            ];
             const randomReply = malamReplies[Math.floor(Math.random() * malamReplies.length)];
             message.reply(randomReply);
     } 
