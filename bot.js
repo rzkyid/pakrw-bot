@@ -16,7 +16,8 @@ const client = new Client({
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.GuildVoiceStates,
         GatewayIntentBits.MessageContent,
-        GatewayIntentBits.GuildMembers
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.Attachments, 
     ],
     partials: [
         Partials.Message,
@@ -723,7 +724,7 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 // Fungsi untuk mencoba kembali dengan retry (Exponential backoff)
 const makeRequestWithRetry = async (query) => {
     const MAX_RETRIES = 5; // Maksimal percobaan ulang
-    const RETRY_DELAY = 5000; // Delay awal 1 detik
+    const RETRY_DELAY = 5000; // Delay awal 5 detik
 
     let attempts = 0;
     while (attempts < MAX_RETRIES) {
