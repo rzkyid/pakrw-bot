@@ -85,6 +85,22 @@ client.on('guildMemberAdd', (member) => {
   }
 });
 
+// ID channel khusus untuk mengirim pesan terima kasih
+const thankYouChannelId = '1052126042300624906';
+
+// Event yang dipicu ketika member melakukan boost server
+client.on('guildMemberUpdate', async (oldMember, newMember) => {
+    // Mengecek apakah member melakukan boost server
+    if (!oldMember.premiumSince && newMember.premiumSince) {
+        // Dapatkan channel terima kasih
+        const thankYouChannel = newMember.guild.channels.cache.get(thankYouChannelId);
+        if (thankYouChannel) {
+            // Kirim pesan terima kasih
+            thankYouChannel.send(`🎉 Terima kasih ${newMember.user.username} telah melakukan Boost Server! 🚀`);
+        }
+    }
+});
+
 // Event ketika member baru melakukan boost dan donasi server
 const ROLE_CHANNELS = {
     '1052585457965346848': '1052126042300624906',  // Role ID: Boost ke channel 1052126042300624906
