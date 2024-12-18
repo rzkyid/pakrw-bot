@@ -604,7 +604,9 @@ client.on('messageCreate', async (message) => {
     const lowerContent = message.content.toLowerCase();
 
     if (lowerContent.includes('welcome')) {
-        message.channel.send('Selamat datang warga baru! 👋\nSemoga betah jadi warga di sini, join voice sini biar makin akrab. <:OkeSip:1291831721313964053>\n<a:Hai:1318929546887565374><a:Welcome:1318926838894170194><a:Hai:1318929546887565374>');
+        message.channel.send('Selamat datang warga baru! 👋\nSemoga betah jadi warga di sini, join voice sini biar makin akrab. <:OkeSip:1291831721313964053>');
+    } else if (lowerContent.includes('wlcm')) {
+        message.reply('<a:Hai:1318929546887565374><a:Welcome:1318926838894170194><a:Hai:1318929546887565374>');
     } else if (lowerContent.includes('halo')) {
         message.reply('Halo juga kak! 👋\nGabung sini ke voice biar makin akrab hehe <:Hehe:1099424821974151310>');
     } else if (lowerContent.includes('mabar')) {
