@@ -85,19 +85,27 @@ client.on('guildMemberAdd', (member) => {
   }
 });
 
-// ID channel khusus untuk mengirim pesan terima kasih
-const thankYouChannelId = '1052126042300624906';
-
 // Event yang dipicu ketika member melakukan boost server
+const BoostChannelID = '1052126042300624906';
+
 client.on('guildMemberUpdate', async (oldMember, newMember) => {
     // Mengecek apakah member melakukan boost server
     if (!oldMember.premiumSince && newMember.premiumSince) {
         // Dapatkan channel terima kasih
-        const thankYouChannel = newMember.guild.channels.cache.get(thankYouChannelId);
-        if (thankYouChannel) {
-            // Kirim pesan terima kasih
-            thankYouChannel.send(`🎉 Terima kasih ${newMember.user.username} telah melakukan Boost Server! 🚀`);
-        }
+        const BoostChannel = newMember.guild.channels.cache.get(BoostChannelID);
+        const embed = new EmbedBuilder()
+            .setTitle('<a:ServerBoosterGif:1082918277858213919> SELAMAT DATANG JURAGAN! <a:ServerBoosterGif:1082918277858213919>') // Judul embed
+            .setDescription(`Terima kasih sudah mendukung server ini Juragan ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice) dari Role <@&1052585457965346848>`)
+            .setColor('#f47fff') // Warna dari embed
+            .setTimestamp() // Menambahkan timestamp ke embed
+            .setThumbnail(newMember.user.displayAvatarURL({ dynamic: true, size: 1024 })) // Menampilkan avatar member yang baru boost
+            .setFooter({ text: `${newMember.guild.name}`, iconURL: newMember.guild.iconURL() }); // Footer dengan nama channel dan logo server
+
+        // Mengirim pesan dan embed dalam satu kiriman
+        await BoostChannel.send({
+            content: `Wih ada Juragan baru nih! ${newMember.toString()}`, // Pesan teks
+            embeds: [embed] // Embed yang dibuat di atas
+        });
     }
 });
 
