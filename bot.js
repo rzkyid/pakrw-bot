@@ -82,6 +82,7 @@ client.on('guildMemberAdd', (member) => {
   // Pastikan channel ditemukan dan dapat dikirim pesan
   if (channel && channel.isTextBased()) {
     channel.send(`Halo ada warga baru nih! <@${member.id}>\nSalam kenal, semoga betah jadi warga disini hehe <:Hehe:1099424821974151310> Jangan lupa di sapa ya!`);
+    channel.send(`<a:Hai:1318929546887565374><a:Welcome1:1319195762902700052><a:Welcome2:1319195777318387722><a:Hai:1318929546887565374>`);     
   }
 });
 
@@ -614,7 +615,7 @@ client.on('messageCreate', async (message) => {
     if (lowerContent.includes('welcome')) {
         message.channel.send('Selamat datang warga baru! 👋\nSemoga betah jadi warga di sini, join voice sini biar makin akrab. <:OkeSip:1291831721313964053>');
     } else if (lowerContent.includes('wlcm')) {
-        message.reply('<a:Hai:1318929546887565374><a:Welcome:1318926838894170194><a:Hai:1318929546887565374>');
+        message.reply('<a:Hai:1318929546887565374><a:Welcome1:1319195762902700052><a:Welcome2:1319195777318387722><a:Hai:1318929546887565374>');
     } else if (lowerContent.includes('halo')) {
         message.reply('Halo juga kak! 👋\nGabung sini ke voice biar makin akrab hehe <:Hehe:1099424821974151310>');
     } else if (lowerContent.includes('mabar')) {
