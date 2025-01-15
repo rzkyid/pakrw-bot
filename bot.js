@@ -73,6 +73,12 @@ app.listen(PORT, () => {
     console.log(`Server Express berjalan di port ${PORT}`);
 });
 
+client.on(Events.ClientReady, readyClient => {
+    console.log("===========================================");
+    console.log("Logged in as ${readyClient.user.tag}!");
+    console.log("===========================================");
+}); 
+
 // Pesan otomatis ketika ada member baru bergabung
 const WELCOME_CHANNEL_ID = '1052123058678276106';
 client.on('guildMemberAdd', (member) => {
