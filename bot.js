@@ -28,7 +28,7 @@ const client = new Client({
 // Token Bot Discord
 const TOKEN = process.env.DISCORD_TOKEN;
 
-// Prefix
+// Prefix Pak RW
 const PREFIX = 'rw';
 
 // Konfigurasi Channel ID
