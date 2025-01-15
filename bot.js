@@ -380,7 +380,7 @@ let currentTypeIndex = 0;
 
 async function login() {
   try {
-    await client.login(process.env.TOKEN);
+    await client.login(process.env.DISCORD_TOKEN);
     console.log('\x1b[36m[ LOGIN ]\x1b[0m', `\x1b[32mLogged in as: ${client.user.tag} ✅\x1b[0m`);
     console.log('\x1b[36m[ INFO ]\x1b[0m', `\x1b[35mBot ID: ${client.user.id} \x1b[0m`);
     console.log('\x1b[36m[ INFO ]\x1b[0m', `\x1b[34mConnected to ${client.guilds.cache.size} server(s) \x1b[0m`);
