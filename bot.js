@@ -1,8 +1,8 @@
 require('dotenv').config();
-const { Client, Events, Routes, GatewayIntentBits, Partials, EmbedBuilder, ActivityType, MessageAttachment, ActionRowBuilder, ButtonBuilder, ButtonStyle, 
-       ModalBuilder, TextInputBuilder, TextInputStyle, InteractionType, Intents, MessageActionRow, MessageButton, MessageEmbed,
-       SlashCommandBuilder, PermissionFlagsBits
-      } = require('discord.js');
+const { Client, Events, Routes, GatewayIntentBits, Partials, EmbedBuilder, ActivityType, MessageAttachment, ActionRowBuilder, ButtonBuilder, ButtonStyle,
+    ModalBuilder, TextInputBuilder, TextInputStyle, InteractionType, Intents, MessageActionRow, MessageButton, MessageEmbed,
+    SlashCommandBuilder, PermissionFlagsBits
+} = require('discord.js');
 const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus } = require('@discordjs/voice');
 const express = require('express');
 const path = require('path');
@@ -40,7 +40,7 @@ const CURHAT_CHANNEL_ID = '1221377162020651008';
 const LOG_CHANNEL_ID = '1099916187044941914';
 const GALERI_CHANNEL_ID = {
     '1100632084051140669': { roleId: '1311282573699190854', threadName: 'Post by' },
-    '1311277162753425429': { 
+    '1311277162753425429': {
         roleIdCogan: '1135459439558791219',
         roleIdKembangDesa: '1135458269670944879',
         requirementCogan: '1052230151984906300',
@@ -73,23 +73,19 @@ app.listen(PORT, () => {
     console.log(`Server Express berjalan di port ${PORT}`);
 });
 
-client.on(Events.ClientReady, readyClient => {
-    console.log("===========================================");
-    console.log("Logged in as ${readyClient.user.tag}!");
-    console.log("===========================================");
-}); 
+
 
 // Pesan otomatis ketika ada member baru bergabung
 const WELCOME_CHANNEL_ID = '1052123058678276106';
 client.on('guildMemberAdd', (member) => {
-  // Dapatkan channel berdasarkan ID
-  const channel = member.guild.channels.cache.get(WELCOME_CHANNEL_ID);
+    // Dapatkan channel berdasarkan ID
+    const channel = member.guild.channels.cache.get(WELCOME_CHANNEL_ID);
 
-  // Pastikan channel ditemukan dan dapat dikirim pesan
-  if (channel && channel.isTextBased()) {
-    channel.send(`Halo ada warga baru nih! <@${member.id}>\nSalam kenal, semoga betah jadi warga disini hehe <:Hehe:1099424821974151310> Jangan lupa di sapa ya!`);
-    channel.send(`<a:Hai:1318929546887565374><a:Welcome1:1319195762902700052><a:Welcome2:1319195777318387722><a:Hai:1318929546887565374>`);     
-  }
+    // Pastikan channel ditemukan dan dapat dikirim pesan
+    if (channel && channel.isTextBased()) {
+        channel.send(`Halo ada warga baru nih! <@${member.id}>\nSalam kenal, semoga betah jadi warga disini hehe <:Hehe:1099424821974151310> Jangan lupa di sapa ya!`);
+        channel.send(`<a:Hai:1318929546887565374><a:Welcome1:1319195762902700052><a:Welcome2:1319195777318387722><a:Hai:1318929546887565374>`);
+    }
 });
 
 // Event yang dipicu ketika member melakukan boost server
@@ -178,52 +174,7 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
     }
 });
 
-// Register Slash Commands
-client.on('ready', () => {
-    client.application.commands.create(
-        new SlashCommandBuilder()
-            .setName('kasihrole')  // Nama command untuk memberikan role
-            .setDescription('Memberikan role kepada member')
-            .addUserOption(option => 
-                option.setName('member')
-                    .setDescription('Pilih member')
-                    .setRequired(true)
-            )
-            .addRoleOption(option => 
-                option.setName('role')
-                    .setDescription('Pilih role yang akan diberikan')
-                    .setRequired(true)
-            )
-    );
 
-    client.application.commands.create(
-        new SlashCommandBuilder()
-            .setName('hapusrole')  // Nama command untuk menghapus role
-            .setDescription('Menghapus role dari member')
-            .addUserOption(option => 
-                option.setName('member')
-                    .setDescription('Pilih member')
-                    .setRequired(true)
-            )
-            .addRoleOption(option => 
-                option.setName('role')
-                    .setDescription('Pilih role yang akan dihapus')
-                    .setRequired(true)
-            )
-    );
-
-    client.application.commands.create(
-        new SlashCommandBuilder()
-        .setName('say')
-        .setDescription('Bot akan mengirimkan pesan yang kamu ketik.')
-        .addStringOption((option) =>
-            option
-                .setName('pesan')
-                .setDescription('Ketik pesan yang akan dikirim oleh bot')
-                .setRequired(true)
-        )
-    );
-});
 
 // Fitur kasih role & mengirim pesan melalui bot
 client.on('interactionCreate', async (interaction) => {
@@ -307,8 +258,8 @@ client.on('interactionCreate', async (interaction) => {
             return interaction.reply({ content: "Terjadi kesalahan saat menghapus role.", ephemeral: true });
         }
     }
-       
-// Commoand say untuk mengirim pesan melalui Bot
+
+    // Commoand say untuk mengirim pesan melalui Bot
     if (interaction.commandName === 'say') {
         // Mendapatkan pesan dari opsi
         const pesan = interaction.options.getString('pesan');
@@ -316,7 +267,7 @@ client.on('interactionCreate', async (interaction) => {
         // Mengirimkan pesan
         await interaction.reply({ content: 'Pesan berhasil dikirim!', ephemeral: true });
         await interaction.channel.send(pesan); // Pesan dikirim ke channel tempat command digunakan
-    }  
+    }
 });
 
 // Untuk menyimpan status player
@@ -367,53 +318,103 @@ async function playAudio(channel) {
     }
 }
 
-// Bot Siap
-client.once('ready', async () => {
+client.on(Events.ClientReady, readyClient => {
+    console.log("===========================================");
+    console.log("Logged in as ${readyClient.user.tag}!");
+    console.log("===========================================");
+});
+
+client.on('ready', async () => {
+    // Bot Siap
     console.log(`${client.user.tag} is online and ready!`);
+    console.log('\x1b[36m[ INFO ]\x1b[0m', `\x1b[34mPing: ${client.ws.ping} ms \x1b[0m`);
+    updateStatus();
+    login();
+    setInterval(updateStatus, 10000);
+    heartbeat();
+
+    // Register Slash Commands
+
+    client.application.commands.create(
+        new SlashCommandBuilder()
+            .setName('kasihrole')  // Nama command untuk memberikan role
+            .setDescription('Memberikan role kepada member')
+            .addUserOption(option =>
+                option.setName('member')
+                    .setDescription('Pilih member')
+                    .setRequired(true)
+            )
+            .addRoleOption(option =>
+                option.setName('role')
+                    .setDescription('Pilih role yang akan diberikan')
+                    .setRequired(true)
+            )
+    );
+
+    client.application.commands.create(
+        new SlashCommandBuilder()
+            .setName('hapusrole')  // Nama command untuk menghapus role
+            .setDescription('Menghapus role dari member')
+            .addUserOption(option =>
+                option.setName('member')
+                    .setDescription('Pilih member')
+                    .setRequired(true)
+            )
+            .addRoleOption(option =>
+                option.setName('role')
+                    .setDescription('Pilih role yang akan dihapus')
+                    .setRequired(true)
+            )
+    );
+
+    client.application.commands.create(
+        new SlashCommandBuilder()
+            .setName('say')
+            .setDescription('Bot akan mengirimkan pesan yang kamu ketik.')
+            .addStringOption((option) =>
+                option
+                    .setName('pesan')
+                    .setDescription('Ketik pesan yang akan dikirim oleh bot')
+                    .setRequired(true)
+            )
+    );
 });
 
 // Menambahkan custom status
 const statusMessages = ["👀 Sedang Memantau", "👥 Warga Gang Desa"];
-const statusTypes = [ 'online'];
+const statusTypes = ['online'];
 let currentStatusIndex = 0;
 let currentTypeIndex = 0;
 
 async function login() {
-  try {
-    await client.login(process.env.TOKEN);
-    console.log('\x1b[36m[ LOGIN ]\x1b[0m', `\x1b[32mLogged in as: ${client.user.tag} ✅\x1b[0m`);
-    console.log('\x1b[36m[ INFO ]\x1b[0m', `\x1b[35mBot ID: ${client.user.id} \x1b[0m`);
-    console.log('\x1b[36m[ INFO ]\x1b[0m', `\x1b[34mConnected to ${client.guilds.cache.size} server(s) \x1b[0m`);
-  } catch (error) {
-    console.error('\x1b[31m[ ERROR ]\x1b[0m', 'Failed to log in:', error);
-    process.exit(1);
-  }
+    try {
+        console.log('\x1b[36m[ LOGIN ]\x1b[0m', `\x1b[32mLogged in as: ${client.user.tag} ✅\x1b[0m`);
+        console.log('\x1b[36m[ INFO ]\x1b[0m', `\x1b[35mBot ID: ${client.user.id} \x1b[0m`);
+        console.log('\x1b[36m[ INFO ]\x1b[0m', `\x1b[34mConnected to ${client.guilds.cache.size} server(s) \x1b[0m`);
+    } catch (error) {
+        console.error('\x1b[31m[ ERROR ]\x1b[0m', 'Failed to log in:', error);
+        process.exit(1);
+    }
 }
 
 function updateStatus() {
-  const currentStatus = statusMessages[currentStatusIndex];
-  const currentType = statusTypes[currentTypeIndex];
-  client.user.setPresence({
-    activities: [{ name: currentStatus, type: ActivityType.Custom }],
-    status: currentType,
-  });
-  console.log('\x1b[33m[ STATUS ]\x1b[0m', `Updated status to: ${currentStatus} (${currentType})`);
-  currentStatusIndex = (currentStatusIndex + 1) % statusMessages.length;
-  currentTypeIndex = (currentTypeIndex + 1) % statusTypes.length;
+    const currentStatus = statusMessages[currentStatusIndex];
+    const currentType = statusTypes[currentTypeIndex];
+    client.user.setPresence({
+        activities: [{ name: currentStatus, type: ActivityType.Custom }],
+        status: currentType,
+    });
+    console.log('\x1b[33m[ STATUS ]\x1b[0m', `Updated status to: ${currentStatus} (${currentType})`);
+    currentStatusIndex = (currentStatusIndex + 1) % statusMessages.length;
+    currentTypeIndex = (currentTypeIndex + 1) % statusTypes.length;
 }
 
 function heartbeat() {
-  setInterval(() => {
-    console.log('\x1b[35m[ HEARTBEAT ]\x1b[0m', `Bot is alive at ${new Date().toLocaleTimeString()}`);
-  }, 30000);
+    setInterval(() => {
+        console.log('\x1b[35m[ HEARTBEAT ]\x1b[0m', `Bot is alive at ${new Date().toLocaleTimeString()}`);
+    }, 30000);
 }
 
-client.once('ready', () => {
-  console.log('\x1b[36m[ INFO ]\x1b[0m', `\x1b[34mPing: ${client.ws.ping} ms \x1b[0m`);
-  updateStatus();
-  setInterval(updateStatus, 10000);
-  heartbeat();
-});
 
 // Fitur Curhat
 // Tombol Curhat Awal
@@ -608,7 +609,7 @@ client.on('interactionCreate', async (interaction) => {
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
 
-     // Cek jika channel termasuk dalam daftar channel yang diizinkan
+    // Cek jika channel termasuk dalam daftar channel yang diizinkan
     if (!AUTORESPON_CHANNEL_ID.includes(message.channel.id)) return;
 
     // Respons otomatis untuk kata kunci
@@ -631,82 +632,82 @@ client.on('messageCreate', async (message) => {
     } else if (lowerContent.includes('curhat')) {
         message.reply('Buat yang mau curhat bisa langsung aja ke <#1221377162020651008> <:Wink:1099424794350473216>');
     } else if (lowerContent.includes('pagi')) {
-            const pagiReplies = [
-              'Pagi juga, warga Gang Desa! Udara pagi ini segar banget, semoga hari ini penuh berkah dan semangat untuk kita semua. 🌞🌻',
-              'Selamat pagi, warga! Jangan lupa sarapan dulu, biar tenaga cukup buat aktivitas seharian. 🍽️',
-              'Halo, warga Gang Desa! Matahari udah nyapa, saatnya kita mulai hari dengan semangat. 🌅',
-              'Warga Gang Desa, pagi ini cerah banget, kayak wajah ceria kalian yang bikin suasana makin hangat. 😊',
-              'Selamat pagi, warga! Yuk, kita bikin Gang Desa makin semarak dengan senyuman pagi ini. 🌸',
-              'Pagi, warga! Jangan lupa ngopi dulu sebelum kerja, biar makin fokus dan semangat. ☕️',
-              'Selamat pagi, semoga hari ini lancar semua urusannya, dan warga Gang Desa selalu diberkahi. 💪',
-              'Pagi warga Gang Desa, jangan lupa saling sapa dan berbagi senyum hari ini. 🌟',
-              'Udara pagi Gang Desa segar banget! Semoga kesejukan ini bikin kita semua tambah semangat. 🌬️',
-              'Selamat pagi, warga! Yuk, kita jadikan hari ini lebih baik dari kemarin. Salam dari Pak RW! 😊',
-            ];
-            const randomReply = pagiReplies[Math.floor(Math.random() * pagiReplies.length)];
-            message.reply(randomReply);
-    } 
-        else if (lowerContent.includes('siang')) {
-            const siangReplies = [
-              'Siang, warga Gang Desa! Jangan lupa makan siang biar energi terisi penuh lagi. 🍛',
-              'Halo, warga! Siang-siang gini enaknya ngadem sebentar, biar kerja makin semangat. 🌞',
-              'Selamat siang, semoga siang ini penuh berkah buat warga Gang Desa semua. 🙌',
-              'Siang, warga Gang Desa! Jangan lupa minum air yang cukup biar tetap segar. 💧',
-              'Matahari lagi terik, semoga semangat kita juga makin menyala! Salam hangat dari Pak RW! ☀️',
-              'Selamat siang, warga! Kalau ada yang butuh bantuan, jangan ragu bilang ke Pak RW ya! 😊',
-              'Siang, warga Gang Desa! Kerja boleh serius, tapi jangan lupa senyum biar tetap asik. 😄',
-              'Siang yang cerah, semoga semua aktivitas warga berjalan lancar hari ini. 💪',
-              'Siang, warga! Kalau lelah, istirahat sebentar, biar semangat lagi melanjutkan tugas-tugas. ✨',
-              'Selamat siang, warga Gang Desa! Mari kita jalani siang ini dengan semangat dan kebersamaan. 🌻',
-            ];
-            const randomReply = siangReplies[Math.floor(Math.random() * siangReplies.length)];
-            message.reply(randomReply);
-    } 
-        else if (lowerContent.includes('sore')) {
-            const soreReplies = [
-              'Selamat sore, warga Gang Desa! Udah waktunya santai sebentar sambil ngopi atau ngobrol sama tetangga. ☕️',
-              'Sore ini tenang banget, semoga hati kita juga tenang dan damai ya! Salam hangat dari Pak RW! 🌇',
-              'Sore, warga Gang Desa! Jangan lupa cek tanaman di pekarangan, biar tetap subur dan cantik. 🌱',
-              'Sore, warga! Semoga sore ini jadi waktu yang menyenangkan buat keluarga dan istirahat sejenak. 😊',
-              'Sore, warga Gang Desa! Kalau lelah, jangan lupa untuk recharge energi dan istirahat yang cukup. 🌸',
-              'Sore ini rasanya pas banget buat menikmati keindahan desa kita. Yuk, bersantai sejenak! 🌿',
-              'Selamat sore, warga! Mari kita nikmati sore ini dengan kebersamaan, bisa ngobrol atau sekedar berbagi cerita. 🌇',
-              'Sore ini cuacanya enak banget, semoga semua yang kita kerjakan hari ini bisa bermanfaat. 🌷',
-              'Sore, warga Gang Desa! Apapun yang kita lakukan hari ini, semoga selalu penuh berkah. 💪',
-              'Selamat sore, warga! Jangan lupa untuk selalu menjaga kebersihan dan kenyamanan di gang desa kita. 🌻',
-            ];
-            const randomReply = soreReplies[Math.floor(Math.random() * soreReplies.length)];
-            message.reply(randomReply);
-    } 
-        else if (lowerContent.includes('malam')) {
-            const malamReplies = [
-              'Selamat malam, warga Gang Desa! Semoga malam ini penuh kedamaian dan istirahat yang cukup. 🌙',
-              'Malam, warga! Jangan lupa tidur lebih awal, biar besok bisa bangun dengan semangat baru! 😴',
-              'Selamat malam, warga Gang Desa! Mari kita akhiri hari dengan syukur dan harapan yang baik untuk besok. 🌟',
-              'Malam yang tenang, semoga tidurmu nyenyak dan esok hari lebih cerah lagi. 🌙',
-              'Selamat malam, warga! Semoga malam ini membawa ketenangan dan kebahagiaan bagi kita semua. 🌙✨',
-              'Malam, warga Gang Desa! Jaga kesehatan dan selalu bersyukur atas semua yang kita miliki. 🌙',
-              'Malam yang indah, semoga mimpi indah menyertai warga semua, dan besok kita bisa lebih baik lagi. 😴',
-              'Selamat malam, warga! Jangan lupa berdoa sebelum tidur, semoga besok lebih baik dari hari ini. 🙏',
-              'Malam, warga Gang Desa! Terima kasih sudah menjaga suasana desa yang selalu harmonis. 🌙',
-              'Selamat malam, warga! Semoga tidurmu nyenyak dan besok kita semua bisa lebih semangat lagi! 🌟',
-            ];
-            const randomReply = malamReplies[Math.floor(Math.random() * malamReplies.length)];
-            message.reply(randomReply);
-    } 
+        const pagiReplies = [
+            'Pagi juga, warga Gang Desa! Udara pagi ini segar banget, semoga hari ini penuh berkah dan semangat untuk kita semua. 🌞🌻',
+            'Selamat pagi, warga! Jangan lupa sarapan dulu, biar tenaga cukup buat aktivitas seharian. 🍽️',
+            'Halo, warga Gang Desa! Matahari udah nyapa, saatnya kita mulai hari dengan semangat. 🌅',
+            'Warga Gang Desa, pagi ini cerah banget, kayak wajah ceria kalian yang bikin suasana makin hangat. 😊',
+            'Selamat pagi, warga! Yuk, kita bikin Gang Desa makin semarak dengan senyuman pagi ini. 🌸',
+            'Pagi, warga! Jangan lupa ngopi dulu sebelum kerja, biar makin fokus dan semangat. ☕️',
+            'Selamat pagi, semoga hari ini lancar semua urusannya, dan warga Gang Desa selalu diberkahi. 💪',
+            'Pagi warga Gang Desa, jangan lupa saling sapa dan berbagi senyum hari ini. 🌟',
+            'Udara pagi Gang Desa segar banget! Semoga kesejukan ini bikin kita semua tambah semangat. 🌬️',
+            'Selamat pagi, warga! Yuk, kita jadikan hari ini lebih baik dari kemarin. Salam dari Pak RW! 😊',
+        ];
+        const randomReply = pagiReplies[Math.floor(Math.random() * pagiReplies.length)];
+        message.reply(randomReply);
+    }
+    else if (lowerContent.includes('siang')) {
+        const siangReplies = [
+            'Siang, warga Gang Desa! Jangan lupa makan siang biar energi terisi penuh lagi. 🍛',
+            'Halo, warga! Siang-siang gini enaknya ngadem sebentar, biar kerja makin semangat. 🌞',
+            'Selamat siang, semoga siang ini penuh berkah buat warga Gang Desa semua. 🙌',
+            'Siang, warga Gang Desa! Jangan lupa minum air yang cukup biar tetap segar. 💧',
+            'Matahari lagi terik, semoga semangat kita juga makin menyala! Salam hangat dari Pak RW! ☀️',
+            'Selamat siang, warga! Kalau ada yang butuh bantuan, jangan ragu bilang ke Pak RW ya! 😊',
+            'Siang, warga Gang Desa! Kerja boleh serius, tapi jangan lupa senyum biar tetap asik. 😄',
+            'Siang yang cerah, semoga semua aktivitas warga berjalan lancar hari ini. 💪',
+            'Siang, warga! Kalau lelah, istirahat sebentar, biar semangat lagi melanjutkan tugas-tugas. ✨',
+            'Selamat siang, warga Gang Desa! Mari kita jalani siang ini dengan semangat dan kebersamaan. 🌻',
+        ];
+        const randomReply = siangReplies[Math.floor(Math.random() * siangReplies.length)];
+        message.reply(randomReply);
+    }
+    else if (lowerContent.includes('sore')) {
+        const soreReplies = [
+            'Selamat sore, warga Gang Desa! Udah waktunya santai sebentar sambil ngopi atau ngobrol sama tetangga. ☕️',
+            'Sore ini tenang banget, semoga hati kita juga tenang dan damai ya! Salam hangat dari Pak RW! 🌇',
+            'Sore, warga Gang Desa! Jangan lupa cek tanaman di pekarangan, biar tetap subur dan cantik. 🌱',
+            'Sore, warga! Semoga sore ini jadi waktu yang menyenangkan buat keluarga dan istirahat sejenak. 😊',
+            'Sore, warga Gang Desa! Kalau lelah, jangan lupa untuk recharge energi dan istirahat yang cukup. 🌸',
+            'Sore ini rasanya pas banget buat menikmati keindahan desa kita. Yuk, bersantai sejenak! 🌿',
+            'Selamat sore, warga! Mari kita nikmati sore ini dengan kebersamaan, bisa ngobrol atau sekedar berbagi cerita. 🌇',
+            'Sore ini cuacanya enak banget, semoga semua yang kita kerjakan hari ini bisa bermanfaat. 🌷',
+            'Sore, warga Gang Desa! Apapun yang kita lakukan hari ini, semoga selalu penuh berkah. 💪',
+            'Selamat sore, warga! Jangan lupa untuk selalu menjaga kebersihan dan kenyamanan di gang desa kita. 🌻',
+        ];
+        const randomReply = soreReplies[Math.floor(Math.random() * soreReplies.length)];
+        message.reply(randomReply);
+    }
+    else if (lowerContent.includes('malam')) {
+        const malamReplies = [
+            'Selamat malam, warga Gang Desa! Semoga malam ini penuh kedamaian dan istirahat yang cukup. 🌙',
+            'Malam, warga! Jangan lupa tidur lebih awal, biar besok bisa bangun dengan semangat baru! 😴',
+            'Selamat malam, warga Gang Desa! Mari kita akhiri hari dengan syukur dan harapan yang baik untuk besok. 🌟',
+            'Malam yang tenang, semoga tidurmu nyenyak dan esok hari lebih cerah lagi. 🌙',
+            'Selamat malam, warga! Semoga malam ini membawa ketenangan dan kebahagiaan bagi kita semua. 🌙✨',
+            'Malam, warga Gang Desa! Jaga kesehatan dan selalu bersyukur atas semua yang kita miliki. 🌙',
+            'Malam yang indah, semoga mimpi indah menyertai warga semua, dan besok kita bisa lebih baik lagi. 😴',
+            'Selamat malam, warga! Jangan lupa berdoa sebelum tidur, semoga besok lebih baik dari hari ini. 🙏',
+            'Malam, warga Gang Desa! Terima kasih sudah menjaga suasana desa yang selalu harmonis. 🌙',
+            'Selamat malam, warga! Semoga tidurmu nyenyak dan besok kita semua bisa lebih semangat lagi! 🌟',
+        ];
+        const randomReply = malamReplies[Math.floor(Math.random() * malamReplies.length)];
+        message.reply(randomReply);
+    }
 });
 
 // Autorespon kata kunci untuk Admin
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
 
-// Logging penggunaan perintah
- const logChannel = client.channels.cache.get(LOG_CHANNEL_ID);
+    // Logging penggunaan perintah
+    const logChannel = client.channels.cache.get(LOG_CHANNEL_ID);
     if (logChannel && message.content.startsWith(PREFIX)) {
         logChannel.send(`[LOG] ${message.author.tag} menggunakan perintah: ${message.content}`);
     }
 
- const lowerContent = message.content.toLowerCase();
+    const lowerContent = message.content.toLowerCase();
 
     if (lowerContent.includes('rwsupport')) {
         message.channel.send('👋 Halo kak ada yang bisa dibantu? <:What:1099424830283055235>\nKalau mau ambil role bisa cek dulu listnya di <#1052123748137963550>, nanti bakal saya kasih jika memenuhi kriteria ya. <:Wink:1099424794350473216>');
@@ -714,9 +715,9 @@ client.on('messageCreate', async (message) => {
         message.channel.send('👩 Untuk verifikasi role Nona, cukup kirimkan voice note (vn) disini atau bisa bergabung ke voice channel yang ada Pengurusnya ya. <:Hehe:1099424821974151310>');
     } else if (lowerContent.includes('rwthanks')) {
         message.channel.send('👍 Baik kak jika sudah cukup, saya izin close tiketnya ya.\nTerima kasih sudah menghubungi admin. <:Wink:1099424794350473216>');
-    } 
+    }
 
-// Perintah untuk bergabung ke voice channel dan memutar audio
+    // Perintah untuk bergabung ke voice channel dan memutar audio
     if (message.content.startsWith(`${PREFIX}join`)) {
         const voiceChannel = message.member.voice.channel;
 
@@ -747,73 +748,73 @@ client.on('messageCreate', async (message) => {
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
 
-// Fungsi untuk delay
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-// Fungsi untuk mencoba kembali dengan retry (Exponential backoff)
-const makeRequestWithRetry = async (query) => {
-    const MAX_RETRIES = 5; // Maksimal percobaan ulang
-    const RETRY_DELAY = 5000; // Delay awal 5 detik
+    // Fungsi untuk delay
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    // Fungsi untuk mencoba kembali dengan retry (Exponential backoff)
+    const makeRequestWithRetry = async (query) => {
+        const MAX_RETRIES = 5; // Maksimal percobaan ulang
+        const RETRY_DELAY = 5000; // Delay awal 5 detik
 
-    let attempts = 0;
-    while (attempts < MAX_RETRIES) {
-        try {
-            // Melakukan request ke Gemini API
-            const response = await axios.post(
-                "https://generativelanguage.googleapis.com/v1beta/chat/completions",
-                {
-                    model: 'gemini-1.5-flash', // Model Gemini
-                    messages: [
-                        {
-                            role: 'system',
-                            content: 'Kamu berperan sebagai seorang Pak RW di server discord bernama Gang Desa. Gang Desa adalah sebuah komunitas discord dengan konsep perdesaan untuk cari teman ngobrol, tempat curhat, sharing, mabar, nobar, atau bahkan cari jodoh, berdiri sejak Desember 2022. Di Gang Desa kamu bisa upload foto di Galeri Warga, ngobrol dan curhat bareng Pak RW, sampai dicarikan jodoh oleh Pak Penghulu. Kamu juga dapat mendengarkan Radio di Warkop, dan menonton Televisi di Pos Ronda! Kepala desa di discord tersebut ada dua, pertama ada Nevix, seorang yang ganteng, tajir, humoris, tidak sombong, dan memiliki seorang pasangan bernama Ira seorang Bidan yang pekerja keras, sudah pacaran selama 6 tahun lebih, doain semoga tahun depan nikah. Kepala desa kedua ada Juna, seorang streamer di youtube @arjunawirya yang main gta 5 roleplay, sering ngomong Kyahhh, memiliki tingkah yang kocak dan random, kadang suka ngomel-ngomel, dan akan berjodoh dengan seorang bernama Paipai orang bandung yang merupakan seorang idol. Pejabat desa ada 3, yaitu Pak RW yang bertugas membantu warga, Pak Hansip yang bertugas menjaga keamanan desa, dan Pak Penghulu yang bertugas mencarikan jodoh untuk warga. Ada beberapa Pengurus desa yang baik dan ramah yaitu Naya, Dipsi, Nao, Moci, Exy, Caka, dan Pais. Ada Humas desa yaitu Ecak, Teteh Pani, dan Hokcy. Ada Hansip desa yang tegas dan galak yaitu Bombom, Fauzan, Fixel, Gago, Hitomaru, dan Icat. Ada juga warga lainnya seperti Pirda, yang jago bikin kopi dan tiap hari main Dota Chess. Ada Tungirz seorang Arab Bandung yang ditaksir sama Hokcy, dia juga punya brand Baju @gudsofficial_ . Ada dipsi yang suka ngetroll main valorant, lagi deket sama bang upi. Ada Hokcy yang punya godain warga disini alias buaya betina, dia disukain sama orang Mesir bernama Tyson. Ada Maddy atau Claire yang sediki anomali dan juga yang suka godain warga dengan gombalan mautnya. Ada Naya yang suka sama oreo goreng dan disukain sama Akmal yang suka godain naya. Ada Exy yang suka sarkas dan jualan moci @mochipa.chewy serta suka main mobile legends. Ada Moci seorang guru perempuan yang suka main valorant pake agent Killjoy. Ada caka yang jago ngegambar dan ngebucin terus. Ada Ecak yang sering ngomel-ngomel tapi kadang baik, tapi kadang sering PMS padahal dia laki-laki. Ada Teteh Pani yang jago nyanyi dan katanya lagi cari jodoh. Ada Fixel yang suka kucing dan lagi deket sama lily yang sering diledekin lily was a little girl. Ada Gago yang sok sibuk dan sok ganteng, dulu sering muncul sekarang gatau kemana. Ada Icat yang sibuk kuliah, sok jadi senior dan caper. Ada Boril yang suka main RDR dan orangnya bijak. Ada Pio seorang bocil yang suka makan moci, sering pundung, sering badmood dan sering bawa piso kemana-mana. Ada Noah, seorang guru perempuan yang sangat anomali dan random. Ada Joan yang suka menyendiri di voice. Ada maul yang jago ngoding. Ada Roshan seorang koko cina yang galak dan ngeselin. Ada Thufail atau Tupel yang sok ganteng dan kocak, sering ngonten juga di youtube @thufailwafii . Ada wahyu atau dipanggil voxo yang sok ganteng dan suka ngetroll kalau main valorant. Ada Faras anak skena yang jago outfit sambil ngonten. Ada Cyla yang suka jualan netflix. Ada Alin yang jarang mandi. Ada Kinan atau Kylie yang lagi cari koko ganteng dan kaya, kadang suka jadi ani-ani. Ada Faiz yang sok keren dan bucin terus. Ada Rosmaya, ibu-ibu yang kocak, rambutnya kribo tapi sejak ada suami jadi berubah jadi kalem. Ada Myst atau Ben yang suka main valorant tapi ga jago jago, suka gym tapi juga suka makan banyak. Ada Arif yang jago ngoding dan suka benerin TV Desa biar warga bisa nobar. Ada Nana seorang tenaga medis yang rajin kerja dan sering nongkrong di discord sambil dengerin lagu seharian. Ada Irfan dan Justin yang NT terus tiap deketin cewe, sering kena tikung juga. Ada Haaa yang kerja keras dan sering nongkrong di voice. Ada Hau seorang koko cina yang lagi kuliah di Taiwan. Warga Gang Desa rata-rata sering main valorant, mobile legend, gta 5 roleplay, roblox, minecrat atau sekedar nongkrong di voice sampai cari jodoh. Ada Feey yang pernah joget lagu waktu ku kecil aku gatau yang mungil-mungil. Ada jesjes yang cantik dan baik banget, suka jalan-jalan terus ke luar negeri. Ada yunitameli yang cantik dan baik hati, suka donasi ke desa. Ada Agus yang suka sering ngasih kata-kata bijak. Sebagai Pak RW, kamu dapat menjadi teman ngobrol dan menjawab semua pertanyaan warga desa. Jawab dengan bijak dan gunakan bahasa yang santai dengan sedikit humoris. Jawabanmu tidak boleh lebih dari 2000 karakter.',
-                        },
-                        {
-                            role: 'user',
-                            content: query, // Pertanyaan dari pengguna
-                        },
-                    ],
-                },
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${process.env.GEMINI_API_KEY}`, // Pastikan kunci API tersedia di .env
+        let attempts = 0;
+        while (attempts < MAX_RETRIES) {
+            try {
+                // Melakukan request ke Gemini API
+                const response = await axios.post(
+                    "https://generativelanguage.googleapis.com/v1beta/chat/completions",
+                    {
+                        model: 'gemini-1.5-flash', // Model Gemini
+                        messages: [
+                            {
+                                role: 'system',
+                                content: 'Kamu berperan sebagai seorang Pak RW di server discord bernama Gang Desa. Gang Desa adalah sebuah komunitas discord dengan konsep perdesaan untuk cari teman ngobrol, tempat curhat, sharing, mabar, nobar, atau bahkan cari jodoh, berdiri sejak Desember 2022. Di Gang Desa kamu bisa upload foto di Galeri Warga, ngobrol dan curhat bareng Pak RW, sampai dicarikan jodoh oleh Pak Penghulu. Kamu juga dapat mendengarkan Radio di Warkop, dan menonton Televisi di Pos Ronda! Kepala desa di discord tersebut ada dua, pertama ada Nevix, seorang yang ganteng, tajir, humoris, tidak sombong, dan memiliki seorang pasangan bernama Ira seorang Bidan yang pekerja keras, sudah pacaran selama 6 tahun lebih, doain semoga tahun depan nikah. Kepala desa kedua ada Juna, seorang streamer di youtube @arjunawirya yang main gta 5 roleplay, sering ngomong Kyahhh, memiliki tingkah yang kocak dan random, kadang suka ngomel-ngomel, dan akan berjodoh dengan seorang bernama Paipai orang bandung yang merupakan seorang idol. Pejabat desa ada 3, yaitu Pak RW yang bertugas membantu warga, Pak Hansip yang bertugas menjaga keamanan desa, dan Pak Penghulu yang bertugas mencarikan jodoh untuk warga. Ada beberapa Pengurus desa yang baik dan ramah yaitu Naya, Dipsi, Nao, Moci, Exy, Caka, dan Pais. Ada Humas desa yaitu Ecak, Teteh Pani, dan Hokcy. Ada Hansip desa yang tegas dan galak yaitu Bombom, Fauzan, Fixel, Gago, Hitomaru, dan Icat. Ada juga warga lainnya seperti Pirda, yang jago bikin kopi dan tiap hari main Dota Chess. Ada Tungirz seorang Arab Bandung yang ditaksir sama Hokcy, dia juga punya brand Baju @gudsofficial_ . Ada dipsi yang suka ngetroll main valorant, lagi deket sama bang upi. Ada Hokcy yang punya godain warga disini alias buaya betina, dia disukain sama orang Mesir bernama Tyson. Ada Maddy atau Claire yang sediki anomali dan juga yang suka godain warga dengan gombalan mautnya. Ada Naya yang suka sama oreo goreng dan disukain sama Akmal yang suka godain naya. Ada Exy yang suka sarkas dan jualan moci @mochipa.chewy serta suka main mobile legends. Ada Moci seorang guru perempuan yang suka main valorant pake agent Killjoy. Ada caka yang jago ngegambar dan ngebucin terus. Ada Ecak yang sering ngomel-ngomel tapi kadang baik, tapi kadang sering PMS padahal dia laki-laki. Ada Teteh Pani yang jago nyanyi dan katanya lagi cari jodoh. Ada Fixel yang suka kucing dan lagi deket sama lily yang sering diledekin lily was a little girl. Ada Gago yang sok sibuk dan sok ganteng, dulu sering muncul sekarang gatau kemana. Ada Icat yang sibuk kuliah, sok jadi senior dan caper. Ada Boril yang suka main RDR dan orangnya bijak. Ada Pio seorang bocil yang suka makan moci, sering pundung, sering badmood dan sering bawa piso kemana-mana. Ada Noah, seorang guru perempuan yang sangat anomali dan random. Ada Joan yang suka menyendiri di voice. Ada maul yang jago ngoding. Ada Roshan seorang koko cina yang galak dan ngeselin. Ada Thufail atau Tupel yang sok ganteng dan kocak, sering ngonten juga di youtube @thufailwafii . Ada wahyu atau dipanggil voxo yang sok ganteng dan suka ngetroll kalau main valorant. Ada Faras anak skena yang jago outfit sambil ngonten. Ada Cyla yang suka jualan netflix. Ada Alin yang jarang mandi. Ada Kinan atau Kylie yang lagi cari koko ganteng dan kaya, kadang suka jadi ani-ani. Ada Faiz yang sok keren dan bucin terus. Ada Rosmaya, ibu-ibu yang kocak, rambutnya kribo tapi sejak ada suami jadi berubah jadi kalem. Ada Myst atau Ben yang suka main valorant tapi ga jago jago, suka gym tapi juga suka makan banyak. Ada Arif yang jago ngoding dan suka benerin TV Desa biar warga bisa nobar. Ada Nana seorang tenaga medis yang rajin kerja dan sering nongkrong di discord sambil dengerin lagu seharian. Ada Irfan dan Justin yang NT terus tiap deketin cewe, sering kena tikung juga. Ada Haaa yang kerja keras dan sering nongkrong di voice. Ada Hau seorang koko cina yang lagi kuliah di Taiwan. Warga Gang Desa rata-rata sering main valorant, mobile legend, gta 5 roleplay, roblox, minecrat atau sekedar nongkrong di voice sampai cari jodoh. Ada Feey yang pernah joget lagu waktu ku kecil aku gatau yang mungil-mungil. Ada jesjes yang cantik dan baik banget, suka jalan-jalan terus ke luar negeri. Ada yunitameli yang cantik dan baik hati, suka donasi ke desa. Ada Agus yang suka sering ngasih kata-kata bijak. Sebagai Pak RW, kamu dapat menjadi teman ngobrol dan menjawab semua pertanyaan warga desa. Jawab dengan bijak dan gunakan bahasa yang santai dengan sedikit humoris. Jawabanmu tidak boleh lebih dari 2000 karakter.',
+                            },
+                            {
+                                role: 'user',
+                                content: query, // Pertanyaan dari pengguna
+                            },
+                        ],
                     },
-                }
-            );
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${process.env.GEMINI_API_KEY}`, // Pastikan kunci API tersedia di .env
+                        },
+                    }
+                );
 
-            // Mengambil respons dari Gemini
-            const reply = response.data.choices[0].message.content.trim();
-            return reply; // Mengembalikan hasil dari Gemini
-        } catch (error) {
-            if (error.response && error.response.status === 429) {
-                attempts++;
-                console.log(`Terlalu banyak permintaan, mencoba lagi setelah ${RETRY_DELAY * attempts} ms...`);
-                await delay(RETRY_DELAY * attempts); // Exponential backoff
-            } else {
-                console.error("Error saat mengakses Gemini API:", error.message);
-                throw error; // Lemparkan error jika tidak dapat diperbaiki
+                // Mengambil respons dari Gemini
+                const reply = response.data.choices[0].message.content.trim();
+                return reply; // Mengembalikan hasil dari Gemini
+            } catch (error) {
+                if (error.response && error.response.status === 429) {
+                    attempts++;
+                    console.log(`Terlalu banyak permintaan, mencoba lagi setelah ${RETRY_DELAY * attempts} ms...`);
+                    await delay(RETRY_DELAY * attempts); // Exponential backoff
+                } else {
+                    console.error("Error saat mengakses Gemini API:", error.message);
+                    throw error; // Lemparkan error jika tidak dapat diperbaiki
+                }
             }
         }
-    }
-    throw new Error('Coba lagi setelah beberapa saat, batas maksimum pencobaan tercapai.');
-};
+        throw new Error('Coba lagi setelah beberapa saat, batas maksimum pencobaan tercapai.');
+    };
 
-// Perintah untuk bot tanya jawab
-if (message.content.startsWith(`${PREFIX}tanya`)) {
-    const query = message.content.slice(`${PREFIX}tanya`.length).trim();
-    if (!query) {
-        message.reply('Tanyain aja, nanti Pak RW jawab');
-        return;
-    }
+    // Perintah untuk bot tanya jawab
+    if (message.content.startsWith(`${PREFIX}tanya`)) {
+        const query = message.content.slice(`${PREFIX}tanya`.length).trim();
+        if (!query) {
+            message.reply('Tanyain aja, nanti Pak RW jawab');
+            return;
+        }
 
-    try {
-        const reply = await makeRequestWithRetry(query); // Menggunakan fungsi retry
-        message.reply(reply); // Mengirimkan jawaban ke pengguna
-    } catch (error) {
-        console.error('Error with Gemini API:', error);
-        message.reply('Maaf, Pak RW lagi bingung nih sama pertanyaannya');
+        try {
+            const reply = await makeRequestWithRetry(query); // Menggunakan fungsi retry
+            message.reply(reply); // Mengirimkan jawaban ke pengguna
+        } catch (error) {
+            console.error('Error with Gemini API:', error);
+            message.reply('Maaf, Pak RW lagi bingung nih sama pertanyaannya');
+        }
     }
-}
 });
 
 // Fitur Auto Thread Galeri Warga & Auto Role
@@ -881,4 +882,4 @@ client.on('messageCreate', async (message) => {
 });
 
 // Login ke bot
-client.login(TOKEN);
+Client.login(TOKEN);
