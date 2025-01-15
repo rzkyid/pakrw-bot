@@ -1,6 +1,6 @@
 require('dotenv').config();
 const { Client, GatewayIntentBits, Partials, EmbedBuilder, ActivityType, MessageAttachment, ActionRowBuilder, ButtonBuilder, ButtonStyle, 
-       ModalBuilder, TextInputBuilder, TextInputStyle, InteractionType, Intents, MessageActionRow, MessageButton, MessageEmbed,
+       ModalBuilder, TextInputBuilder, TextInputStyle, InteractionType, Intents, MessageActionRow, MessageButton, MessageEmbed, MessageFlags, 
        SlashCommandBuilder, PermissionFlagsBits
       } = require('discord.js');
 const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus } = require('@discordjs/voice');
@@ -235,7 +235,7 @@ client.on('interactionCreate', async (interaction) => {
         interaction.member.roles.cache.has('1077457424736333844'); // Cek apakah pengguna memiliki role dengan ID ini
 
     if (!hasPermission) {
-        return interaction.reply({ content: "Anda tidak memiliki izin untuk menggunakan perintah ini.", ephemeral: true });
+        return interaction.reply({ content: "Anda tidak memiliki izin untuk menggunakan perintah ini.",  flags: MessageFlags.Ephemeral, });
     }
 
     // Command untuk memberikan role (diubah ke kasihrole)
@@ -244,31 +244,31 @@ client.on('interactionCreate', async (interaction) => {
         const role = interaction.options.getRole('role');
 
         if (!member || !role) {
-            return interaction.reply({ content: "Pastikan Anda memilih member dan role yang valid.", ephemeral: true });
+            return interaction.reply({ content: "Pastikan Anda memilih member dan role yang valid.",  flags: MessageFlags.Ephemeral, });
         }
 
         // Periksa apakah member sudah memiliki role tersebut
         if (member.roles.cache.has(role.id)) {
             return interaction.reply({
                 content: `✅ ${member} sudah memiliki role **${role.name}**!`,
-                ephemeral: false // Pesan ini dapat dilihat oleh semua member
+                flags: 0, // Pesan ini dapat dilihat oleh semua member
             });
         }
 
         // Periksa apakah role bisa diberikan
         if (role.position >= interaction.guild.members.me.roles.highest.position) {
-            return interaction.reply({ content: "Saya tidak memiliki izin untuk memberikan role ini.", ephemeral: true });
+            return interaction.reply({ content: "Saya tidak memiliki izin untuk memberikan role ini.",  flags: MessageFlags.Ephemeral, });
         }
 
         try {
             await member.roles.add(role);
             return interaction.reply({
                 content: `✅ Berhasil memberikan role **${role.name}** kepada ${member}.`,
-                ephemeral: false // Pesan ini dapat dilihat oleh semua member
+                 flags: 0, // Pesan ini dapat dilihat oleh semua member
             });
         } catch (error) {
             console.error(error);
-            return interaction.reply({ content: "Terjadi kesalahan saat memberikan role.", ephemeral: true });
+            return interaction.reply({ content: "Terjadi kesalahan saat memberikan role.",  flags: MessageFlags.Ephemeral, });
         }
     }
 
@@ -278,7 +278,7 @@ client.on('interactionCreate', async (interaction) => {
         const role = interaction.options.getRole('role');
 
         if (!member || !role) {
-            return interaction.reply({ content: "Pastikan Anda memilih member dan role yang valid.", ephemeral: true });
+            return interaction.reply({ content: "Pastikan Anda memilih member dan role yang valid.",  flags: MessageFlags.Ephemeral, });
         }
 
         // Periksa apakah member sudah memiliki role tersebut
@@ -291,18 +291,18 @@ client.on('interactionCreate', async (interaction) => {
 
         // Periksa apakah role bisa dihapus
         if (role.position >= interaction.guild.members.me.roles.highest.position) {
-            return interaction.reply({ content: "Saya tidak memiliki izin untuk menghapus role ini.", ephemeral: true });
+            return interaction.reply({ content: "Saya tidak memiliki izin untuk menghapus role ini.",  flags: MessageFlags.Ephemeral, });
         }
 
         try {
             await member.roles.remove(role);
             return interaction.reply({
                 content: `✅ Berhasil menghapus role **${role.name}** dari ${member}.`,
-                ephemeral: false // Pesan ini dapat dilihat oleh semua member
+                 flags: 0 // Pesan ini dapat dilihat oleh semua member
             });
         } catch (error) {
             console.error(error);
-            return interaction.reply({ content: "Terjadi kesalahan saat menghapus role.", ephemeral: true });
+            return interaction.reply({ content: "Terjadi kesalahan saat menghapus role.",  flags: MessageFlags.Ephemeral, });
         }
     }
        
@@ -312,7 +312,7 @@ client.on('interactionCreate', async (interaction) => {
         const pesan = interaction.options.getString('pesan');
 
         // Mengirimkan pesan
-        await interaction.reply({ content: 'Pesan berhasil dikirim!', ephemeral: true });
+        await interaction.reply({ content: 'Pesan berhasil dikirim!',  flags: MessageFlags.Ephemeral, });
         await interaction.channel.send(pesan); // Pesan dikirim ke channel tempat command digunakan
     }  
 });
@@ -531,9 +531,9 @@ client.on('interactionCreate', async (interaction) => {
                     logChannel.send(`[LOG] **${interaction.user.username}** mengirim curhat: "${pesanCurhat}"`);
                 }
 
-                await interaction.reply({ content: 'Curhat Anda berhasil dikirim!', ephemeral: true });
+                await interaction.reply({ content: 'Curhat Anda berhasil dikirim!',  flags: MessageFlags.Ephemeral, });
             } else {
-                await interaction.reply({ content: 'Gagal mengirim curhat. Channel tidak ditemukan.', ephemeral: true });
+                await interaction.reply({ content: 'Gagal mengirim curhat. Channel tidak ditemukan.',  flags: MessageFlags.Ephemeral, });
             }
         } else if (interaction.customId.startsWith('balas_modal_')) {
             const curhatId = interaction.customId.split('_')[2];
@@ -588,16 +588,16 @@ client.on('interactionCreate', async (interaction) => {
                             logChannel.send(`[LOG] **${interaction.user.username}** mengirim balasan ke curhat ID: ${curhatId} - "${balasan}"`);
                         }
 
-                        await interaction.reply({ content: 'Balasan Anda berhasil dikirim ke thread!', ephemeral: true });
+                        await interaction.reply({ content: 'Balasan Anda berhasil dikirim ke thread!',  flags: MessageFlags.Ephemeral, });
                     } else {
-                        await interaction.reply({ content: 'Pesan curhat tidak ditemukan di channel yang sama.', ephemeral: true });
+                        await interaction.reply({ content: 'Pesan curhat tidak ditemukan di channel yang sama.',  flags: MessageFlags.Ephemeral, });
                     }
                 } catch (error) {
                     console.error(error);
-                    await interaction.reply({ content: 'Gagal mengirim balasan. Pesan curhat tidak ditemukan atau telah dihapus.', ephemeral: true });
+                    await interaction.reply({ content: 'Gagal mengirim balasan. Pesan curhat tidak ditemukan atau telah dihapus.',  flags: MessageFlags.Ephemeral, });
                 }
             } else {
-                await interaction.reply({ content: 'Gagal mengirim balasan. Channel tidak ditemukan.', ephemeral: true });
+                await interaction.reply({ content: 'Gagal mengirim balasan. Channel tidak ditemukan.',  flags: MessageFlags.Ephemeral, });
             }
         }
     }
