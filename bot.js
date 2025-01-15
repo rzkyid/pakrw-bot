@@ -882,4 +882,4 @@ client.on('messageCreate', async (message) => {
 });
 
 // Login ke bot
-Client.login(TOKEN);
+client.login(TOKEN);
