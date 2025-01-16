@@ -1,7 +1,6 @@
-global.ReadableStream = require('web-streams-polyfill/ponyfill').ReadableStream;
 require('dotenv').config();
 const { Client, GatewayIntentBits, Partials, EmbedBuilder, ActivityType, MessageAttachment, ActionRowBuilder, ButtonBuilder, ButtonStyle, 
-       ModalBuilder, TextInputBuilder, TextInputStyle, InteractionType, Intents, MessageActionRow, MessageButton, MessageEmbed, MessageFlags, 
+       ModalBuilder, TextInputBuilder, TextInputStyle, InteractionType, Intents, MessageActionRow, MessageButton, MessageEmbed,
        SlashCommandBuilder, PermissionFlagsBits
       } = require('discord.js');
 const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus } = require('@discordjs/voice');
@@ -64,6 +63,16 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Routing dasar untuk memastikan aplikasi web berjalan
+app.get('/', (req, res) => {
+    const filePath = path.join(__dirname, 'index.html');
+    res.sendFile(filePath);
+});
+
+app.listen(PORT, () => {
+    console.log(`Server Express berjalan di port ${PORT}`);
+});
+
 // Pesan otomatis ketika ada member baru bergabung
 const WELCOME_CHANNEL_ID = '1052123058678276106';
 client.on('guildMemberAdd', (member) => {
@@ -87,7 +96,7 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
         const BoostChannel = newMember.guild.channels.cache.get(BoostChannelID);
         const embed = new EmbedBuilder()
             .setTitle('<a:ServerBoosterGif:1082918277858213919> SELAMAT DATANG JURAGAN! <a:ServerBoosterGif:1082918277858213919>') // Judul embed
-            .setDescription(`Terima kasih sudah mendukung server ini Juragan ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice) dari Role <@&1052585457965346848>`)
+            .setDescription(`Terima kasih sudah mendukung server ini Juragan ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice) dari Role <@&1052585457965346848> dan akses ke Voice Channel VIP <#1324635056328675338>`)
             .setColor('#f47fff') // Warna dari embed
             .setTimestamp() // Menambahkan timestamp ke embed
             .setThumbnail(newMember.user.displayAvatarURL({ dynamic: true, size: 1024 })) // Menampilkan avatar member yang baru boost
@@ -103,31 +112,27 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
 
 // Event ketika member baru melakukan boost dan donasi server
 const ROLE_CHANNELS = {
-    '1052585457965346848': '1052126042300624906',  // Role ID: Boost ke channel 1052126042300624906
     '1221395908311384125': '1221386974003204126',  // Role ID: Donatur ke channel 1221386974003204126
     '1081256438879485953': '1221386974003204126',  // Role ID: Raden ke channel 1221386974003204126
     '1105536787725684848': '1221386974003204126',  // Role ID: Sultan ke channel 1221386974003204126
 };
 
 const EMBED_TITLES = {
-    '1314097979514159206': '<a:ServerBoosterGif:1082918277858213919> SELAMAT DATANG JURAGAN! <a:ServerBoosterGif:1082918277858213919>',
     '1221395908311384125': '💶 SELAMAT DATANG DONATUR! 💶',
     '1081256438879485953': '💵 SELAMAT DATANG RADEN! 💵',
     '1105536787725684848': '💰 SELAMAT DATANG SULTAN! 💰',
 };
 
 const EMBED_COLORS = {
-    '1314097979514159206': '#f47fff',    // Boost color
     '1221395908311384125': '#68bbff',    // Donatur color
     '1081256438879485953': '#4caf50',    // Raden color
     '1105536787725684848': '#ffeb3b',    // Sultan color
 };
 
 const EMBED_DESCRIPTIONS = {
-    '1314097979514159206': 'Terima kasih sudah mendukung server ini Juragan ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice) dari Role <@&1052585457965346848>',
-    '1221395908311384125': 'Terima kasih sudah mendukung server ini Donatur ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice) dari Role <@&1221395908311384125>',
-    '1081256438879485953': 'Terima kasih sudah mendukung server ini Raden ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice) dari Role <@&1081256438879485953>',
-    '1105536787725684848': 'Terima kasih sudah mendukung server ini Sultan ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice) dari Role <@&1105536787725684848>',
+    '1221395908311384125': 'Terima kasih sudah mendukung server ini Donatur ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice) dari Role <@&1221395908311384125> dan akses ke Voice Channel VIP <#1324635056328675338>',
+    '1081256438879485953': 'Terima kasih sudah mendukung server ini Raden ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice) dari Role <@&1081256438879485953> dan akses ke Voice Channel VIP <#1324635056328675338>',
+    '1105536787725684848': 'Terima kasih sudah mendukung server ini Sultan ${newMember.toString()}! Sekarang kamu dapat menikmati fitur khusus (Mute, Deafen, Move & Disconnect Voice) dari Role <@&1105536787725684848> dan akses ke Voice Channel VIP <#1324635056328675338>',
 };
 
 client.on('guildMemberUpdate', async (oldMember, newMember) => {
@@ -226,7 +231,7 @@ client.on('interactionCreate', async (interaction) => {
         interaction.member.roles.cache.has('1077457424736333844'); // Cek apakah pengguna memiliki role dengan ID ini
 
     if (!hasPermission) {
-        return interaction.reply({ content: "Anda tidak memiliki izin untuk menggunakan perintah ini.",  flags: MessageFlags.Ephemeral, });
+        return interaction.reply({ content: "Anda tidak memiliki izin untuk menggunakan perintah ini.", ephemeral: true });
     }
 
     // Command untuk memberikan role (diubah ke kasihrole)
@@ -235,31 +240,31 @@ client.on('interactionCreate', async (interaction) => {
         const role = interaction.options.getRole('role');
 
         if (!member || !role) {
-            return interaction.reply({ content: "Pastikan Anda memilih member dan role yang valid.",  flags: MessageFlags.Ephemeral, });
+            return interaction.reply({ content: "Pastikan Anda memilih member dan role yang valid.", ephemeral: true });
         }
 
         // Periksa apakah member sudah memiliki role tersebut
         if (member.roles.cache.has(role.id)) {
             return interaction.reply({
                 content: `✅ ${member} sudah memiliki role **${role.name}**!`,
-                flags: 0, // Pesan ini dapat dilihat oleh semua member
+                ephemeral: false // Pesan ini dapat dilihat oleh semua member
             });
         }
 
         // Periksa apakah role bisa diberikan
         if (role.position >= interaction.guild.members.me.roles.highest.position) {
-            return interaction.reply({ content: "Saya tidak memiliki izin untuk memberikan role ini.",  flags: MessageFlags.Ephemeral, });
+            return interaction.reply({ content: "Saya tidak memiliki izin untuk memberikan role ini.", ephemeral: true });
         }
 
         try {
             await member.roles.add(role);
             return interaction.reply({
                 content: `✅ Berhasil memberikan role **${role.name}** kepada ${member}.`,
-                 flags: 0, // Pesan ini dapat dilihat oleh semua member
+                ephemeral: false // Pesan ini dapat dilihat oleh semua member
             });
         } catch (error) {
             console.error(error);
-            return interaction.reply({ content: "Terjadi kesalahan saat memberikan role.",  flags: MessageFlags.Ephemeral, });
+            return interaction.reply({ content: "Terjadi kesalahan saat memberikan role.", ephemeral: true });
         }
     }
 
@@ -269,7 +274,7 @@ client.on('interactionCreate', async (interaction) => {
         const role = interaction.options.getRole('role');
 
         if (!member || !role) {
-            return interaction.reply({ content: "Pastikan Anda memilih member dan role yang valid.",  flags: MessageFlags.Ephemeral, });
+            return interaction.reply({ content: "Pastikan Anda memilih member dan role yang valid.", ephemeral: true });
         }
 
         // Periksa apakah member sudah memiliki role tersebut
@@ -282,18 +287,18 @@ client.on('interactionCreate', async (interaction) => {
 
         // Periksa apakah role bisa dihapus
         if (role.position >= interaction.guild.members.me.roles.highest.position) {
-            return interaction.reply({ content: "Saya tidak memiliki izin untuk menghapus role ini.",  flags: MessageFlags.Ephemeral, });
+            return interaction.reply({ content: "Saya tidak memiliki izin untuk menghapus role ini.", ephemeral: true });
         }
 
         try {
             await member.roles.remove(role);
             return interaction.reply({
                 content: `✅ Berhasil menghapus role **${role.name}** dari ${member}.`,
-                 flags: 0 // Pesan ini dapat dilihat oleh semua member
+                ephemeral: false // Pesan ini dapat dilihat oleh semua member
             });
         } catch (error) {
             console.error(error);
-            return interaction.reply({ content: "Terjadi kesalahan saat menghapus role.",  flags: MessageFlags.Ephemeral, });
+            return interaction.reply({ content: "Terjadi kesalahan saat menghapus role.", ephemeral: true });
         }
     }
        
@@ -303,7 +308,7 @@ client.on('interactionCreate', async (interaction) => {
         const pesan = interaction.options.getString('pesan');
 
         // Mengirimkan pesan
-        await interaction.reply({ content: 'Pesan berhasil dikirim!',  flags: MessageFlags.Ephemeral, });
+        await interaction.reply({ content: 'Pesan berhasil dikirim!', ephemeral: true });
         await interaction.channel.send(pesan); // Pesan dikirim ke channel tempat command digunakan
     }  
 });
@@ -399,7 +404,7 @@ function heartbeat() {
 
 client.once('ready', () => {
   console.log('\x1b[36m[ INFO ]\x1b[0m', `\x1b[34mPing: ${client.ws.ping} ms \x1b[0m`);
-  login();  
+  login();
   updateStatus();
   setInterval(updateStatus, 10000);
   heartbeat();
@@ -522,9 +527,9 @@ client.on('interactionCreate', async (interaction) => {
                     logChannel.send(`[LOG] **${interaction.user.username}** mengirim curhat: "${pesanCurhat}"`);
                 }
 
-                await interaction.reply({ content: 'Curhat Anda berhasil dikirim!',  flags: MessageFlags.Ephemeral, });
+                await interaction.reply({ content: 'Curhat Anda berhasil dikirim!', ephemeral: true });
             } else {
-                await interaction.reply({ content: 'Gagal mengirim curhat. Channel tidak ditemukan.',  flags: MessageFlags.Ephemeral, });
+                await interaction.reply({ content: 'Gagal mengirim curhat. Channel tidak ditemukan.', ephemeral: true });
             }
         } else if (interaction.customId.startsWith('balas_modal_')) {
             const curhatId = interaction.customId.split('_')[2];
@@ -579,16 +584,16 @@ client.on('interactionCreate', async (interaction) => {
                             logChannel.send(`[LOG] **${interaction.user.username}** mengirim balasan ke curhat ID: ${curhatId} - "${balasan}"`);
                         }
 
-                        await interaction.reply({ content: 'Balasan Anda berhasil dikirim ke thread!',  flags: MessageFlags.Ephemeral, });
+                        await interaction.reply({ content: 'Balasan Anda berhasil dikirim ke thread!', ephemeral: true });
                     } else {
-                        await interaction.reply({ content: 'Pesan curhat tidak ditemukan di channel yang sama.',  flags: MessageFlags.Ephemeral, });
+                        await interaction.reply({ content: 'Pesan curhat tidak ditemukan di channel yang sama.', ephemeral: true });
                     }
                 } catch (error) {
                     console.error(error);
-                    await interaction.reply({ content: 'Gagal mengirim balasan. Pesan curhat tidak ditemukan atau telah dihapus.',  flags: MessageFlags.Ephemeral, });
+                    await interaction.reply({ content: 'Gagal mengirim balasan. Pesan curhat tidak ditemukan atau telah dihapus.', ephemeral: true });
                 }
             } else {
-                await interaction.reply({ content: 'Gagal mengirim balasan. Channel tidak ditemukan.',  flags: MessageFlags.Ephemeral, });
+                await interaction.reply({ content: 'Gagal mengirim balasan. Channel tidak ditemukan.', ephemeral: true });
             }
         }
     }
@@ -868,16 +873,6 @@ client.on('messageCreate', async (message) => {
             }
         }
     }
-});
-
-// Routing dasar untuk memastikan aplikasi web berjalan
-app.get('/', (req, res) => {
-    const filePath = path.join(__dirname, 'index.html');
-    res.sendFile(filePath);
-});
-
-app.listen(PORT, () => {
-    console.log(`Server Express berjalan di PORT ${PORT}`);
 });
 
 // Login ke bot
