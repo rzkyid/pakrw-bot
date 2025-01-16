@@ -1,3 +1,4 @@
+global.ReadableStream = require('web-streams-polyfill/ponyfill').ReadableStream;
 require('dotenv').config();
 const { Client, GatewayIntentBits, Partials, EmbedBuilder, ActivityType, MessageAttachment, ActionRowBuilder, ButtonBuilder, ButtonStyle, 
        ModalBuilder, TextInputBuilder, TextInputStyle, InteractionType, Intents, MessageActionRow, MessageButton, MessageEmbed, MessageFlags, 
