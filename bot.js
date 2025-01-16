@@ -64,16 +64,6 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Routing dasar untuk memastikan aplikasi web berjalan
-app.get('/', (req, res) => {
-    const filePath = path.join(__dirname, 'index.html');
-    res.sendFile(filePath);
-});
-
-app.listen(PORT, () => {
-    console.log(`Server Express berjalan di port ${PORT}`);
-});
-
 // Pesan otomatis ketika ada member baru bergabung
 const WELCOME_CHANNEL_ID = '1052123058678276106';
 client.on('guildMemberAdd', (member) => {
@@ -878,6 +868,16 @@ client.on('messageCreate', async (message) => {
             }
         }
     }
+});
+
+// Routing dasar untuk memastikan aplikasi web berjalan
+app.get('/', (req, res) => {
+    const filePath = path.join(__dirname, 'index.html');
+    res.sendFile(filePath);
+});
+
+app.listen(PORT, () => {
+    console.log(`Server Express berjalan di PORT ${PORT}`);
 });
 
 // Login ke bot
