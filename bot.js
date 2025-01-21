@@ -870,3 +870,4 @@ function heartbeat() {
   }, 30000);
 }
 
+client.login(TOKEN);
