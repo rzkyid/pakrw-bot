@@ -1,4 +1,3 @@
-global.ReadableStream = require('web-streams-polyfill/ponyfill').ReadableStream;
 require('dotenv').config();
 const { Client, GatewayIntentBits, Partials, EmbedBuilder, ActivityType, MessageAttachment, ActionRowBuilder, ButtonBuilder, ButtonStyle, 
        ModalBuilder, TextInputBuilder, TextInputStyle, InteractionType, Intents, MessageActionRow, MessageButton, MessageEmbed,
@@ -361,11 +360,6 @@ async function playAudio(channel) {
         console.error('Gagal memutar audio:', error);
     }
 }
-
-// Bot Siap
-client.once('ready', async () => {
-    console.log(`${client.user.tag} is online and ready!`);
-});
 
 // Menambahkan custom status
 const statusMessages = ["👀 Sedang Memantau", "👥 Warga Gang Desa"];
