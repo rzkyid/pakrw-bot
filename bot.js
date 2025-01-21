@@ -832,6 +832,14 @@ const statusTypes = [ 'online'];
 let currentStatusIndex = 0;
 let currentTypeIndex = 0;
 
+client.once('ready', () => {
+  console.log('\x1b[36m[ INFO ]\x1b[0m', `\x1b[34mPing: ${client.ws.ping} ms \x1b[0m`);
+  login();
+  updateStatus();
+  setInterval(updateStatus, 10000);
+  heartbeat();
+});
+
 async function login() {
   try {
     await client.login(TOKEN);
@@ -862,10 +870,3 @@ function heartbeat() {
   }, 30000);
 }
 
-client.once('ready', () => {
-  console.log('\x1b[36m[ INFO ]\x1b[0m', `\x1b[34mPing: ${client.ws.ping} ms \x1b[0m`);
-  login();
-  updateStatus();
-  setInterval(updateStatus, 10000);
-  heartbeat();
-});
