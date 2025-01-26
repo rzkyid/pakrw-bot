@@ -452,7 +452,7 @@ client.on('interactionCreate', async (interaction) => {
 
     const genderInput = new TextInputBuilder()
         .setCustomId('gender')
-        .setLabel('Jenis Kelamin (L/P)')
+        .setLabel('Jenis Kelamin (Laki-Laki/Perempuan:')
         .setStyle(TextInputStyle.Short)
         .setRequired(true);
 
