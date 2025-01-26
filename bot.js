@@ -513,7 +513,7 @@ if (interaction.isModalSubmit() && interaction.customId === 'ktp_form') {
 
         const attachment = new AttachmentBuilder(idCardBuffer, { name: 'idcard.png' });
 
-        await interaction.followUp({
+        await interaction.channel.send({
             content: `Kartu Tanda Penduduk Gang Desa untuk <@${interaction.user.id}>`,
             files: [attachment],
             components: [new ActionRowBuilder().addComponents(
