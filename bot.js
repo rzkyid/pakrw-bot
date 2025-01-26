@@ -486,7 +486,7 @@ client.on('interactionCreate', async (interaction) => {
 }
 
 if (interaction.isModalSubmit() && interaction.customId === 'ktp_form') {
-    await interaction.reply({ content: 'KTP kamu sedang diproses...', ephemeral: true });
+    await interaction.channel.send({ content: 'KTP kamu sedang diproses...', ephemeral: true });
 
     const nama = interaction.fields.getTextInputValue('nama');
     const gender = interaction.fields.getTextInputValue('gender');
