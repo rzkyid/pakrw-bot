@@ -75,7 +75,7 @@ app.listen(PORT, () => {
 });
 
 // Pesan otomatis ketika ada member baru bergabung
-const WELCOME_CHANNEL_ID = '1052123058678276106';
+/* const WELCOME_CHANNEL_ID = '1052123058678276106';
 client.on('guildMemberAdd', (member) => {
   // Dapatkan channel berdasarkan ID
   const channel = member.guild.channels.cache.get(WELCOME_CHANNEL_ID);
@@ -86,6 +86,7 @@ client.on('guildMemberAdd', (member) => {
     channel.send(`<a:Hai:1318929546887565374><a:Welcome1:1319195762902700052><a:Welcome2:1319195777318387722><a:Hai:1318929546887565374>`);     
   }
 });
+*/
 
 // Event yang dipicu ketika member melakukan boost server
 const BoostChannelID = '1052126042300624906';
