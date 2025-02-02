@@ -732,10 +732,12 @@ client.on('messageCreate', async (message) => {
 
     if (lowerContent.includes('welcome')) {
         message.channel.send('Selamat datang warga baru! 👋\nSemoga betah jadi warga di sini, join voice sini biar makin akrab. <:OkeSip:1291831721313964053>');
-    } else if (lowerContent.includes('wlcm')) {
+    } else if (lowerContent.includes('welkam')) {
         message.reply('<a:Hai:1318929546887565374><a:Welcome1:1319195762902700052><a:Welcome2:1319195777318387722><a:Hai:1318929546887565374>');
     } else if (lowerContent.includes('halo')) {
         message.reply('Halo juga kak! 👋\nGabung sini ke voice biar makin akrab hehe <:Hehe:1099424821974151310>');
+    } else if (lowerContent.includes('hai')) {
+        message.reply('Hai juga kak! 👋\nGimana kabarnya hari ini? Sini ngobrol di voice hehe <:Hehe:1099424821974151310>');
     } else if (lowerContent.includes('mabar')) {
         message.reply('Buat yang mau mabar bisa cari di https://discord.com/channels/1052115524273836176/1052428628819984424 ya! 🎮\nJangan lupa tag role game yang mau dimainin <:OkeSip:1291831721313964053>');
     } else if (lowerContent.includes('salam kenal')) {
