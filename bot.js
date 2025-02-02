@@ -40,7 +40,7 @@ const AUTORESPON_CHANNEL_ID = [
 const CURHAT_CHANNEL_ID = '1221377162020651008';
 const LOG_CHANNEL_ID = '1099916187044941914';
 const GALERI_CHANNEL_ID = {
-    '1100632084051140669': { roleId: '1311282573699190854', threadName: 'Post by' },
+    '1100632084051140669': { roleId: '1311282573699190854', threadName: 'Post by' }, // Random 
     '1311277162753425429': { 
         roleIdCogan: '1135459439558791219',
         roleIdKembangDesa: '1135458269670944879',
@@ -54,6 +54,7 @@ const GALERI_CHANNEL_ID = {
     '1311278783344676884': { roleId: '1285971566366032004', threadName: 'Post by' },
     '1311278954245787698': { roleId: '1135121270078451752', threadName: 'Post by' },
     '1312281786318852096': { roleId: '1312280861219225631', threadName: 'Post by' },
+    '1335658950980276328': { roleId: '1335657621977432165', threadName: 'Post by' },        
 };
 
 // Konfigurasi API Gemini AI
