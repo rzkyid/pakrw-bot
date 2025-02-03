@@ -54,7 +54,9 @@ const GALERI_CHANNEL_ID = {
     '1311278783344676884': { roleId: '1285971566366032004', threadName: 'Post by' },
     '1311278954245787698': { roleId: '1135121270078451752', threadName: 'Post by' },
     '1312281786318852096': { roleId: '1312280861219225631', threadName: 'Post by' },
-    '1335658950980276328': { roleId: '1335657621977432165', threadName: 'Post by' },        
+    '1335658950980276328': { roleId: '1335657621977432165', threadName: 'Post by' }, // olahraga
+    '1335876168641019954': { roleId: '1335877150737174528', threadName: 'Post by' }, // kerja
+    '1335886755643260978': { roleId: '1335885084364111936', threadName: 'Post by' },
 };
 
 // Konfigurasi API Gemini AI
