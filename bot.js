@@ -920,8 +920,8 @@ const makeRequestWithRetry = async (query) => {
 };
 
 // Perintah untuk bot tanya jawab
-if (message.content.startsWith(`${PREFIX}tanya`)) {
-    const query = message.content.slice(`${PREFIX}tanya`.length).trim();
+if (message.content.startsWith(`rwtanya`)) {
+    const query = message.content.slice(`rwtanya`.length).trim();
     if (!query) {
         message.reply('Tanyain aja, nanti Pak RW jawab');
         return;
