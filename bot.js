@@ -836,21 +836,9 @@ client.on('messageCreate', async (message) => {
     } else if (lowerContent.includes('rwthanks')) {
         message.channel.send('👍 Baik kak jika sudah cukup, saya izin close tiketnya ya.\nTerima kasih sudah menghubungi admin. <:Wink:1099424794350473216>');
     } else if (lowerContent.includes('rwmitra')) {
-        message.channel.send('Silahkan baca terlebih dahulu <#1300360114733187082> jika sudah memenuhi syarat dan ketentuan, silahkan mengisi form berikut:\n
-```Nama Server:\n
-Tentang Server:\n
-Link Server:\n
-Link Channel Event Server:\n
-Link Channel Partnership:\n
-Link Channel Event Partnership:\n
-Logo/Foto Profile Server:```');
+        message.channel.send('Silahkan baca terlebih dahulu <#1300360114733187082> jika sudah memenuhi syarat dan ketentuan, silahkan mengisi form berikut:\n```Nama Server:\nTentang Server:\nLink Server:\nLink Channel Event Server:\nLink Channel Partnership:\nLink Channel Event Partnership:\nLogo/Foto Profile Server:```');
     } else if (lowerContent.includes('rwgiveaway')) {
-        message.channel.send('Silahkan isi format pengajuan giveaway:\n
-```Judul Giveaway:\n
-Total Hadiah:\n
-Jumlah Pemenang:\n
-Durasi Giveaway:\n
-Syarat Mengikuti:```');
+        message.channel.send('Silahkan isi format pengajuan giveaway:\n```Judul Giveaway:\nTotal Hadiah:\nJumlah Pemenang:\nDurasi Giveaway:\nSyarat Mengikuti:```');
     } 
 
 // Perintah untuk bergabung ke voice channel dan memutar audio
