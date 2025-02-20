@@ -759,7 +759,7 @@ client.on('messageCreate', async (message) => {
               `Halo warga baru! Gang Desa makin keren karena ada kamu! Yuk langsung gabung ngobrol, biar makin akrab sama Pak RW 😏✨`,
                ];
             const randomReply = welcomeReplies[Math.floor(Math.random() * welcomeReplies.length)];
-            message.reply(randomReply);
+            message.channel.send(randomReply);
     } else if (lowerContent.includes('welkam')) {
         message.channel.send('<a:Hai:1318929546887565374><a:Welcome1:1319195762902700052><a:Welcome2:1319195777318387722><a:Hai:1318929546887565374>');
     } else if (lowerContent.includes('halo')) {
