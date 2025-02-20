@@ -739,13 +739,62 @@ client.on('messageCreate', async (message) => {
     } else if (lowerContent.includes('welkam')) {
         message.channel.send('<a:Hai:1318929546887565374><a:Welcome1:1319195762902700052><a:Welcome2:1319195777318387722><a:Hai:1318929546887565374>');
     } else if (lowerContent.includes('halo')) {
-        message.reply('Halo juga kak! 👋\nGabung sini ke voice biar makin akrab hehe <:Hehe:1099424821974151310>');
+           const haloReplies [
+              'Halo juga ${message.author.toString()}! Ada yang kangen Pak RW, ya? Bilang aja, nggak usah malu-malu~ 😘',
+              'Halo ${message.author.toString()}! Baru datang atau baru sadar kalau Pak RW makin ganteng? 😏',
+              'Eh, halo ${message.author.toString()}! Kok pas kamu nyapa, hati Pak RW langsung anget, ya? Apa ini yang namanya cinta? 💕',
+              'Halo, ${message.author.toString()}! Hati-hati, nyapa Pak RW bisa bikin ketagihan loh 😆',
+              'Wah, halo ${message.author.toString()}! Suara kamu tuh kayak alarm subuh, bikin jantung Pak RW berdebar-debar ⏰❤️',
+              'Halo juga ${message.author.toString()}! Apa kabar, warga kesayangan Pak RW? Udah makan? Atau butuh disuapin? 😏',
+              'Halo, ${message.author.toString()}! Suasana desa jadi lebih cerah nih, soalnya ada kamu yang nyapa ☀️✨',
+              'Weh, halo ${message.author.toString()}! Hati-hati, sekali nyapa Pak RW, kamu nggak bakal bisa lepas dari pesonanya 😎',
+              'Halo, ${message.author.toString()}! Kalau butuh perhatian lebih, sini duduk dekat Pak RW, jangan jauh-jauh 😘',
+              'Halo juga ${message.author.toString()}! Kok rasanya kayak ada angin sejuk lewat ya? Oh, ternyata karena kamu nyapa 😍',
+              'Halo juga ${message.author.toString()}! Kok pas kamu nyapa, tiba-tiba desa ini berasa lebih cerah? Apa ini efek senyumanmu? ☀️😍',
+              'Halo juga${message.author.toString()}! Udah makan? Jangan sampai lapar, ntar yang lapar bukan perut doang, tapi hati karena kurang perhatian dari Pak RW 😆',
+              'Halo ${message.author.toString()}! Kalau butuh yang adem-adem, sini dekat Pak RW, pelukan bisa disediakan gratis 😆',
+              'Halo ${message.author.toString()}! Udah makan belum? Kalau belum, senyumin Pak RW dulu dong 😍',
+              'Halo juga ${message.author.toString()}! Eh, tadi Pak RW mau ngomong apa ya? Kok jadi lupa gara-gara senyum kamu 😆💕',
+              ];
+            const randomReply = haloReplies[Math.floor(Math.random() * haloReplies.length)];
+            message.reply(randomReply);
     } else if (lowerContent.includes('hai')) {
-        message.reply('Hai juga kak! 👋\nGimana kabarnya hari ini? Sini ngobrol di voice hehe <:Hehe:1099424821974151310>');
+        const haloReplies [
+              'Hai juga ${message.author.toString()}! Ada yang kangen Pak RW, ya? Bilang aja, nggak usah malu-malu~ 😘',
+              'Hai ${message.author.toString()}! Baru datang atau baru sadar kalau Pak RW makin ganteng? 😏',
+              'Eh, hai ${message.author.toString()}! Kok pas kamu nyapa, hati Pak RW langsung anget, ya? Apa ini yang namanya cinta? 💕',
+              'Hai, ${message.author.toString()}! Hati-hati, nyapa Pak RW bisa bikin ketagihan loh 😆',
+              'Wah, hai ${message.author.toString()}! Suara kamu tuh kayak alarm subuh, bikin jantung Pak RW berdebar-debar ⏰❤️',
+              'Hai juga ${message.author.toString()}! Apa kabar, warga kesayangan Pak RW? Udah makan? Atau butuh disuapin? 😏',
+              'Hai, ${message.author.toString()}! Suasana desa jadi lebih cerah nih, soalnya ada kamu yang nyapa ☀️✨',
+              'Weh, hai ${message.author.toString()}! Hati-hati, sekali nyapa Pak RW, kamu nggak bakal bisa lepas dari pesonanya 😎',
+              'Hai, ${message.author.toString()}! Kalau butuh perhatian lebih, sini duduk dekat Pak RW, jangan jauh-jauh 😘',
+              'Hai juga ${message.author.toString()}! Kok rasanya kayak ada angin sejuk lewat ya? Oh, ternyata karena kamu nyapa 😍',
+              'Hai juga ${message.author.toString()}! Kok pas kamu nyapa, tiba-tiba desa ini berasa lebih cerah? Apa ini efek senyumanmu? ☀️😍',
+              'Hai juga${message.author.toString()}! Udah makan? Jangan sampai lapar, ntar yang lapar bukan perut doang, tapi hati karena kurang perhatian dari Pak RW 😆',
+              'Hai ${message.author.toString()}! Kalau butuh yang adem-adem, sini dekat Pak RW, pelukan bisa disediakan gratis 😆',
+              'Hai ${message.author.toString()}! Udah makan belum? Kalau belum, senyumin Pak RW dulu dong 😍',
+              'Hai juga ${message.author.toString()}! Eh, tadi Pak RW mau ngomong apa ya? Kok jadi lupa gara-gara senyum kamu 😆💕',
+              ];
+            const randomReply = haiReplies[Math.floor(Math.random() * haiReplies.length)];
+            message.reply(randomReply);
     } else if (lowerContent.includes('mabar')) {
         message.reply('Buat yang mau mabar bisa cari di https://discord.com/channels/1052115524273836176/1052428628819984424 ya! 🎮\nJangan lupa tag role game yang mau dimainin <:OkeSip:1291831721313964053>');
     } else if (lowerContent.includes('salam kenal')) {
-        message.reply('Salam kenal juga kak! 👏\nDengan kakak siapa nich? <:Halo:1291831692025397270>');
+           const salamReplies [
+              'Salam kenal juga ${message.author.toString()}! Wah, warga baru nih? Hati-hati, kalau terlalu betah di sini, nanti nggak mau pindah~😘',
+              'Eh, salam kenal ${message.author.toString()}! Tapi kalau boleh jujur, rasanya kita udah kenal lama deh… di dalam hati Pak RW 😏💕',
+              'Salam kenal ${message.author.toString()}! Selamat datang di Gang Desa, tempat di mana warga betah dan Pak RW makin ganteng tiap hari 😆✨',
+              'Halo, salam kenal ${message.author.toString()}! Tapi jangan cuma kenal, harus akrab juga, biar bisa sering-sering ngobrol sama Pak RW 😏',
+              'Wah, salam kenal ${message.author.toString()}! Udah siap jadi warga kesayangan Pak RW? Soalnya sekali kenal, nggak bakal bisa lupa 😘',
+              'Salam kenal ${message.author.toString()}! Kalau butuh apa-apa, jangan sungkan ya… kecuali butuh jodoh, itu sih Pak RW duluan yang butuh 😆',
+              'Eh, salam kenal ${message.author.toString()}! Tapi kalau boleh request, kenalnya jangan sebentar ya, maunya seumur hidup 😍',
+              'Halo, salam kenal ${message.author.toString()}! Semoga betah di desa ini, dan kalau butuh perhatian lebih, Pak RW siap sedia 😏',
+              'Salam kenal juga ${message.author.toString()}! Nama boleh baru, tapi semoga kehadiranmu bisa langsung bikin desa ini makin seru ✨',
+              'Wah, salam kenal ${message.author.toString()}! Jangan sungkan ngobrol sama Pak RW ya, siapa tahu dari ngobrol bisa jadi sayang~ 🤭',
+              ];
+           const randomReply = salamReplies[Math.floor(Math.random() * salamReplies.length)];
+           message.reply(randomReply);
     } else if (lowerContent.includes('donasi')) {
         message.reply('Kalau mau jadi donatur server bisa cek https://discord.com/channels/1052115524273836176/1221385772351881286 yaaa <:Wink:1099424794350473216>');
     } else if (lowerContent.includes('jodoh')) {
@@ -754,64 +803,84 @@ client.on('messageCreate', async (message) => {
         message.reply('Buat yang mau curhat bisa langsung aja ke <#1221377162020651008> <:Wink:1099424794350473216>');
     } else if (lowerContent.includes('pagi')) {
             const pagiReplies = [
-              'Pagi juga, warga Gang Desa! Udara pagi ini segar banget, semoga hari ini penuh berkah dan semangat untuk kita semua. 🌞🌻',
-              'Selamat pagi, warga! Jangan lupa sarapan dulu, biar tenaga cukup buat aktivitas seharian. 🍽️',
-              'Halo, warga Gang Desa! Matahari udah nyapa, saatnya kita mulai hari dengan semangat. 🌅',
-              'Warga Gang Desa, pagi ini cerah banget, kayak wajah ceria kalian yang bikin suasana makin hangat. 😊',
-              'Selamat pagi, warga! Yuk, kita bikin Gang Desa makin semarak dengan senyuman pagi ini. 🌸',
-              'Pagi, warga! Jangan lupa ngopi dulu sebelum kerja, biar makin fokus dan semangat. ☕️',
-              'Selamat pagi, semoga hari ini lancar semua urusannya, dan warga Gang Desa selalu diberkahi. 💪',
-              'Pagi warga Gang Desa, jangan lupa saling sapa dan berbagi senyum hari ini. 🌟',
-              'Udara pagi Gang Desa segar banget! Semoga kesejukan ini bikin kita semua tambah semangat. 🌬️',
-              'Selamat pagi, warga! Yuk, kita jadikan hari ini lebih baik dari kemarin. Salam dari Pak RW! 😊',
+              'Pagi, ${message.author.toString()}! Udah sarapan? Kalau belum, sini Pak RW suapin… pakai perhatian ekstra 😘',
+              'Selamat pagi, ${message.author.toString()}! Jangan lupa senyum, soalnya Pak RW udah senyum duluan gara-gara kamu nyapa~ 😊✨',
+              'Pagi juga, ${message.author.toString()}! Hati-hati di jalan ya… jalan menuju hati Pak RW maksudnya 😏💕',
+              'Wah, pagi! Udara sejuk, matahari cerah, tapi tetap nggak secerah kehadiran kamu di desa ini, ${message.author.toString()} 😍',
+              'Pagi, ${message.author.toString()}! Hari ini semoga lancar ya, jangan sampai ada yang nyangkut… kecuali perasaan kamu ke Pak RW 😆',
+              'Selamat pagi, ${message.author.toString()}! Jangan lupa sarapan, biar nggak lemes… kayak aku kalau nggak disapa kamu 😏',
+              'Pagi juga, ${message.author.toString()}! Pak RW doain harimu indah, setidaknya hampir seindah senyummu 🤭✨',
+              'Halo, pagi ${message.author.toString()}! Udah minum kopi? Kalau belum, sini Pak RW bikinin, tapi jangan kaget kalau ada rasa cinta di dalamnya ☕💕',
+              'Pagi, ${message.author.toString()}! Semoga hari ini penuh kebahagiaan, dan kalau kurang bahagia, sini Pak RW tambahin dikit-dikit 😘',
+              'Selamat pagi, ${message.author.toString()}! Udah siap menjalani hari? Kalau belum, ayo deh, semangatnya Pak RW bagi dua sama kamu 💪😆',
+              'Pagi juga, ${message.author.toString()}! Dingin nggak? Kalau iya, sini Pak RW angetin… dengan perhatian spesial 😏🔥',
+              'Halo, pagi ${message.author.toString()}! Udah lihat matahari? Kalau belum, tenang… soalnya senyum kamu aja udah cukup bikin dunia terang ☀️😍',
+              'Selamat pagi, ${message.author.toString()}! Semoga hari ini nggak ada yang bikin kesel, kecuali kesel karena kangen Pak RW 😆',
+              'Pagi juga, ${message.author.toString()}! Ayo semangat! Kalau masih ngantuk, bayangin aja wajah Pak RW, dijamin langsung melek 😏✨',
+              'Wah, pagi! Semoga harimu seindah langit biru, secerah mentari, dan sehangat perhatian Pak RW buat kamu, ${message.author.toString()} ☀️💕',
             ];
             const randomReply = pagiReplies[Math.floor(Math.random() * pagiReplies.length)];
             message.reply(randomReply);
     } 
         else if (lowerContent.includes('siang')) {
             const siangReplies = [
-              'Siang, warga Gang Desa! Jangan lupa makan siang biar energi terisi penuh lagi. 🍛',
-              'Halo, warga! Siang-siang gini enaknya ngadem sebentar, biar kerja makin semangat. 🌞',
-              'Selamat siang, semoga siang ini penuh berkah buat warga Gang Desa semua. 🙌',
-              'Siang, warga Gang Desa! Jangan lupa minum air yang cukup biar tetap segar. 💧',
-              'Matahari lagi terik, semoga semangat kita juga makin menyala! Salam hangat dari Pak RW! ☀️',
-              'Selamat siang, warga! Kalau ada yang butuh bantuan, jangan ragu bilang ke Pak RW ya! 😊',
-              'Siang, warga Gang Desa! Kerja boleh serius, tapi jangan lupa senyum biar tetap asik. 😄',
-              'Siang yang cerah, semoga semua aktivitas warga berjalan lancar hari ini. 💪',
-              'Siang, warga! Kalau lelah, istirahat sebentar, biar semangat lagi melanjutkan tugas-tugas. ✨',
-              'Selamat siang, warga Gang Desa! Mari kita jalani siang ini dengan semangat dan kebersamaan. 🌻',
+              'Siang, ${message.author.toString()}! Udah makan belum? Jangan sampe perutnya kosong… nanti hatinya juga kosong, butuh diisi sama Pak RW 😏💕',
+              'Selamat siang, ${message.author.toString()}! Jangan lupa istirahat bentar ya… biar tetap segar, kayak perasaan Pak RW ke kamu 😆✨',
+              'Siang juga, ${message.author.toString()}! Panas ya? Tapi tetap nggak sepanas perasaan Pak RW pas disapa kamu 😍🔥',
+              'Halo siang, ${message.author.toString()}! Kalau siang ini terasa berat, inget aja kalau ada Pak RW yang siap bikin ringan… hatimu 😏',
+              'Siang, ${message.author.toString()}! Kerja atau belajar yang rajin, tapi jangan lupa sisain waktu buat kangenin Pak RW 😆💕',
+              'Siang juga, ${message.author.toString()}! Matahari terik, tapi masih kalah terang sama senyummu 😍☀️',
+              'Wah, siang! Udah waktunya istirahat, tapi hati Pak RW nggak bisa istirahat mikirin kamu 😏',
+              'Siang, ${message.author.toString()}! Kalau haus, minum air. Kalau butuh perhatian, sini Pak RW temenin 😘',
+              'Siang juga, ${message.author.toString()}! Cuaca boleh panas, tapi kalau ada kamu pasti adem rasanya 🥰🌿',
+              'Halo, siang! Lagi sibuk apa, ${message.author.toString()}? Jangan lupa sisain waktu buat baca chat dari Pak RW 😆✨',
+              'Siang, ${message.author.toString()}! Semangat ya buat sisa harinya, jangan sampai semangatnya ilang… kecuali ilangnya ke hati Pak RW 😏💕',
+              'Siang juga! Kalau lelah, rehat sebentar. Kalau butuh hiburan, Pak RW siap bikin senyum-senyum sendiri 😆',
+              'Siang, ${message.author.toString()}! Jangan lupa makan biar tetap sehat… sehat lahir batin, biar kuat menahan rindu ke Pak RW 😘',
+              'Wah, siang! Kalau siang ini terasa berat, inget aja kalau ada Pak RW yang siap bikin ringan… beban di hati kamu 😏',
+              'Siang juga, ${message.author.toString()}! Hati-hati di luar, panasnya nggak main-main. Tapi kalau ada kamu, Pak RW rela kepanasan bareng 😆🔥',
             ];
             const randomReply = siangReplies[Math.floor(Math.random() * siangReplies.length)];
             message.reply(randomReply);
     } 
         else if (lowerContent.includes('sore')) {
             const soreReplies = [
-              'Selamat sore, warga Gang Desa! Udah waktunya santai sebentar sambil ngopi atau ngobrol sama tetangga. ☕️',
-              'Sore ini tenang banget, semoga hati kita juga tenang dan damai ya! Salam hangat dari Pak RW! 🌇',
-              'Sore, warga Gang Desa! Jangan lupa cek tanaman di pekarangan, biar tetap subur dan cantik. 🌱',
-              'Sore, warga! Semoga sore ini jadi waktu yang menyenangkan buat keluarga dan istirahat sejenak. 😊',
-              'Sore, warga Gang Desa! Kalau lelah, jangan lupa untuk recharge energi dan istirahat yang cukup. 🌸',
-              'Sore ini rasanya pas banget buat menikmati keindahan desa kita. Yuk, bersantai sejenak! 🌿',
-              'Selamat sore, warga! Mari kita nikmati sore ini dengan kebersamaan, bisa ngobrol atau sekedar berbagi cerita. 🌇',
-              'Sore ini cuacanya enak banget, semoga semua yang kita kerjakan hari ini bisa bermanfaat. 🌷',
-              'Sore, warga Gang Desa! Apapun yang kita lakukan hari ini, semoga selalu penuh berkah. 💪',
-              'Selamat sore, warga! Jangan lupa untuk selalu menjaga kebersihan dan kenyamanan di gang desa kita. 🌻',
+              'Sore, ${message.author.toString()}! Langit mulai jingga, tapi tetap nggak sehangat perasaan Pak RW pas disapa kamu 😏💕',
+              'Selamat sore, ${message.author.toString()}! Udah capek hari ini? Kalau iya, sini Pak RW pijitin… pake perhatian ekstra 😘',
+              'Sore juga, ${message.author.toString()}! Kalau capek kerja atau belajar, istirahat dulu ya… di hati Pak RW boleh kok 😆',
+              'Halo sore, ${message.author.toString()}! Jangan lupa nikmatin senja, tapi kalau mau yang lebih indah, liat aja senyum kamu sendiri 😍',
+              'Sore, ${message.author.toString()}! Semoga harimu menyenangkan ya… kalau kurang menyenangkan, sini Pak RW hibur 😏',
+              'Sore juga! Langit mulai gelap, tapi hati Pak RW tetap terang kalau ada kamu 🌅💕',
+              'Wah, sore! Udah waktunya nyantai, tapi hati Pak RW masih sibuk… sibuk mikirin kamu 😆',
+              'Sore, ${message.author.toString()}! Jangan lupa minum teh atau kopi biar rileks… atau mau minum bareng Pak RW? ☕😏',
+              'Sore juga, ${message.author.toString()}! Udah mulai adem, tapi tetep kamu yang bikin suasana makin nyaman 🥰',
+              'Halo, sore! Lagi di mana, ${message.author.toString()}? Kalau butuh teman ngobrol, Pak RW siap nemenin sampai magrib 😆✨',
+              'Sore, ${message.author.toString()}! Jangan lupa jalan-jalan sore biar fresh… tapi kalau jalan ke hati Pak RW, itu lebih segar 😏',
+              'Sore juga! Udah waktunya pulang dan istirahat, tapi hati Pak RW masih nyangkut di kamu 😘',
+              'Sore, ${message.author.toString()}! Langit senja cantik banget ya? Tapi tetap nggak secantik kamu 😍',
+              'Wah, sore! Kalau sore ini terasa biasa aja, biar Pak RW tambahin sedikit bumbu perhatian biar makin spesial 😏💕',
+              'Sore juga, ${message.author.toString()}! Jangan lupa nikmati waktu sore ini, sebelum malam datang… dan kamu makin kangen Pak RW 😆',
             ];
             const randomReply = soreReplies[Math.floor(Math.random() * soreReplies.length)];
             message.reply(randomReply);
     } 
         else if (lowerContent.includes('malam')) {
             const malamReplies = [
-              'Selamat malam, warga Gang Desa! Semoga malam ini penuh kedamaian dan istirahat yang cukup. 🌙',
-              'Malam, warga! Jangan lupa tidur lebih awal, biar besok bisa bangun dengan semangat baru! 😴',
-              'Selamat malam, warga Gang Desa! Mari kita akhiri hari dengan syukur dan harapan yang baik untuk besok. 🌟',
-              'Malam yang tenang, semoga tidurmu nyenyak dan esok hari lebih cerah lagi. 🌙',
-              'Selamat malam, warga! Semoga malam ini membawa ketenangan dan kebahagiaan bagi kita semua. 🌙✨',
-              'Malam, warga Gang Desa! Jaga kesehatan dan selalu bersyukur atas semua yang kita miliki. 🌙',
-              'Malam yang indah, semoga mimpi indah menyertai warga semua, dan besok kita bisa lebih baik lagi. 😴',
-              'Selamat malam, warga! Jangan lupa berdoa sebelum tidur, semoga besok lebih baik dari hari ini. 🙏',
-              'Malam, warga Gang Desa! Terima kasih sudah menjaga suasana desa yang selalu harmonis. 🌙',
-              'Selamat malam, warga! Semoga tidurmu nyenyak dan besok kita semua bisa lebih semangat lagi! 🌟',
+              'Malam, ${message.author.toString()}! Udah siap tidur? Kalau belum, sini Pak RW bacain dongeng… dongeng tentang kita berdua 😏💕',
+              'Selamat malam, ${message.author.toString()}! Langit boleh gelap, tapi kalau ada kamu, dunia Pak RW tetap terang 😘✨',
+              'Malam juga, ${message.author.toString()}! Udah ngantuk belum? Kalau belum, boleh kok ngelamunin Pak RW dulu 😆',
+              'Halo malam, ${message.author.toString()}! Udara mulai dingin, tapi kalau ada kamu, hati Pak RW tetap anget 🔥🥰',
+              'Malam, ${message.author.toString()}! Jangan lupa istirahat ya, biar besok makin fresh… dan makin kangen Pak RW 😏',
+              'Malam juga! Bulan dan bintang bersinar terang, tapi tetap kalah sama bersinarnya pesona kamu 😍🌙',
+              'Wah, malam! Jangan lupa selimutan, biar nggak kedinginan… kecuali dinginnya karena rindu ke Pak RW 😆',
+              'Malam, ${message.author.toString()}! Kalau nggak bisa tidur, hitung aja berapa kali Pak RW bikin kamu senyum hari ini 😏💕',
+              'Malam juga, ${message.author.toString()}! Udah siap masuk mimpi? Kalau iya, semoga ketemu Pak RW di sana 😘',
+              'Halo, malam! Langitnya tenang banget, kayak hati Pak RW tiap kali denger kamu nyapa 😍✨',
+              'Malam, ${message.author.toString()}! Kalau hari ini berat, tenang aja… besok ada Pak RW lagi buat nemenin 😊',
+              'Malam juga! Jangan terlalu lama main HP ya, nanti Pak RW makin susah masuk ke mimpi kamu 😆',
+              'Malam, ${message.author.toString()}! Tidur yang nyenyak ya, biar besok bangun dengan semangat… semangat buat nyapa Pak RW lagi 😏',
+              'Wah, malam! Udara dingin, tapi kalau kamu butuh kehangatan, Pak RW siap kasih perhatian ekstra 🔥🥰',
+              'Malam juga, ${message.author.toString()}! Jangan lupa berdoa sebelum tidur… doa biar besok makin deket sama Pak RW 😘',
             ];
             const randomReply = malamReplies[Math.floor(Math.random() * malamReplies.length)];
             message.reply(randomReply);
