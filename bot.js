@@ -316,6 +316,12 @@ client.on('interactionCreate', async (interaction) => {
         // Mengirimkan pesan
         await interaction.reply({ content: 'Pesan berhasil dikirim!', ephemeral: true });
         await interaction.channel.send(pesan); // Pesan dikirim ke channel tempat command digunakan
+
+        // Log ke channel 1099916187044941914
+        const logChannel = client.channels.cache.get('1099916187044941914');
+        if (logChannel) {
+        logChannel.send(`[LOG] **${interaction.user.tag}** menggunakan /say: "${pesan}"`);
+        }   
     }  
 });
 
@@ -735,11 +741,29 @@ client.on('messageCreate', async (message) => {
     const lowerContent = message.content.toLowerCase();
 
     if (lowerContent.includes('welcome')) {
-        message.channel.send('Selamat datang warga baru! 👋\nSemoga betah jadi warga di sini, join voice sini biar makin akrab. <:OkeSip:1291831721313964053>');
+           const welcomeReplies = [
+              'Selamat datang! Gang Desa makin rame nih~ semoga betah, ya. Kalau butuh sesuatu, tanya aja ke Pak RW… atau langsung minta perhatian juga boleh 😆💕',
+              'Selamat datang di Gang Desa! Jangan malu-malu, di sini semua warga ramah… apalagi Pak RW, lebih dari ramah, perhatian banget 😏',
+              'Wah, ada warga baru! Selamat datang! Hati-hati, nanti kebanyakan main di sini malah jadi nyaman 😆✨',
+              'Selamat datang di Gang Desa! Di sini nggak ada yang sendiri, kecuali yang emang jomblo… tapi tenang aja, ada Pak RW yang siap nemenin 😘',
+              'Halo, warga baru! Selamat datang di rumah kedua kamu! Jangan lupa absen tiap hari, biar Pak RW inget terus sama kamu 😏💕',
+              'Selamat datang di Gang Desa! Semoga betah, kalau nggak betah, tenang aja… Pak RW siap bikin nyaman 😆',
+              'Selamat bergabung di Gang Desa, jangan lupa rajin nyapa Pak RW ya 😏✨',
+              'Wah, ada yang baru nih! Selamat datang! Semoga di sini kamu nemu temen baru, pengalaman baru, dan mungkin… jodoh baru? 😘',
+              'Selamat datang di Gang Desa! Wajib senyum setiap hari di sini, soalnya Pak RW nggak tega lihat warganya sedih 😆💕',
+              'Halo! Gang Desa makin seru nih ada kamu~ jangan lupa sering ngobrol ya, biar makin akrab sama warga… dan Pak RW 😏',
+              'Selamat datang di tempat paling santai, seru, dan penuh kehangatan, ${message.author.toString()}! Kalau butuh apa-apa, cari Pak RW aja, siap bantu… bantu baper maksudnya 😆',
+              'Selamat datang! Semoga betah ya, kalau belum betah, Pak RW siap kasih alasan biar betah 😏💕',
+              'Halo! Baru masuk Gang Desa tapi auranya udah cocok banget nih~ selamat bergabung, semoga makin akrab sama kita semua 😘',
+              'Selamat datang! Di sini santai aja, nggak ada aturan ribet… kecuali satu: jangan bikin Pak RW kangen kalau jarang nongol 😆',
+              'Halo warga baru! Gang Desa makin keren karena ada kamu! Yuk langsung gabung ngobrol, biar makin akrab sama Pak RW 😏✨',
+               ];
+            const randomReply = welcomeReplies[Math.floor(Math.random() * welcomeReplies.length)];
+            message.reply(randomReply);
     } else if (lowerContent.includes('welkam')) {
         message.channel.send('<a:Hai:1318929546887565374><a:Welcome1:1319195762902700052><a:Welcome2:1319195777318387722><a:Hai:1318929546887565374>');
     } else if (lowerContent.includes('halo')) {
-           const haloReplies [
+           const haloReplies = [
               'Halo juga ${message.author.toString()}! Ada yang kangen Pak RW, ya? Bilang aja, nggak usah malu-malu~ 😘',
               'Halo ${message.author.toString()}! Baru datang atau baru sadar kalau Pak RW makin ganteng? 😏',
               'Eh, halo ${message.author.toString()}! Kok pas kamu nyapa, hati Pak RW langsung anget, ya? Apa ini yang namanya cinta? 💕',
@@ -759,7 +783,7 @@ client.on('messageCreate', async (message) => {
             const randomReply = haloReplies[Math.floor(Math.random() * haloReplies.length)];
             message.reply(randomReply);
     } else if (lowerContent.includes('hai')) {
-        const haloReplies [
+        const haloReplies = [
               'Hai juga ${message.author.toString()}! Ada yang kangen Pak RW, ya? Bilang aja, nggak usah malu-malu~ 😘',
               'Hai ${message.author.toString()}! Baru datang atau baru sadar kalau Pak RW makin ganteng? 😏',
               'Eh, hai ${message.author.toString()}! Kok pas kamu nyapa, hati Pak RW langsung anget, ya? Apa ini yang namanya cinta? 💕',
@@ -781,7 +805,7 @@ client.on('messageCreate', async (message) => {
     } else if (lowerContent.includes('mabar')) {
         message.reply('Buat yang mau mabar bisa cari di https://discord.com/channels/1052115524273836176/1052428628819984424 ya! 🎮\nJangan lupa tag role game yang mau dimainin <:OkeSip:1291831721313964053>');
     } else if (lowerContent.includes('salam kenal')) {
-           const salamReplies [
+           const salamReplies = [
               'Salam kenal juga ${message.author.toString()}! Wah, warga baru nih? Hati-hati, kalau terlalu betah di sini, nanti nggak mau pindah~😘',
               'Eh, salam kenal ${message.author.toString()}! Tapi kalau boleh jujur, rasanya kita udah kenal lama deh… di dalam hati Pak RW 😏💕',
               'Salam kenal ${message.author.toString()}! Selamat datang di Gang Desa, tempat di mana warga betah dan Pak RW makin ganteng tiap hari 😆✨',
