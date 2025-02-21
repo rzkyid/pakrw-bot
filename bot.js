@@ -783,7 +783,7 @@ client.on('messageCreate', async (message) => {
             const randomReply = haloReplies[Math.floor(Math.random() * haloReplies.length)];
             message.reply(randomReply);
     } else if (lowerContent.includes('hai')) {
-        const haloReplies = [
+        const haiReplies = [
               `Hai juga ${message.author.toString()}! Ada yang kangen Pak RW, ya? Bilang aja, nggak usah malu-malu~ 😘`,
               `Hai ${message.author.toString()}! Baru datang atau baru sadar kalau Pak RW makin ganteng? 😏`,
               `Eh, hai ${message.author.toString()}! Kok pas kamu nyapa, hati Pak RW langsung anget, ya? Apa ini yang namanya cinta? 💕`,
