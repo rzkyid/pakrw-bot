@@ -40,24 +40,24 @@ const AUTORESPON_CHANNEL_ID = [
 const CURHAT_CHANNEL_ID = '1221377162020651008';
 const LOG_CHANNEL_ID = '1099916187044941914';
 const GALERI_CHANNEL_ID = {
-    '1100632084051140669': { roleId: '1311282573699190854', threadName: 'Post by' }, // Random 
+    '1100632084051140669': { roleId: '1311282573699190854', threadName: 'Tulis komentar disini...' }, // Random 
     '1311277162753425429': { 
         roleIdCogan: '1135459439558791219',
         roleIdKembangDesa: '1135458269670944879',
         requirementCogan: '1052230151984906300',
         requirementKembangDesa: '1052128766777901087',
-        threadName: 'Post by'
+        threadName: 'Tulis komentar disini...'
     },
-    '1311277387148951582': { roleId: '1311283067058524190', threadName: 'Post by' },
-    '1311277512558510090': { roleId: '1311283485847195648', threadName: 'Post by' },
-    '1311278033969090610': { roleId: '1287745130106847313', threadName: 'Post by' },
-    '1311278783344676884': { roleId: '1285971566366032004', threadName: 'Post by' },
-    '1311278954245787698': { roleId: '1135121270078451752', threadName: 'Post by' },
-    '1312281786318852096': { roleId: '1312280861219225631', threadName: 'Post by' },
-    '1335658950980276328': { roleId: '1335657621977432165', threadName: 'Post by' }, // olahraga
-    '1335876168641019954': { roleId: '1335877150737174528', threadName: 'Post by' }, // kerja
-    '1335886755643260978': { roleId: '1335885084364111936', threadName: 'Post by' }, 
-    '1342095563759419512': { roleId: '1342094772612890666', threadName: 'Post by' }, // bucin
+    '1311277387148951582': { roleId: '1311283067058524190', threadName: 'Tulis komentar disini...' },
+    '1311277512558510090': { roleId: '1311283485847195648', threadName: 'Tulis komentar disini...' },
+    '1311278033969090610': { roleId: '1287745130106847313', threadName: 'Tulis komentar disini...' },
+    '1311278783344676884': { roleId: '1285971566366032004', threadName: 'Tulis komentar disini...' },
+    '1311278954245787698': { roleId: '1135121270078451752', threadName: 'Tulis komentar disini...' },
+    '1312281786318852096': { roleId: '1312280861219225631', threadName: 'Tulis komentar disini...' },
+    '1335658950980276328': { roleId: '1335657621977432165', threadName: 'Tulis komentar disini...' }, // olahraga
+    '1335876168641019954': { roleId: '1335877150737174528', threadName: 'Tulis komentar disini...' }, // kerja
+    '1335886755643260978': { roleId: '1335885084364111936', threadName: 'Tulis komentar disini...' }, 
+    '1342095563759419512': { roleId: '1342094772612890666', threadName: 'Tulis komentar disini...' }, // bucin
 };
 
 // Konfigurasi API Gemini AI
@@ -1059,7 +1059,7 @@ client.on('messageCreate', async (message) => {
             try {
                 // Membuat thread
                 const thread = await message.startThread({
-                    name: `${channelConfig.threadName} ${message.author.username}`,
+                    name: `${channelConfig.threadName}`,
                     autoArchiveDuration: 1440, // Thread otomatis diarsipkan setelah 24 jam
                 });
 
