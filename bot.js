@@ -58,6 +58,8 @@ const GALERI_CHANNEL_ID = {
     '1335876168641019954': { roleId: '1335877150737174528', threadName: 'Tulis komentar disini...' }, // kerja
     '1335886755643260978': { roleId: '1335885084364111936', threadName: 'Tulis komentar disini...' }, 
     '1342095563759419512': { roleId: '1342094772612890666', threadName: 'Tulis komentar disini...' }, // bucin
+    '1343525650686021633': { roleId: '1149252517818015744', threadName: 'Tulis komentar disini...' }, // show off
+    '1343533420587909164': { roleId: '1343521572916433008', threadName: 'Tulis komentar disini...' }, // owo squad
 };
 
 // Konfigurasi API Gemini AI
