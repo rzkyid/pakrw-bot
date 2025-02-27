@@ -1117,7 +1117,7 @@ client.on('messageCreate', async (message) => {
   try {
     // Buat thread untuk setiap pesan
     const thread = await message.startThread({
-      name: `${channelConfig.threadName} ${message.author.username}`,
+      name: `${channelConfig.threadName}`,
       autoArchiveDuration: 1440, // Thread diarsipkan setelah 24 jam tidak aktif
     });
 
