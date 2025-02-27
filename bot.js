@@ -1101,6 +1101,42 @@ client.on('messageCreate', async (message) => {
     }
 });
 
+// Auto thread khusus channel text
+const THREAD_CHANNEL_CONFIG = {
+  '1052126207937880095': { roleId: '1281905105783885865', threadName: 'Tulis komentar disini...' }, // kata kata hari ini
+};
+
+client.on('messageCreate', async (message) => {
+  // Cek apakah pesan berasal dari salah satu channel yang dikonfigurasi
+  const channelConfig = THREAD_CHANNEL_CONFIG[message.channel.id];
+  if (!channelConfig) return;
+
+  // Jangan proses pesan dari bot
+  if (message.author.bot) return;
+
+  try {
+    // Buat thread untuk setiap pesan
+    const thread = await message.startThread({
+      name: `${channelConfig.threadName} ${message.author.username}`,
+      autoArchiveDuration: 1440, // Thread diarsipkan setelah 24 jam tidak aktif
+    });
+
+    // Tambahkan reaksi ❤️ ke pesan asli
+    await message.react('❤️');
+
+    // Ambil objek member dari guild
+    const guildMember = await message.guild.members.fetch(message.author.id);
+
+    // Berikan role sesuai channel jika member belum memilikinya
+    if (channelConfig.roleId && !guildMember.roles.cache.has(channelConfig.roleId)) {
+      await guildMember.roles.add(channelConfig.roleId);
+      console.log(`Role ${channelConfig.roleId} diberikan ke ${message.author.tag}`);
+    }
+  } catch (error) {
+    console.error(`Gagal memproses pesan dari ${message.author.tag}: ${error.message}`);
+  }
+});
+
 // Menambahkan custom status
 const statusMessages = ["👀 Sedang Memantau", "👥 Warga Gang Desa"];
 const statusTypes = [ 'online'];
