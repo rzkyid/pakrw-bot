@@ -97,7 +97,6 @@ client.on('guildMemberAdd', (member) => {
 // Fitur OwO Lottery
 const LOTTERY_ROLE_ID = '1343554118899335241';
 const ADMIN_ROLE_ID = '1077457424736333844';
-const ANNOUNCE_CHANNEL_ID = '1052124921817464883';
 
 client.on('interactionCreate', async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
@@ -137,12 +136,8 @@ client.on('interactionCreate', async (interaction) => {
                 .setColor("#FFD700")
                 .setFooter({ text: "Memilih pemenang..." });
 
-            const announceChannel = guild.channels.cache.get(ANNOUNCE_CHANNEL_ID);
-            if (!announceChannel) {
-                return interaction.followUp({ content: "❌ Channel pengumuman tidak ditemukan!", ephemeral: true });
-            }
-
-            // Kirim pesan spin wheel ke channel pengumuman
+            // Kirim pesan spin wheel ke channel tempat perintah digunakan
+            const announceChannel = interaction.channel;
             announceChannel.send({ embeds: [spinWheelEmbed] }).then(async (spinMessage) => {
                 setTimeout(async () => {
                     // Pilih pemenang secara acak setelah 10 detik
@@ -155,7 +150,7 @@ client.on('interactionCreate', async (interaction) => {
 
                     // Embed pengumuman pemenang
                     const winnerEmbed = new EmbedBuilder()
-                        .setTitle("🏆 GANG DESA OWO LOTTERY")
+                        .setTitle("🎟️ GANG DESA OWO LOTTERY 🎟️")
                         .setColor("#FFD700")
                         .addFields(
                             { name: "🎉 Pemenang:", value: `${winner}`, inline: false },
@@ -166,9 +161,9 @@ client.on('interactionCreate', async (interaction) => {
                         )
                         .setTimestamp();
 
-                    // Kirim pengumuman pemenang ke channel
+                    // Kirim pengumuman pemenang ke channel tempat perintah digunakan
                     announceChannel.send({
-                        content: `🎉 Selamat <@${winner.id}> kamu telah memenangkan OwO Lottery!`,
+                        content: `🎉 **Selamat** <@${winner.id}> kamu telah memenangkan **OwO Lottery!**`,
                         embeds: [winnerEmbed]
                     });
 
