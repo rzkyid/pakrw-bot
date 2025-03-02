@@ -97,6 +97,7 @@ client.on('guildMemberAdd', (member) => {
 // Fitur OwO Lottery
 const LOTTERY_ROLE_ID = '1343554118899335241';
 const ADMIN_ROLE_ID = '1077457424736333844';
+const LOTTERY_ROLE_ID2 = '1322509806472269826';
 
 client.on('interactionCreate', async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
@@ -173,6 +174,50 @@ client.on('interactionCreate', async (interaction) => {
         } catch (error) {
             console.error("❌ Terjadi kesalahan saat mengambil peserta lottery:", error);
             interaction.followUp({ content: "❌ Terjadi kesalahan saat menjalankan OwO Lottery.", ephemeral: true });
+        }
+    }
+});
+
+client.on('interactionCreate', async (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
+
+    if (interaction.commandName === 'resetlottery') {
+        // Periksa apakah user memiliki akses
+        if (
+            !interaction.member.permissions.has(PermissionsBitField.Flags.Administrator) &&
+            !interaction.member.roles.cache.has(ADMIN_ROLE_ID)
+        ) {
+            return interaction.reply({ content: "❌ Anda tidak memiliki izin untuk menjalankan perintah ini!", ephemeral: true });
+        }
+
+        await interaction.reply({ content: "🔄 Sedang mereset OwO Lottery... Harap tunggu!", ephemeral: true });
+
+        try {
+            const guild = interaction.guild;
+            await guild.members.fetch(); // Ambil semua member agar cache terisi
+            const role = guild.roles.cache.get(LOTTERY_ROLE_ID2);
+
+            if (!role) {
+                return interaction.followUp({ content: "❌ Role lottery tidak ditemukan!", ephemeral: true });
+            }
+
+            const membersWithRole = role.members.map(member => member);
+            if (membersWithRole.length === 0) {
+                return interaction.followUp({ content: "⚠️ Tidak ada peserta OwO Lottery untuk di-reset.", ephemeral: true });
+            }
+
+            // Menghapus role dari semua anggota
+            for (const member of membersWithRole) {
+                await member.roles.remove(role);
+            }
+
+            interaction.followUp({
+                content: `✅ Semua ${membersWithRole.length} peserta telah direset dari OwO Lottery!`
+            });
+
+        } catch (error) {
+            console.error("❌ Terjadi kesalahan saat mereset lottery:", error);
+            interaction.followUp({ content: "❌ Terjadi kesalahan saat mereset OwO Lottery.", ephemeral: true });
         }
     }
 });
@@ -313,6 +358,12 @@ client.on('ready', () => {
         new SlashCommandBuilder()
         .setName('lottery')
         .setDescription('Memulai OwO Lottery')
+    );
+    
+    client.application.commands.create(
+        new SlashCommandBuilder()
+        .setName('resetlottery')
+        .setDescription('Menghapus semua peserta dari OwO Lottery')
     );
 });
 
