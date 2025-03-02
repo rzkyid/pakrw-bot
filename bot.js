@@ -111,61 +111,67 @@ client.on('interactionCreate', async (interaction) => {
             return interaction.reply({ content: "❌ Anda tidak memiliki izin untuk menjalankan perintah ini!", ephemeral: true });
         }
 
-        await interaction.deferReply();
+        await interaction.reply({ content: "🎰 Memulai OwO Lottery... Harap tunggu!", ephemeral: true });
 
-        // Ambil daftar peserta
+        // Ambil daftar peserta dengan role ID yang ditentukan
         const guild = interaction.guild;
         const role = guild.roles.cache.get(LOTTERY_ROLE_ID);
         if (!role) {
-            return interaction.editReply({ content: "❌ Role lottery tidak ditemukan!", ephemeral: true });
+            return interaction.followUp({ content: "❌ Role lottery tidak ditemukan!", ephemeral: true });
         }
 
         const membersWithRole = role.members.map(member => member);
-        if (membersWithRole.length === 0) {
-            return interaction.editReply({ content: "❌ Tidak ada peserta OwO Lottery!", ephemeral: true });
+        const totalPeserta = membersWithRole.length;
+
+        if (totalPeserta === 0) {
+            return interaction.followUp({ content: "❌ Tidak ada peserta OwO Lottery!", ephemeral: true });
         }
 
-        // Menampilkan spin wheel (simulasi)
+        // Simulasi animasi spin wheel selama 10 detik
         const participantNames = membersWithRole.map(member => member.user.username);
-        const winner = membersWithRole[Math.floor(Math.random() * membersWithRole.length)];
-
         const spinWheelEmbed = new EmbedBuilder()
             .setTitle("🎡 OwO Lottery: Spinning Wheel...")
             .setDescription(`**Peserta:**\n${participantNames.join(', ')}`)
             .setColor("#FFD700")
             .setFooter({ text: "Memilih pemenang..." });
 
-        await interaction.editReply({ embeds: [spinWheelEmbed] });
+        const announceChannel = guild.channels.cache.get(ANNOUNCE_CHANNEL_ID);
+        if (!announceChannel) {
+            return interaction.followUp({ content: "❌ Channel pengumuman tidak ditemukan!", ephemeral: true });
+        }
 
-        setTimeout(async () => {
-            // Hitung total hadiah
-            const totalPeserta = membersWithRole.length;
-            const totalLottery = totalPeserta * 200000;
-            const pajakLottery = totalLottery * 0.1;
-            const jumlahDiterima = totalLottery - pajakLottery;
+        // Kirim pesan spin wheel ke channel pengumuman
+        announceChannel.send({ embeds: [spinWheelEmbed] }).then(async (spinMessage) => {
+            setTimeout(async () => {
+                // Pilih pemenang secara acak setelah 10 detik
+                const winner = membersWithRole[Math.floor(Math.random() * totalPeserta)];
 
-            // Embed pengumuman pemenang
-            const winnerEmbed = new EmbedBuilder()
-                .setTitle("🏆 GANG DESA OWO LOTTERY")
-                .setColor("#FFD700")
-                .addFields(
-                    { name: "🎉 Pemenang:", value: `${winner}`, inline: false },
-                    { name: "👥 Total Peserta:", value: `${totalPeserta}`, inline: true },
-                    { name: "💰 Total Lottery:", value: `${totalLottery.toLocaleString()}`, inline: true },
-                    { name: "📉 Pajak Lottery:", value: `${pajakLottery.toLocaleString()}`, inline: true },
-                    { name: "💸 Jumlah Diterima:", value: `${jumlahDiterima.toLocaleString()}`, inline: true }
-                )
-                .setTimestamp();
+                // Hitung total hadiah
+                const totalLottery = totalPeserta * 200000;
+                const pajakLottery = totalLottery * 0.1;
+                const jumlahDiterima = totalLottery - pajakLottery;
 
-            // Kirim pengumuman ke channel
-            const announceChannel = guild.channels.cache.get(ANNOUNCE_CHANNEL_ID);
-            if (announceChannel) {
-                announceChannel.send({ content: `🎉 Selamat <@${winner.id}> kamu telah memenangkan OwO Lottery!`, embeds: [winnerEmbed] });
-            }
+                // Embed pengumuman pemenang
+                const winnerEmbed = new EmbedBuilder()
+                    .setTitle("🏆 GANG DESA OWO LOTTERY")
+                    .setColor("#FFD700")
+                    .addFields(
+                        { name: "🎉 Pemenang:", value: `${winner}`, inline: false },
+                        { name: "👥 Total Peserta:", value: `${totalPeserta}`, inline: true },
+                        { name: "💰 Total Lottery:", value: `${totalLottery.toLocaleString()}`, inline: true },
+                        { name: "📉 Pajak Lottery:", value: `${pajakLottery.toLocaleString()}`, inline: true },
+                        { name: "💸 Jumlah Diterima:", value: `${jumlahDiterima.toLocaleString()}`, inline: true }
+                    )
+                    .setTimestamp();
 
-            await interaction.editReply({ content: `🎊 **Pemenang telah ditentukan!**`, embeds: [winnerEmbed] });
+                // Kirim pengumuman pemenang ke channel
+                announceChannel.send({
+                    content: `🎉 Selamat <@${winner.id}> kamu telah memenangkan OwO Lottery!`,
+                    embeds: [winnerEmbed]
+                });
 
-        }, 5000); // Simulasi spin selama 5 detik
+            }, 10000); // Spin selama 10 detik
+        });
     }
 });
 
