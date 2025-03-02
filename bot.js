@@ -177,6 +177,7 @@ client.on('interactionCreate', async (interaction) => {
     }
 });
 
+// Fitur reset lottery
 client.on('interactionCreate', async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
 
@@ -221,6 +222,101 @@ client.on('interactionCreate', async (interaction) => {
     }
 });
 
+// Fitur giveaway
+ client.on('interactionCreate', async (interaction) => {
+    if (interaction.isChatInputCommand() && interaction.commandName === 'giveaway') {
+        // Periksa apakah user memiliki izin
+        if (
+            !interaction.member.permissions.has(PermissionsBitField.Flags.Administrator) &&
+            !interaction.member.roles.cache.has(ADMIN_ROLE_ID)
+        ) {
+            return interaction.reply({ content: "❌ Anda tidak memiliki izin untuk menjalankan perintah ini!", ephemeral: true });
+        }
+
+        const role = interaction.options.getRole('role');
+
+        if (!role) {
+            return interaction.reply({ content: "❌ Role tidak ditemukan!", ephemeral: true });
+        }
+
+        await interaction.reply({ content: `🎉 Sedang memilih pemenang giveaway dari **${role.name}**... Harap tunggu!`, ephemeral: false });
+
+        try {
+            const guild = interaction.guild;
+            await guild.members.fetch(); // Ambil semua member agar cache terisi
+            const membersWithRole = role.members.map(member => member);
+
+            if (membersWithRole.length === 0) {
+                return interaction.followUp({ content: "⚠️ Tidak ada peserta dengan role ini!", ephemeral: false });
+            }
+
+            // Buat list nama peserta untuk Spin Wheel
+            const participantNames = membersWithRole.map(member => member.user.username);
+            let displayNames = participantNames.join("\n");
+
+            if (displayNames.length > 1024) {
+                displayNames = displayNames.substring(0, 1020) + "...";
+            }
+
+            // Embed untuk menampilkan Spin Wheel
+            const spinEmbed = new EmbedBuilder()
+                .setTitle("🎡 **SPIN WHEEL GIVEAWAY**")
+                .setDescription(`🎉 Memilih pemenang dari **${role.name}**...\n\n**Peserta:**\n${displayNames}`)
+                .setColor("Random");
+
+            const spinMessage = await interaction.followUp({ embeds: [spinEmbed] });
+
+            // Simulasi Spin Wheel (10 detik)
+            await new Promise(resolve => setTimeout(resolve, 10000));
+
+            // Pilih pemenang secara acak
+            const winner = membersWithRole[Math.floor(Math.random() * membersWithRole.length)];
+
+            // Tombol Reroll
+            const row = new ActionRowBuilder()
+                .addComponents(
+                    new ButtonBuilder()
+                        .setCustomId('reroll_giveaway')
+                        .setLabel('🔄 Reroll')
+                        .setStyle(ButtonStyle.Primary)
+                );
+
+            // Embed hasil pemenang
+            const winnerEmbed = new EmbedBuilder()
+                .setTitle("🎉 **GIVEAWAY WINNER**")
+                .setDescription(`✨ **Selamat ${winner} kamu telah memenangkan Giveaway!** ✨`)
+                .setColor("Gold");
+
+            const message = await interaction.followUp({
+                content: `🎊 **Pemenang telah dipilih!** 🎊`,
+                embeds: [winnerEmbed],
+                components: [row]
+            });
+
+            // Handle Reroll
+            const filter = i => i.customId === 'reroll_giveaway' && (i.member.permissions.has(PermissionsBitField.Flags.Administrator) || i.member.roles.cache.has(ADMIN_ROLE_ID));
+            const collector = message.createMessageComponentCollector({ filter, time: 60000 });
+
+            collector.on('collect', async i => {
+                // Pilih pemenang baru
+                const newWinner = membersWithRole[Math.floor(Math.random() * membersWithRole.length)];
+                
+                // Embed untuk pemenang baru
+                const newWinnerEmbed = new EmbedBuilder()
+                    .setTitle("🎉 **GIVEAWAY WINNER**")
+                    .setDescription(`✨ **Selamat ${newWinner} kamu telah memenangkan Giveaway!** ✨`)
+                    .setColor("Gold");
+
+                await i.update({ content: `🎊 **Pemenang telah dipilih ulang!** 🎊`, embeds: [newWinnerEmbed], components: [row] });
+            });
+
+        } catch (error) {
+            console.error("❌ Terjadi kesalahan saat melakukan giveaway:", error);
+            interaction.followUp({ content: "❌ Terjadi kesalahan saat menjalankan giveaway.", ephemeral: false });
+        }
+    }
+});
+                    
 // Event yang dipicu ketika member melakukan boost server
 const BoostChannelID = '1052126042300624906';
 
@@ -364,6 +460,18 @@ client.on('ready', () => {
         .setName('resetlottery')
         .setDescription('Menghapus semua peserta dari OwO Lottery')
     );
+    
+    client.application.commands.create(
+        new SlashCommandBuilder()
+            .setName('giveaway')
+            .setDescription('Memilih pemenang giveaway dari role yang dipilih')
+            .addRoleOption(option =>
+                option.setName('role')
+                    .setDescription('Pilih role peserta giveaway')
+                    .setRequired(true)
+            )
+    );
+    
 });
 
 // Fitur kasih role & mengirim pesan melalui bot
