@@ -131,9 +131,9 @@ client.on('interactionCreate', async (interaction) => {
             // Simulasi animasi spin wheel selama 10 detik
             const participantNames = membersWithRole.map(member => member.user.username);
             const spinWheelEmbed = new EmbedBuilder()
-                .setTitle("🎡 OwO Lottery: Spinning Wheel...")
+                .setTitle("🎡 **OwO Lottery: Spinning Wheel...**")
                 .setDescription(`**Peserta:**\n${participantNames.join(', ')}`)
-                .setColor("#FFD700")
+                .setColor("Random")
                 .setFooter({ text: "Memilih pemenang..." });
 
             // Kirim pesan spin wheel ke channel tempat perintah digunakan
@@ -150,8 +150,8 @@ client.on('interactionCreate', async (interaction) => {
 
                     // Embed pengumuman pemenang
                     const winnerEmbed = new EmbedBuilder()
-                        .setTitle("🎟️ GANG DESA OWO LOTTERY 🎟️")
-                        .setColor("#FFD700")
+                        .setTitle("🎟️ **GANG DESA OWO LOTTERY** 🎟️")
+                        .setColor("Gold")
                         .addFields(
                             { name: "🎉 Pemenang:", value: `${winner}`, inline: false },
                             { name: "👥 Total Peserta:", value: `${totalPeserta}`, inline: true },
