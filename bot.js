@@ -97,7 +97,6 @@ client.on('guildMemberAdd', (member) => {
 // Fitur OwO Lottery
 const LOTTERY_ROLE_ID = '1343554118899335241';
 const ADMIN_ROLE_ID = '1077457424736333844';
-const LOTTERY_ROLE_ID2 = '1322509806472269826';
 
 client.on('interactionCreate', async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
@@ -190,12 +189,12 @@ client.on('interactionCreate', async (interaction) => {
             return interaction.reply({ content: "❌ Anda tidak memiliki izin untuk menjalankan perintah ini!", ephemeral: true });
         }
 
-        await interaction.reply({ content: "🔄 Sedang mereset OwO Lottery... Harap tunggu!", ephemeral: true });
+        await interaction.reply({ content: "🔄 Sedang mereset OwO Lottery... Harap tunggu!", ephemeral: false });
 
         try {
             const guild = interaction.guild;
             await guild.members.fetch(); // Ambil semua member agar cache terisi
-            const role = guild.roles.cache.get(LOTTERY_ROLE_ID2);
+            const role = guild.roles.cache.get(LOTTERY_ROLE_ID);
 
             if (!role) {
                 return interaction.followUp({ content: "❌ Role lottery tidak ditemukan!", ephemeral: true });
@@ -212,7 +211,7 @@ client.on('interactionCreate', async (interaction) => {
             }
 
             interaction.followUp({
-                content: `✅ Semua ${membersWithRole.length} peserta telah direset dari OwO Lottery!`
+                content: `✅ Semua **${membersWithRole.length} peserta** telah direset dari **OwO Lottery!**`
             });
 
         } catch (error) {
