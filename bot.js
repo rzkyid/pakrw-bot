@@ -1,7 +1,7 @@
 require('dotenv').config();
 const { Client, GatewayIntentBits, Partials, EmbedBuilder, ActivityType, MessageAttachment, ActionRowBuilder, ButtonBuilder, ButtonStyle, 
        ModalBuilder, TextInputBuilder, TextInputStyle, InteractionType, Intents, MessageActionRow, MessageButton, MessageEmbed,
-       SlashCommandBuilder, PermissionFlagsBits, AttachmentBuilder
+       SlashCommandBuilder, PermissionFlagsBits, PermissionsBitField, AttachmentBuilder
       } = require('discord.js');
 const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus } = require('@discordjs/voice');
 const { createCanvas, loadImage } = require('canvas'); 
@@ -93,6 +93,81 @@ client.on('guildMemberAdd', (member) => {
   }
 });
 */
+
+// Fitur OwO Lottery
+const LOTTERY_ROLE_ID = '1343554118899335241';
+const ADMIN_ROLE_ID = '1077457424736333844';
+const ANNOUNCE_CHANNEL_ID = '1052124921817464883';
+
+client.on('interactionCreate', async (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
+
+    if (interaction.commandName === 'lottery') {
+        // Cek apakah user memiliki akses
+        if (
+            !interaction.member.permissions.has(PermissionsBitField.Flags.Administrator) &&
+            !interaction.member.roles.cache.has(ADMIN_ROLE_ID)
+        ) {
+            return interaction.reply({ content: "❌ Anda tidak memiliki izin untuk menjalankan perintah ini!", ephemeral: true });
+        }
+
+        await interaction.deferReply();
+
+        // Ambil daftar peserta
+        const guild = interaction.guild;
+        const role = guild.roles.cache.get(LOTTERY_ROLE_ID);
+        if (!role) {
+            return interaction.editReply({ content: "❌ Role lottery tidak ditemukan!", ephemeral: true });
+        }
+
+        const membersWithRole = role.members.map(member => member);
+        if (membersWithRole.length === 0) {
+            return interaction.editReply({ content: "❌ Tidak ada peserta OwO Lottery!", ephemeral: true });
+        }
+
+        // Menampilkan spin wheel (simulasi)
+        const participantNames = membersWithRole.map(member => member.user.username);
+        const winner = membersWithRole[Math.floor(Math.random() * membersWithRole.length)];
+
+        const spinWheelEmbed = new EmbedBuilder()
+            .setTitle("🎡 OwO Lottery: Spinning Wheel...")
+            .setDescription(`**Peserta:**\n${participantNames.join(', ')}`)
+            .setColor("#FFD700")
+            .setFooter({ text: "Memilih pemenang..." });
+
+        await interaction.editReply({ embeds: [spinWheelEmbed] });
+
+        setTimeout(async () => {
+            // Hitung total hadiah
+            const totalPeserta = membersWithRole.length;
+            const totalLottery = totalPeserta * 200000;
+            const pajakLottery = totalLottery * 0.1;
+            const jumlahDiterima = totalLottery - pajakLottery;
+
+            // Embed pengumuman pemenang
+            const winnerEmbed = new EmbedBuilder()
+                .setTitle("🏆 GANG DESA OWO LOTTERY")
+                .setColor("#FFD700")
+                .addFields(
+                    { name: "🎉 Pemenang:", value: `${winner}`, inline: false },
+                    { name: "👥 Total Peserta:", value: `${totalPeserta}`, inline: true },
+                    { name: "💰 Total Lottery:", value: `${totalLottery.toLocaleString()}`, inline: true },
+                    { name: "📉 Pajak Lottery:", value: `${pajakLottery.toLocaleString()}`, inline: true },
+                    { name: "💸 Jumlah Diterima:", value: `${jumlahDiterima.toLocaleString()}`, inline: true }
+                )
+                .setTimestamp();
+
+            // Kirim pengumuman ke channel
+            const announceChannel = guild.channels.cache.get(ANNOUNCE_CHANNEL_ID);
+            if (announceChannel) {
+                announceChannel.send({ content: `🎉 Selamat <@${winner.id}> kamu telah memenangkan OwO Lottery!`, embeds: [winnerEmbed] });
+            }
+
+            await interaction.editReply({ content: `🎊 **Pemenang telah ditentukan!**`, embeds: [winnerEmbed] });
+
+        }, 5000); // Simulasi spin selama 5 detik
+    }
+});
 
 // Event yang dipicu ketika member melakukan boost server
 const BoostChannelID = '1052126042300624906';
@@ -224,6 +299,12 @@ client.on('ready', () => {
                 .setDescription('Ketik pesan yang akan dikirim oleh bot')
                 .setRequired(true)
         )
+    );
+    
+    client.application.commands.create(
+        new SlashCommandBuilder()
+        .setName('lottery')
+        .setDescription('Memulai OwO Lottery')
     );
 });
 
