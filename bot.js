@@ -252,7 +252,7 @@ client.on('interactionCreate', async (interaction) => {
 
             // Buat list nama peserta untuk Spin Wheel
             const participantNames = membersWithRole.map(member => member.user.username);
-            let displayNames = participantNames.join("\n");
+            let displayNames = participantNames.join(', ');
 
             if (displayNames.length > 1024) {
                 displayNames = displayNames.substring(0, 1020) + "...";
