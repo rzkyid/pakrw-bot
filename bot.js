@@ -94,6 +94,33 @@ client.on('guildMemberAdd', (member) => {
 });
 */
 
+// Fitur auto role & react giveaway
+const CHANNEL_GIVEAWAY = '1319651622481166419';  // ID Channel Giveaway
+const ROLE_GIVEAWAY = '1322509806472269826';  // ID Role Giveaway
+
+client.on('messageCreate', async (message) => {
+    // Pastikan pesan bukan dari bot
+    if (message.author.bot) return;
+
+    // Periksa apakah pesan dikirim di channel yang ditentukan
+    if (message.channel.id === CHANNEL_GIVEAWAY) {
+        try {
+            const guildMember = await message.guild.members.fetch(message.author.id);
+
+            // Tambahkan role jika belum dimiliki
+            if (!guildMember.roles.cache.has(ROLE_GIVEAWAY)) {
+                await guildMember.roles.add(ROLE_GIVEAWAY);
+                console.log(`✅ Role diberikan ke ${message.author.tag}`);
+            }
+
+            // Tambahkan reaksi ✅ ke pesan
+            await message.react('✅');
+        } catch (error) {
+            console.error(`❌ Gagal memberikan role atau reaksi: ${error.message}`);
+        }
+    }
+});
+
 // Fitur OwO Lottery
 const LOTTERY_ROLE_ID = '1343554118899335241';
 const ADMIN_ROLE_ID = '1077457424736333844';
@@ -218,6 +245,50 @@ client.on('interactionCreate', async (interaction) => {
         } catch (error) {
             console.error("❌ Terjadi kesalahan saat mereset lottery:", error);
             interaction.followUp({ content: "❌ Terjadi kesalahan saat mereset OwO Lottery.", ephemeral: true });
+        }
+    }
+});
+
+// Fitur reset giveaway
+client.on('interactionCreate', async (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
+
+    if (interaction.commandName === 'resetgiveaway') {
+        // Cek apakah user memiliki role yang diizinkan atau admin
+        if (
+            !interaction.member.permissions.has(PermissionFlagsBits.Administrator) &&
+            !interaction.member.roles.cache.has(ADMIN_ROLE_ID)
+        ) {
+            return interaction.reply({ content: "❌ Kamu tidak memiliki izin untuk menjalankan perintah ini!", ephemeral: true });
+        }
+
+        const role = interaction.guild.roles.cache.get(ROLE_GIVEAWAY);
+        if (!role) {
+            return interaction.reply({ content: "❌ Role Giveaway tidak ditemukan!", ephemeral: true });
+        }
+
+        try {
+            const membersWithRole = role.members;
+            const totalMembers = membersWithRole.size;
+
+            if (totalMembers === 0) {
+                return interaction.reply({ content: `✅ Tidak ada member yang memiliki role ${role}.`, ephemeral: true });
+            }
+
+            // Kirim pesan sementara "Sedang mereset giveaway..."
+            await interaction.reply({ content: "🔄 Sedang mereset giveaway...", ephemeral: false });
+
+            // Hapus role dari semua member
+            for (const [_, member] of membersWithRole) {
+                await member.roles.remove(role);
+            }
+
+            // Edit pesan sebelumnya dengan hasil akhir (mention role)
+            await interaction.followUp({ content: `✅ Berhasil mereset **${role}** dari total **${totalMembers} peserta!**` });
+
+        } catch (error) {
+            console.error(`❌ Gagal menghapus role: ${error.message}`);
+            return interaction.reply({ content: "❌ Terjadi kesalahan saat menghapus role.", ephemeral: true });
         }
     }
 });
@@ -459,6 +530,12 @@ client.on('ready', () => {
         new SlashCommandBuilder()
         .setName('resetlottery')
         .setDescription('Menghapus semua peserta dari OwO Lottery')
+    );
+    
+    client.application.commands.create(
+        new SlashCommandBuilder()
+        .setName('resetgiveawat')
+        .setDescription('Menghapus semua peserta dari Giveaway')
     );
     
     client.application.commands.create(
