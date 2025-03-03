@@ -534,7 +534,7 @@ client.on('ready', () => {
     
     client.application.commands.create(
         new SlashCommandBuilder()
-        .setName('resetgiveawat')
+        .setName('resetgiveaway')
         .setDescription('Menghapus semua peserta dari Giveaway')
     );
     
