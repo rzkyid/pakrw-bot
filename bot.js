@@ -410,7 +410,6 @@ client.on('interactionCreate', async interaction => {
         gameSession = {
             active: true,
             targetNumber: Math.floor(Math.random() * 100) + 1,
-            attempts: new Map(),
             startTime: Date.now(),
             channel: interaction.channel
         };
@@ -418,12 +417,14 @@ client.on('interactionCreate', async interaction => {
         // Kirim pesan pembukaan game
         const embed = new EmbedBuilder()
             .setTitle('🎯 Tebak Angka Dimulai!')
-            .setDescription('Bot telah memilih angka antara **1-100**. Tebak angka dengan mengetik langsung di chat!\n\n'
-                + '📌 **Aturan:**\n'
-                + '- Setiap pemain hanya memiliki **3 kesempatan**.\n'
-                + '- Admin bisa memberi **clue** dengan reaction ⬆️ atau ⬇️.\n'
-                + '- **Waktu:** 1 menit sebelum game berakhir otomatis!\n\n'
-                + '🎲 **Ayo mulai menebak!**')
+            .setDescription('Bot telah memilih angka antara **1-100**. Tebak angka dengan mengetik langsung di chat!
+
+' +
+                '📌 **Aturan:**\n' +
+                '- Pemain bisa menebak sebanyak apapun hingga waktu habis atau ada yang menang.\n' +
+                '- Admin bisa memberi **clue** dengan reaction ⬆️ atau ⬇️.\n' +
+                '- **Waktu:** 1 menit sebelum game berakhir otomatis!\n\n' +
+                '🎲 **Ayo mulai menebak!**')
             .setColor('Green');
 
         await interaction.reply({ embeds: [embed] });
@@ -445,22 +446,10 @@ client.on('messageCreate', async (message) => {
     const guess = parseInt(message.content);
     if (isNaN(guess) || guess < 1 || guess > 100) return;
 
-    const userId = message.author.id;
-    const attempts = gameSession.attempts.get(userId) || 0;
-
-    // Cek apakah pemain sudah mencapai batas 3 tebakan
-    if (attempts >= 3) {
-        await message.delete();
-        return message.author.send('⚠️ Kamu hanya bisa menebak **3 kali** dalam game ini!');
-    }
-
-    // Simpan tebakan pemain
-    gameSession.attempts.set(userId, attempts + 1);
-
     // Cek apakah tebakan benar
     if (guess === gameSession.targetNumber) {
         gameSession.active = false;
-        return gameSession.channel.send(`🎉 **Selamat ${message.author}!** Kamu berhasil menebak angka **${guess}** dengan benar!`);
+        return gameSession.channel.send(`🎉 **Selamat <@${message.author.id}>!** Kamu berhasil menebak angka **${guess}** dengan benar!`);
     }
 
     // Jika salah, beri respon dan reaksi
