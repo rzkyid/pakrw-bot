@@ -633,7 +633,7 @@ client.on('ready', () => {
     client.application.commands.create(
         new SlashCommandBuilder()
                .setName('tebakangka')
-               .setDescription('Memulai game tebak angka 1-100');
+               .setDescription('Memulai game tebak angka 1-100')
     );
     
 });
