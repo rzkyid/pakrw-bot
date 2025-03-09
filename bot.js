@@ -417,14 +417,12 @@ client.on('interactionCreate', async interaction => {
         // Kirim pesan pembukaan game
         const embed = new EmbedBuilder()
             .setTitle('🎯 Tebak Angka Dimulai!')
-            .setDescription('Bot telah memilih angka antara **1-100**. Tebak angka dengan mengetik langsung di chat!
-
-' +
-                '📌 **Aturan:**\n' +
-                '- Pemain bisa menebak sebanyak apapun hingga waktu habis atau ada yang menang.\n' +
-                '- Admin bisa memberi **clue** dengan reaction ⬆️ atau ⬇️.\n' +
-                '- **Waktu:** 1 menit sebelum game berakhir otomatis!\n\n' +
-                '🎲 **Ayo mulai menebak!**')
+            .setDescription('Bot telah memilih angka antara **1-100**. Tebak angka dengan mengetik langsung di chat!\n\n'
+                + '📌 **Aturan:**\n'
+                + '- Tebak sebanyak yang kamu mau!\n'
+                + '- Admin bisa memberi **clue** dengan reaction ⬆️ atau ⬇️.\n'
+                + '- **Waktu:** 1 menit sebelum game berakhir otomatis!\n\n'
+                + '🎲 **Ayo mulai menebak!**')
             .setColor('Green');
 
         await interaction.reply({ embeds: [embed] });
