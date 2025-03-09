@@ -387,6 +387,87 @@ client.on('interactionCreate', async (interaction) => {
         }
     }
 });
+
+// Mini games tebak angka
+// Simpan sesi game
+let gameSession = {};
+
+client.on('interactionCreate', async interaction => {
+    if (!interaction.isCommand()) return;
+    if (interaction.commandName === 'tebakangka') {
+        // Periksa apakah user memiliki izin admin atau role tertentu
+        if (!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator) &&
+            !interaction.member.roles.cache.has(ADMIN_ROLE_ID)) {
+            return interaction.reply({ content: '❌ Kamu tidak memiliki izin untuk memulai game!', ephemeral: true });
+        }
+
+        // Cek apakah game sudah berjalan
+        if (gameSession.active) {
+            return interaction.reply({ content: '⚠️ Game tebak angka masih berlangsung!', ephemeral: true });
+        }
+
+        // Mulai game baru
+        gameSession = {
+            active: true,
+            targetNumber: Math.floor(Math.random() * 100) + 1,
+            attempts: new Map(),
+            startTime: Date.now(),
+            channel: interaction.channel
+        };
+
+        // Kirim pesan pembukaan game
+        const embed = new EmbedBuilder()
+            .setTitle('🎯 Tebak Angka Dimulai!')
+            .setDescription('Bot telah memilih angka antara **1-100**. Tebak angka dengan mengetik langsung di chat!\n\n'
+                + '📌 **Aturan:**\n'
+                + '- Setiap pemain hanya memiliki **3 kesempatan**.\n'
+                + '- Admin bisa memberi **clue** dengan reaction ⬆️ atau ⬇️.\n'
+                + '- **Waktu:** 1 menit sebelum game berakhir otomatis!\n\n'
+                + '🎲 **Ayo mulai menebak!**')
+            .setColor('Green');
+
+        await interaction.reply({ embeds: [embed] });
+
+        // Timer untuk mengakhiri game setelah 1 menit
+        setTimeout(() => {
+            if (gameSession.active) {
+                gameSession.active = false;
+                gameSession.channel.send('⏳ **Waktu habis!** Tidak ada yang berhasil menebak angka.');
+            }
+        }, 60000);
+    }
+});
+
+// Event untuk menangkap tebakan pemain
+client.on('messageCreate', async (message) => {
+    if (!gameSession.active || message.author.bot || message.channel.id !== gameSession.channel.id) return;
+
+    const guess = parseInt(message.content);
+    if (isNaN(guess) || guess < 1 || guess > 100) return;
+
+    const userId = message.author.id;
+    const attempts = gameSession.attempts.get(userId) || 0;
+
+    // Cek apakah pemain sudah mencapai batas 3 tebakan
+    if (attempts >= 3) {
+        await message.delete();
+        return message.author.send('⚠️ Kamu hanya bisa menebak **3 kali** dalam game ini!');
+    }
+
+    // Simpan tebakan pemain
+    gameSession.attempts.set(userId, attempts + 1);
+
+    // Cek apakah tebakan benar
+    if (guess === gameSession.targetNumber) {
+        gameSession.active = false;
+        return gameSession.channel.send(`🎉 **Selamat ${message.author}!** Kamu berhasil menebak angka **${guess}** dengan benar!`);
+    }
+
+    // Jika salah, beri respon dan reaksi
+    const hint = guess < gameSession.targetNumber ? '📈 Angka lebih besar!' : '📉 Angka lebih kecil!';
+    await message.react(guess < gameSession.targetNumber ? '⬆️' : '⬇️');
+    message.reply(hint);
+});
                     
 // Event yang dipicu ketika member melakukan boost server
 const BoostChannelID = '1052126042300624906';
@@ -547,6 +628,12 @@ client.on('ready', () => {
                     .setDescription('Pilih role peserta giveaway')
                     .setRequired(true)
             )
+    );
+
+    client.application.commands.create(
+        new SlashCommandBuilder()
+               .setName('tebakangka')
+               .setDescription('Memulai game tebak angka 1-100');
     );
     
 });
