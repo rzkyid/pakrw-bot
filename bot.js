@@ -392,8 +392,10 @@ client.on('interactionCreate', async (interaction) => {
 // Simpan sesi game
 let gameSession = {};
 
+// Event saat ada interaksi command
 client.on('interactionCreate', async interaction => {
     if (!interaction.isCommand()) return;
+
     if (interaction.commandName === 'tebakangka') {
         // Periksa apakah user memiliki izin admin atau role tertentu
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator) &&
@@ -401,19 +403,19 @@ client.on('interactionCreate', async interaction => {
             return interaction.reply({ content: '❌ Kamu tidak memiliki izin untuk memulai game!', ephemeral: true });
         }
 
-        // Cek apakah game sudah berjalan
-        if (gameSession) {
+        // **FIX** Cek apakah game sudah berjalan sebelum memulai
+        if (gameSession && gameSession.active) {
             return interaction.reply({ content: '⚠️ Game tebak angka masih berlangsung!', ephemeral: true });
         }
 
-        // Mulai game baru
+        // **RESET gameSession sebelum mulai**
         gameSession = {
             active: true,
             targetNumber: Math.floor(Math.random() * 100) + 1,
             startTime: Date.now(),
             channel: interaction.channel,
             timeout: setTimeout(() => {
-                if (gameSession) {
+                if (gameSession && gameSession.active) {
                     gameSession.channel.send('⏳ **Waktu habis!** Tidak ada yang berhasil menebak angka.');
                     gameSession = null; // Reset game
                 }
@@ -437,7 +439,7 @@ client.on('interactionCreate', async interaction => {
 
 // Event untuk menangkap tebakan pemain
 client.on('messageCreate', async (message) => {
-    if (!gameSession || message.author.bot || message.channel.id !== gameSession.channel.id) return;
+    if (!gameSession || !gameSession.active || message.author.bot || message.channel.id !== gameSession.channel.id) return;
 
     const guess = parseInt(message.content);
     if (isNaN(guess) || guess < 1 || guess > 100) return;
@@ -445,7 +447,7 @@ client.on('messageCreate', async (message) => {
     // Cek apakah tebakan benar
     if (guess === gameSession.targetNumber) {
         gameSession.active = false;
-        // clearTimeout(gameSession.timeout); // Hentikan timer sebelum waktu habis
+        clearTimeout(gameSession.timeout); // Hentikan timer sebelum waktu habis
         gameSession.channel.send(`🎉 **Selamat <@${message.author.id}>!** Kamu berhasil menebak angka **${guess}** dengan benar!`);
         gameSession = null; // Reset game
         return;
