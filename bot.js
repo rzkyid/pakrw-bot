@@ -445,7 +445,7 @@ client.on('messageCreate', async (message) => {
     // Cek apakah tebakan benar
     if (guess === gameSession.targetNumber) {
         gameSession.active = false;
-        clearTimeout(gameSession.timeout); // Hentikan timer sebelum waktu habis
+        // clearTimeout(gameSession.timeout); // Hentikan timer sebelum waktu habis
         gameSession.channel.send(`🎉 **Selamat <@${message.author.id}>!** Kamu berhasil menebak angka **${guess}** dengan benar!`);
         gameSession = null; // Reset game
         return;
