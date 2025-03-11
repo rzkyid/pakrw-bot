@@ -458,7 +458,191 @@ client.on('messageCreate', async (message) => {
     await message.react(guess < gameSession.targetNumber ? '⬆️' : '⬇️');
     message.reply(hint);
 });
-                    
+
+// Fitur game tebak kata
+const GAME_DURATION = 60000; // 60 detik per ronde
+const TOTAL_ROUNDS = 10;
+
+let gameActive = false;
+let gameParticipants = new Set();
+let currentWord = '';
+let currentHint = '';
+let currentCategory = '';
+let currentRound = 0;
+let scores = {};
+let gameChannel = null;
+let gameStartTimeout = null;
+
+// Fungsi memilih kata secara acak dan menyensornya
+function getRandomWordAndHint() {
+    const words = JSON.parse(fs.readFileSync('kata.json', 'utf8'));
+    const randomWord = words[Math.floor(Math.random() * words.length)];
+
+    currentWord = randomWord.word;
+    currentCategory = randomWord.category;
+
+    let hintArray = currentWord.split('');
+    let revealIndices = [];
+    while (revealIndices.length < 2) {
+        let index = Math.floor(Math.random() * hintArray.length);
+        if (!revealIndices.includes(index)) {
+            revealIndices.push(index);
+        }
+    }
+
+    currentHint = hintArray.map((char, index) => (revealIndices.includes(index) ? char : '_')).join('');
+}
+
+// Slash Command /tebakkata
+client.on('interactionCreate', async (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
+
+    if (interaction.commandName === 'tebakkata') {
+        if (!interaction.member.roles.cache.has(ADMIN_ROLE_ID) && !interaction.member.permissions.has('Administrator')) {
+            return interaction.reply({ content: '❌ Anda tidak memiliki izin untuk menjalankan perintah ini.', ephemeral: true });
+        }
+
+        if (gameActive) {
+            return interaction.reply({ content: '⚠️ Permainan masih berlangsung!', ephemeral: true });
+        }
+
+        gameActive = true;
+        gameParticipants.clear();
+        currentRound = 0;
+        scores = {};
+        gameChannel = interaction.channel;
+
+        const embed = new EmbedBuilder()
+            .setTitle('🎮 Tebak Kata Akan Dimulai!')
+            .setDescription('Tekan **Gabung** untuk ikut bermain.\nPermainan akan dimulai dalam **60 detik** atau jika admin menekan **Mulai**.')
+            .setColor('BLUE');
+
+        const row = new ActionRowBuilder()
+            .addComponents(
+                new ButtonBuilder().setCustomId('join_game').setLabel('Gabung').setStyle(ButtonStyle.Success),
+                new ButtonBuilder().setCustomId('start_game').setLabel('Mulai').setStyle(ButtonStyle.Primary),
+                new ButtonBuilder().setCustomId('cancel_game').setLabel('Keluar').setStyle(ButtonStyle.Danger)
+            );
+
+        await interaction.reply({ embeds: [embed], components: [row] });
+
+        // Timer otomatis mulai setelah 60 detik jika admin tidak menekan "Mulai"
+        gameStartTimeout = setTimeout(() => {
+            if (gameActive && gameParticipants.size > 0) {
+                startNewRound();
+            } else {
+                gameChannel.send('⚠️ **Permainan dibatalkan karena tidak ada peserta!**');
+                gameActive = false;
+            }
+        }, 60000);
+    }
+});
+
+// Menangani tombol interaksi
+client.on('interactionCreate', async (interaction) => {
+    if (!interaction.isButton()) return;
+
+    const { customId, user } = interaction;
+
+    if (customId === 'join_game') {
+        if (gameParticipants.has(user.id)) {
+            return interaction.reply({ content: '✅ Anda sudah bergabung!', ephemeral: true });
+        }
+        gameParticipants.add(user.id);
+        return interaction.reply({ content: `🎉 **${user.username}** telah bergabung dalam permainan!`, ephemeral: true });
+    }
+
+    if (customId === 'start_game') {
+        if (!interaction.member.roles.cache.has(ADMIN_ROLE_ID) && !interaction.member.permissions.has('Administrator')) {
+            return interaction.reply({ content: '❌ Anda tidak memiliki izin untuk memulai permainan!', ephemeral: true });
+        }
+
+        if (gameStartTimeout) clearTimeout(gameStartTimeout);
+        if (gameParticipants.size === 0) {
+            gameActive = false;
+            return interaction.update({ content: '⚠️ **Tidak ada peserta! Permainan dibatalkan.**', components: [] });
+        }
+
+        interaction.update({ content: '🎯 **Permainan dimulai!**', components: [] });
+        startNewRound();
+    }
+
+    if (customId === 'cancel_game') {
+        if (!interaction.member.roles.cache.has(ADMIN_ROLE_ID) && !interaction.member.permissions.has('Administrator')) {
+            return interaction.reply({ content: '❌ Anda tidak memiliki izin untuk membatalkan permainan!', ephemeral: true });
+        }
+
+        if (gameStartTimeout) clearTimeout(gameStartTimeout);
+        gameActive = false;
+        gameParticipants.clear();
+        return interaction.update({ content: '🚫 **Permainan telah dibatalkan oleh admin.**', components: [] });
+    }
+});
+
+// Memulai ronde baru
+async function startNewRound() {
+    if (!gameActive || currentRound >= TOTAL_ROUNDS) {
+        return endGame();
+    }
+
+    currentRound++;
+    getRandomWordAndHint();
+
+    const embed = new EmbedBuilder()
+        .setTitle(`🎯 Ronde ${currentRound}/${TOTAL_ROUNDS}`)
+        .setDescription(`Kategori: **${currentCategory}**\nTebak kata ini: **${currentHint}**`)
+        .setColor('BLUE')
+        .setFooter({ text: 'Jawab di chat!' });
+
+    gameChannel.send({ embeds: [embed] });
+
+    const filter = (msg) => !msg.author.bot && gameParticipants.has(msg.author.id);
+    const collector = gameChannel.createMessageCollector({ filter, time: GAME_DURATION });
+
+    collector.on('collect', (msg) => {
+        if (msg.content.toLowerCase() === currentWord.toLowerCase()) {
+            collector.stop();
+            if (!scores[msg.author.id]) scores[msg.author.id] = 0;
+            scores[msg.author.id]++;
+
+            gameChannel.send(`🎉 **${msg.author}** menjawab benar! Kata: **${currentWord}** (+1 Poin)`);
+
+            setTimeout(startNewRound, 3000);
+        }
+    });
+
+    collector.on('end', (collected, reason) => {
+        if (reason !== 'user') {
+            gameChannel.send(`⏳ Waktu habis! Kata yang benar adalah **${currentWord}**`);
+            setTimeout(startNewRound, 3000);
+        }
+    });
+}
+
+// Mengakhiri game
+function endGame() {
+    gameActive = false;
+    if (Object.keys(scores).length === 0) {
+        return gameChannel.send('😢 **Sayang sekali!** Tidak ada yang menang kali ini.');
+    }
+
+    const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+    const winnerId = sortedScores[0][0];
+    const winnerScore = sortedScores[0][1];
+
+    const embed = new EmbedBuilder()
+        .setTitle('🏆 Tebak Kata Selesai!')
+        .setDescription(`🎖️ **Pemenang:** <@${winnerId}> dengan **${winnerScore} Poin**`)
+        .setColor('GOLD');
+
+    gameChannel.send({ embeds: [embed] });
+}
+
+client.once('ready', () => {
+    console.log(`${client.user.tag} siap!`);
+});
+
+
 // Event yang dipicu ketika member melakukan boost server
 const BoostChannelID = '1052126042300624906';
 
