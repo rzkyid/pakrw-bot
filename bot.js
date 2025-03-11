@@ -515,7 +515,7 @@ client.on('interactionCreate', async (interaction) => {
         const embed = new EmbedBuilder()
             .setTitle('🎮 Tebak Kata Akan Dimulai!')
             .setDescription('Tekan **Gabung** untuk ikut bermain.\nPermainan akan dimulai dalam **60 detik** atau jika admin menekan **Mulai**.')
-            .setColor('BLUE');
+            .setColor('#3498db');
 
         const row = new ActionRowBuilder()
             .addComponents(
@@ -591,7 +591,7 @@ async function startNewRound() {
     const embed = new EmbedBuilder()
         .setTitle(`🎯 Ronde ${currentRound}/${TOTAL_ROUNDS}`)
         .setDescription(`Kategori: **${currentCategory}**\nTebak kata ini: **${currentHint}**`)
-        .setColor('BLUE')
+        .setColor('#3498db')
         .setFooter({ text: 'Jawab di chat!' });
 
     gameChannel.send({ embeds: [embed] });
