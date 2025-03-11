@@ -809,6 +809,12 @@ client.on('ready', () => {
                .setName('tebakangka')
                .setDescription('Memulai game tebak angka 1-100')
     );
+
+    client.application.commands.create(
+        new SlashCommandBuilder()
+               .setName('tebakkata')
+               .setDescription('Memulai game tebak kata')
+    );
     
 });
 
