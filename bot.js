@@ -518,7 +518,7 @@ client.on('interactionCreate', async interaction => {
     const embed = new EmbedBuilder()
         .setTitle(judul)
         .setDescription(deskripsi)
-        .setColor('#FCF4D2') 
+        .setColor('#4B5320') 
         .setFooter({ text: footer })
 
     if (gambar) embed.setImage(gambar);
