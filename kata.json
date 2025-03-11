@@ -1,0 +1,21 @@
+[
+    { "word": "apel", "category": "Buah" },
+    { "word": "pisang", "category": "Buah" },
+    { "word": "jeruk", "category": "Buah" },
+
+    { "word": "indonesia", "category": "Negara" },
+    { "word": "jepang", "category": "Negara" },
+    { "word": "brazil", "category": "Negara" },
+
+    { "word": "harimau", "category": "Binatang" },
+    { "word": "gajah", "category": "Binatang" },
+    { "word": "kucing", "category": "Binatang" },
+
+    { "word": "dokter", "category": "Profesi" },
+    { "word": "guru", "category": "Profesi" },
+    { "word": "pilot", "category": "Profesi" },
+
+    { "word": "gunting", "category": "Alat" },
+    { "word": "palu", "category": "Alat" },
+    { "word": "komputer", "category": "Alat" }
+]
