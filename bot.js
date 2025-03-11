@@ -520,7 +520,6 @@ client.on('interactionCreate', async interaction => {
         .setDescription(deskripsi)
         .setColor('#FCF4D2') 
         .setFooter({ text: footer })
-        .setTimestamp();
 
     if (gambar) embed.setImage(gambar);
 
