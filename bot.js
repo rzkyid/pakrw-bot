@@ -459,6 +459,74 @@ client.on('messageCreate', async (message) => {
     message.reply(hint);
 });
 
+//Fitur pengumuman
+client.on('interactionCreate', async interaction => {
+    if (!interaction.isChatInputCommand()) return;
+
+    if (interaction.commandName === 'pengumuman') {
+        if (!interaction.member.permissions.has(PermissionFlagsBits.Administrator)) {
+            return interaction.reply({ content: '❌ Kamu tidak memiliki izin untuk menggunakan perintah ini!', ephemeral: true });
+        }
+
+        const modal = new ModalBuilder()
+            .setCustomId('pengumumanModal')
+            .setTitle('Buat Pengumuman');
+
+        const judulInput = new TextInputBuilder()
+            .setCustomId('judul')
+            .setLabel('Judul Pengumuman')
+            .setStyle(TextInputStyle.Short)
+            .setRequired(true);
+
+        const deskripsiInput = new TextInputBuilder()
+            .setCustomId('deskripsi')
+            .setLabel('Deskripsi Pengumuman')
+            .setStyle(TextInputStyle.Paragraph)
+            .setRequired(true);
+
+        const gambarInput = new TextInputBuilder()
+            .setCustomId('gambar')
+            .setLabel('URL Gambar (Opsional)')
+            .setStyle(TextInputStyle.Short)
+            .setRequired(false);
+
+        const footerInput = new TextInputBuilder()
+            .setCustomId('footer')
+            .setLabel('Footer')
+            .setStyle(TextInputStyle.Short)
+            .setRequired(true);
+
+        const firstRow = new ActionRowBuilder().addComponents(judulInput);
+        const secondRow = new ActionRowBuilder().addComponents(deskripsiInput);
+        const thirdRow = new ActionRowBuilder().addComponents(gambarInput);
+        const fourthRow = new ActionRowBuilder().addComponents(footerInput);
+
+        modal.addComponents(firstRow, secondRow, thirdRow, fourthRow);
+        await interaction.showModal(modal);
+    }
+});
+
+client.on('interactionCreate', async interaction => {
+    if (interaction.type !== InteractionType.ModalSubmit) return;
+    if (interaction.customId !== 'pengumumanModal') return;
+
+    const judul = interaction.fields.getTextInputValue('judul');
+    const deskripsi = interaction.fields.getTextInputValue('deskripsi');
+    const gambar = interaction.fields.getTextInputValue('gambar') || null;
+    const footer = interaction.fields.getTextInputValue('footer');
+
+    const embed = new EmbedBuilder()
+        .setTitle(judul)
+        .setDescription(deskripsi)
+        .setColor('#FCF4D2') 
+        .setFooter({ text: footer })
+        .setTimestamp();
+
+    if (gambar) embed.setImage(gambar);
+
+    await interaction.reply({ embeds: [embed] });
+});
+
 // Event yang dipicu ketika member melakukan boost server
 const BoostChannelID = '1052126042300624906';
 
@@ -624,6 +692,12 @@ client.on('ready', () => {
         new SlashCommandBuilder()
                .setName('tebakangka')
                .setDescription('Memulai game tebak angka 1-100')
+    );
+
+    client.application.commands.create(
+        new SlashCommandBuilder()
+               .setName('pengumuman')
+               .setDescription('Buat pengumuman desa')
     );
 });
 
