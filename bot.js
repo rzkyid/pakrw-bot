@@ -1501,6 +1501,9 @@ if (message.content.toLowerCase().startsWith(`rwtanya`)) {
     }
 
     try {
+        await message.channel.sendTyping(); // Bot mengetik sebelum mengirim jawaban
+        await delay(3000); // Mengetik dalam waktu 3 detik
+           
         const reply = await makeRequestWithRetry(query); // Menggunakan fungsi retry
         message.reply(reply); // Mengirimkan jawaban ke pengguna
     } catch (error) {
