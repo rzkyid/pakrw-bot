@@ -700,6 +700,12 @@ client.on('ready', () => {
     );
 });
 
+const ADMIN_ROLE_ALL = [
+       '1077457424736333844', // Pengurus
+       '1103372562941083648', // Hansip
+       '1212307214698676295', // Humas
+       ];
+
 // Fitur kasih role & mengirim pesan melalui bot
 client.on('interactionCreate', async (interaction) => {
     // Pastikan hanya menangani Slash Command
@@ -709,7 +715,7 @@ client.on('interactionCreate', async (interaction) => {
 
     // Periksa apakah user memiliki role dengan ID '1077457424736333844' atau admin
     const hasPermission = interaction.memberPermissions.has(PermissionFlagsBits.Administrator) ||
-        interaction.member.roles.cache.has('1077457424736333844'); // Cek apakah pengguna memiliki role dengan ID ini
+        interaction.member.roles.cache.has(ADMIN_ROLE_ALL); // Cek apakah pengguna memiliki role dengan ID ini
 
     if (!hasPermission) {
         return interaction.reply({ content: "Anda tidak memiliki izin untuk menggunakan perintah ini.", ephemeral: true });
