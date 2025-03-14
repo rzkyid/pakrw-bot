@@ -715,7 +715,7 @@ client.on('interactionCreate', async (interaction) => {
 
     // Periksa apakah user memiliki role dengan ID '1077457424736333844' atau admin
     const hasPermission = interaction.memberPermissions.has(PermissionFlagsBits.Administrator) ||
-        interaction.member.roles.cache.has(ADMIN_ROLE_ALL); // Cek apakah pengguna memiliki role dengan ID ini
+        interaction.member.roles.cache.some(role => ADMIN_ROLE_ALL.includes(role.id));
 
     if (!hasPermission) {
         return interaction.reply({ content: "Anda tidak memiliki izin untuk menggunakan perintah ini.", ephemeral: true });
